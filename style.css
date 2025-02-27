@@ -1,0 +1,248 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    color: #333;
+    margin: 0;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.speed-control button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 0 1rem;
+    transition: background-color 0.3s;
+}
+
+.speed-control button:hover {
+    background-color: #3700b3;
+}
+
+.speed-control input {
+    width: 100px;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+.speed-control input:focus {
+    border-color: #6200ea;
+}
+
+#currentSpeed, .parameter-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #6200ea;
+    margin-top: 1rem;
+}
+
+.bottom-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.start-stop-controls {
+    display: flex;
+    margin-left: 2rem;
+}
+
+.start-stop-controls button {
+    background-color: #4caf50; /* Verde */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.start-stop-controls button:hover {
+    background-color: #388e3c; /* Verde scuro */
+}
+
+.start-stop-controls button#stop {
+    background-color: #f44336; /* Rosso */
+}
+
+.start-stop-controls button#stop:hover {
+    background-color: #d32f2f; /* Rosso scuro */
+}
+
+.start-stop-controls button#pause {
+    background-color: #ff9800; /* Arancione */
+}
+
+.start-stop-controls button#pause:hover {
+    background-color: #f57c00; /* Arancione scuro */
+}
+
+.speed-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.speed-dots .dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #6200ea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.speed-dots .dot:hover {
+    background-color: #3700b3;
+}
+
+/* Stili per l'interruttore a scorrimento (ripristinato) */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    left: 0;
+    margin-left: 1rem;
+}
+
+/* Stili per la gestione dello stato di connessione (ripristinato) */
+.connection-status {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: red;
+    animation: blink 1s infinite;
+}
+
+.connection-status.connected {
+    color: green;
+    animation: none;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.parameter-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Allineamento alla base */
+    margin-top: 1rem;
+}
+
+.parameter-name {
+    font-family: 'Arial', sans-serif; /* Stesso font del titolo */
+    font-size: 1.2rem;
+    font-weight: normal; /* Non grassetto */
+    color: #333;
+    margin-right: 0.5rem;
+    display: flex; /* Aggiunto per allineamento verticale */
+    align-items: flex-end; /* Allineamento alla base */
+}
