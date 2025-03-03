@@ -1,0 +1,35 @@
+{
+  "nome": "Sabato",
+  "allenamento": [
+    {
+      "tempo": 5,
+      "velocita": 5,
+      "descrizione": "Riscaldamento"
+    },
+    {
+      "ripetizioni": 5,
+      "serie": [
+        {
+          "tempo": 2,
+          "velocita": 7,
+          "descrizione": "Corsa a ritmo moderato"
+        },
+        {
+          "tempo": 1,
+          "velocita": 9,
+          "descrizione": "Corsa veloce"
+        },
+        {
+          "tempo": 2,
+          "velocita": 6,
+          "descrizione": "Corsa leggera"
+        }
+      ]
+    },
+    {
+      "tempo": 5,
+      "velocita": 5,
+      "descrizione": "Defaticamento"
+    }
+  ]
+}

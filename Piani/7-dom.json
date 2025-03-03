@@ -1,0 +1,35 @@
+{
+  "nome": "TEST",
+  "allenamento": [
+    {
+      "tempo": 0.2,
+      "velocita": 2,
+      "descrizione": "Riscaldamento"
+    },
+    {
+      "ripetizioni": 0.3,
+      "serie": [
+        {
+          "tempo": 0.2,
+          "velocita": 3,
+          "descrizione": "Corsetta"
+        },
+        {
+          "tempo": 0.2,
+          "velocita": 4,
+          "descrizione": "Corsona"
+        },
+        {
+          "tempo": 0.2,
+          "velocita": 2,
+          "descrizione": "Tranquillo"
+        }
+      ]
+    },
+    {
+      "tempo": 0.2,
+      "velocita": 1,
+      "descrizione": "Defaticamento"
+    }
+  ]
+}

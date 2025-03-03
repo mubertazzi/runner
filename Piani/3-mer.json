@@ -1,0 +1,10 @@
+{
+  "nome": "Mercoledì",
+  "allenamento": [
+    {
+      "tempo": 0,
+      "velocita": 0,
+      "descrizione": "Riposo"
+    }
+  ]
+}
