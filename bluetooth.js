@@ -182,3 +182,37 @@ function sendCommand(opcode) {
         console.error(error);
     }
 }
+
+let wakeLock = null;
+
+// Funzione per attivare il Wake Lock
+async function attivaWakeLock() {
+    try {
+        // Richiedi il Wake Lock per mantenere lo schermo acceso
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log("Wake Lock attivato: lo schermo rimarrà acceso.");
+    } catch (err) {
+        console.error("Errore nell'attivazione del Wake Lock:", err);
+    }
+}
+
+// Funzione per rilasciare il Wake Lock
+function rilasciaWakeLock() {
+    if (wakeLock !== null) {
+        wakeLock.release();
+        wakeLock = null;
+        console.log("Wake Lock rilasciato.");
+    }
+}
+
+// Attiva il Wake Lock quando la pagina è visibile
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        attivaWakeLock();
+    } else {
+        rilasciaWakeLock();
+    }
+});
+
+// Attiva il Wake Lock all'avvio
+attivaWakeLock();
