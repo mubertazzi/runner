@@ -9,7 +9,6 @@ let faseCorrente = 0; // Indice della fase corrente
 let pianoPiatto = []; // Array piatto per memorizzare le fasi
 let tempoRimanente = 0; // Tempo rimanente per la fase corrente (in secondi)
 let contoAllaRovesciaInterval = null; // Intervallo per aggiornare il conto alla rovescia
-let timeline; // Oggetto per gestire la timeline
 
 // ==================== INTERRUTTORE COLLEGA/DISCONNETTI ====================
 document.getElementById('connectSwitch').addEventListener('change', async () => {
@@ -141,7 +140,9 @@ speedDots.forEach(dot => {
 
 // ==================== GESTIONE DEL TEMPO ====================
 function startElapsedTime() {
-    startTime = Date.now() - pausedTime;
+    if (!startTime) {
+        startTime = Date.now() - pausedTime; // Inizializza startTime solo se non è già stato impostato
+    }
     elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
 }
 
@@ -162,8 +163,8 @@ function updateElapsedTime() {
     document.getElementById('elapsedTime').textContent = formattedTime;
 
     // Calcola la distanza percorsa in km
-    distance += (currentSpeedValue / 3600);
-    document.getElementById('distance').textContent = distance.toFixed(2);
+    const kmPercorsi = (currentSpeedValue * elapsedMilliseconds) / 3600000; // Velocità (km/h) * tempo (ore)
+    document.getElementById('distance').textContent = kmPercorsi.toFixed(3); // Mostra 3 decimali
 }
 
 function padZero(num) {
@@ -200,10 +201,23 @@ function caricaPianoAllenamento(file) {
     reader.onload = (e) => {
         try {
             const piano = JSON.parse(e.target.result);
-            trasformaInArrayPiatto(piano); // Trasforma il JSON in array piatto
+
+            // Resetta lo stato del piano precedente
+            pianoPiatto = []; // Resetta l'array piatto
+            faseCorrente = 0; // Resetta l'indice della fase corrente
+            distance = 0; // Resetta la distanza percorsa
+            document.getElementById('distance').textContent = distance.toFixed(2); // Aggiorna l'interfaccia
+            document.getElementById('elapsedTime').textContent = "00:00:00"; // Resetta il timer
+
+            // Trasforma il JSON in array piatto
+            trasformaInArrayPiatto(piano);
             console.log("Piano di allenamento caricato:", pianoPiatto);
-            const nomePianoAllenamento = piano.nome || "Piano di allenamento"; // Estrae il nome del piano
-            visualizzaPiano(pianoPiatto, nomePianoAllenamento); // Visualizza il piano con il nome
+
+            // Visualizza il piano con il nome
+            const nomePianoAllenamento = piano.nome || "Piano di allenamento";
+            visualizzaPiano(pianoPiatto, nomePianoAllenamento);
+
+            // Imposta la modalità automatica
             isAutoMode = true;
             autoButton.textContent = 'ANNULLA';
             document.getElementById('plan-info').style.display = 'block'; // Mostra la sezione
@@ -247,6 +261,7 @@ function visualizzaPiano(pianoPiatto, nomePianoAllenamento) {
 
     // Crea un contenitore per il titolo e i parametri
     const headerContainer = document.createElement('div');
+    headerContainer.classList.add('header-container'); // Aggiungi la classe
     headerContainer.style.display = 'flex';
     headerContainer.style.alignItems = 'center';
     headerContainer.style.marginBottom = '0.5rem'; // Aggiunge spazio sotto il titolo e i parametri
@@ -280,16 +295,22 @@ function visualizzaPiano(pianoPiatto, nomePianoAllenamento) {
     // Aggiunge il contenitore del titolo e dei parametri alla sezione
     planInfoDiv.appendChild(headerContainer);
 
-    // Crea la timeline
-    timeline = creaTimeline(pianoPiatto, durataTotale);
+    // Aggiunge il nome della fase e il conto alla rovescia subito sotto il titolo
+    const faseAttualeDiv = document.createElement('div');
+    faseAttualeDiv.classList.add('fase-attuale');
+    faseAttualeDiv.innerHTML = `
+        <span class="nome-fase"></span>
+        <span class="conto-alla-rovescia"></span>
+    `;
+    planInfoDiv.appendChild(faseAttualeDiv);
 
     // Aggiunge l'istogramma
     const histogramDiv = document.createElement('div');
     histogramDiv.classList.add('plan-histogram');
     let currentTime = 0;
 
-    pianoPiatto.forEach(fase => {
-        const bar = creaBarra(fase.tempo, fase.velocita, currentTime, durataTotale);
+    pianoPiatto.forEach((fase, index) => {
+        const bar = creaBarra(fase.tempo, fase.velocita, currentTime, durataTotale, index);
         histogramDiv.appendChild(bar);
         currentTime += fase.tempo;
     });
@@ -298,7 +319,7 @@ function visualizzaPiano(pianoPiatto, nomePianoAllenamento) {
 }
 
 // Funzione per creare una barra dell'istogramma
-function creaBarra(tempo, velocita, currentTime, durataTotale) {
+function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     const bar = document.createElement('div');
     bar.classList.add('bar');
     bar.style.width = `${(tempo / durataTotale) * 100}%`;
@@ -317,74 +338,44 @@ function creaBarra(tempo, velocita, currentTime, durataTotale) {
     speedLabel.textContent = `${velocita}`;
     bar.appendChild(speedLabel);
 
+    // Aggiunge un identificatore univoco per la barra
+    bar.dataset.index = index;
+
     return bar;
 }
 
-// Funzione per creare la timeline
-function creaTimeline(pianoPiatto, durataTotale) {
-    const planInfoDiv = document.getElementById('plan-info');
-    const timelineDiv = document.createElement('div');
-    timelineDiv.classList.add('timeline');
-
-    // Aggiungi i segmenti per ogni fase
-    let currentTime = 0;
-    pianoPiatto.forEach(fase => {
-        const segmentDiv = document.createElement('div');
-        segmentDiv.classList.add('segment');
-        segmentDiv.style.left = `${(currentTime / durataTotale) * 100}%`;
-        segmentDiv.style.width = `${(fase.tempo / durataTotale) * 100}%`;
-        timelineDiv.appendChild(segmentDiv);
-        currentTime += fase.tempo;
+// Funzione per evidenziare la barra della fase attiva
+function evidenziaBarraAttiva(indiceFase) {
+    const bars = document.querySelectorAll('.plan-histogram .bar');
+    bars.forEach((bar, index) => {
+        if (index === indiceFase) {
+            // Evidenzia la barra attiva con un colore di sfondo diverso
+            bar.style.backgroundColor = '#ff9800'; // Colore arancione vivace
+            bar.style.boxShadow = '0 0 10px rgba(255, 152, 0, 0.7)'; // Aggiungi un'ombra per un effetto più carino
+            bar.style.zIndex = '1'; // Metti la barra attiva in primo piano
+        } else {
+            // Ripristina il colore di sfondo originale per le altre barre
+            const velocita = parseFloat(bar.querySelector('.speed-label').textContent);
+            bar.style.backgroundColor = `hsl(200, 100%, ${100 - velocita * 5}%)`; // Colore originale basato sulla velocità
+            bar.style.boxShadow = 'none'; // Rimuovi l'ombra
+            bar.style.zIndex = '0'; // Riporta le altre barre in secondo piano
+        }
     });
-
-    // Aggiungi il cursore
-    const cursorDiv = document.createElement('div');
-    cursorDiv.classList.add('cursor');
-    timelineDiv.appendChild(cursorDiv);
-
-    // Aggiungi l'indicatore della fase attuale
-    const currentPhaseDiv = document.createElement('div');
-    currentPhaseDiv.classList.add('current-phase');
-    timelineDiv.appendChild(currentPhaseDiv);
-
-    // Aggiungi la timeline al contenitore
-    planInfoDiv.appendChild(timelineDiv);
-
-    return { timelineDiv, cursorDiv, currentPhaseDiv };
-}
-
-// Funzione per aggiornare la timeline
-function aggiornaTimeline(timeline, tempoTrascorso, faseCorrente, fase) {
-    const { cursorDiv, currentPhaseDiv } = timeline;
-
-    // Aggiorna la posizione del cursore
-    const percentualeCompletata = (tempoTrascorso / fase.tempo) * 100;
-    const leftOffset = (faseCorrente / pianoPiatto.length) * 100 + (percentualeCompletata / 100) * (100 / pianoPiatto.length);
-    cursorDiv.style.left = `${leftOffset}%`;
-
-    // Aggiorna l'indicatore della fase attuale
-    currentPhaseDiv.textContent = fase.descrizione;
-    currentPhaseDiv.style.left = `${leftOffset}%`;
 }
 
 // Funzione per avviare l'allenamento automatico
 function avviaAllenamento() {
-    if (faseCorrente >= pianoPiatto.length) {
-        console.log("Allenamento completato!");
-
-        // Imposta la velocità a 0
-        setSpeed(0);
-
-        // Mostra l'alert di complimenti
-        alert("Complimenti! Hai completato l'allenamento.");
-
-        // Esegui le operazioni di STOP dopo la chiusura dell'alert
-        stopAll();
+    // Se non c'è un piano caricato o è già stato completato, esci
+    if (pianoPiatto.length === 0 || faseCorrente >= pianoPiatto.length) {
+        console.log("Nessun piano caricato o allenamento già completato.");
         return;
     }
 
     const fase = pianoPiatto[faseCorrente];
     console.log(`Avvio fase ${faseCorrente + 1}: ${fase.descrizione} (${fase.tempo} minuti a ${fase.velocita} km/h)`);
+
+    // Evidenzia la barra della fase attiva
+    evidenziaBarraAttiva(faseCorrente);
 
     // Se è la prima fase, invia il comando di avvio (0x07) e attendi 5 secondi
     if (faseCorrente === 0) {
@@ -399,16 +390,22 @@ function avviaAllenamento() {
             // Aggiorna la visualizzazione della fase attuale
             aggiornaFaseAttuale(fase.descrizione, fase.tempo * 60); // Converti minuti in secondi
 
-            // Avvia l'aggiornamento della timeline
+            // Avvia l'aggiornamento della fase
             let tempoTrascorso = 0;
             const interval = setInterval(() => {
                 tempoTrascorso++;
-                aggiornaTimeline(timeline, tempoTrascorso, faseCorrente, fase);
-
                 if (tempoTrascorso >= fase.tempo * 60) {
                     clearInterval(interval);
                     faseCorrente++;
-                    avviaAllenamento(); // Passa alla fase successiva
+                    if (faseCorrente < pianoPiatto.length) {
+                        avviaAllenamento(); // Passa alla fase successiva
+                    } else {
+                        // Allenamento completato
+                        console.log("Allenamento completato!");
+                        setSpeed(0);
+                        mostraMessaggioCompletamento(); // Mostra il messaggio di completamento
+                        stopAll();
+                    }
                 }
             }, 1000);
         }, 5000); // Ritardo di 5 secondi
@@ -422,19 +419,36 @@ function avviaAllenamento() {
         // Aggiorna la visualizzazione della fase attuale
         aggiornaFaseAttuale(fase.descrizione, fase.tempo * 60); // Converti minuti in secondi
 
-        // Avvia l'aggiornamento della timeline
+        // Avvia l'aggiornamento della fase
         let tempoTrascorso = 0;
         const interval = setInterval(() => {
             tempoTrascorso++;
-            aggiornaTimeline(timeline, tempoTrascorso, faseCorrente, fase);
-
             if (tempoTrascorso >= fase.tempo * 60) {
                 clearInterval(interval);
                 faseCorrente++;
-                avviaAllenamento(); // Passa alla fase successiva
+                if (faseCorrente < pianoPiatto.length) {
+                    avviaAllenamento(); // Passa alla fase successiva
+                } else {
+                    // Allenamento completato
+                    console.log("Allenamento completato!");
+                    setSpeed(0);
+                    mostraMessaggioCompletamento(); // Mostra il messaggio di completamento
+                    stopAll();
+                }
             }
         }, 1000);
     }
+}
+
+// Funzione per mostrare il messaggio di completamento
+function mostraMessaggioCompletamento() {
+    const completionMessage = document.getElementById('completionMessage');
+    completionMessage.style.display = 'block'; // Mostra il messaggio
+
+    // Nascondi il messaggio dopo 5 secondi
+    setTimeout(() => {
+        completionMessage.style.display = 'none';
+    }, 5000); // Durata del messaggio: 5 secondi
 }
 
 // Funzione per aggiornare la fase attuale e il conto alla rovescia
