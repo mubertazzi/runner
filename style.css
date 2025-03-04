@@ -281,16 +281,22 @@ input:checked + .slider:before {
 .plan-info h3 {
     margin: 0;
     color: orange;
-    font-size: 1.1em; /* Riduci il font del titolo */
+    font-size: 1.1em; 
     display: inline-block; /* Permette al titolo e ai parametri di stare sulla stessa riga */
     margin-right: 1rem; /* Aggiunge spazio tra il titolo e i parametri */
 }
 
-/* Stile per i parametri (durata e distanza) */
+.plan-info .header-container {
+    display: flex;
+    justify-content: space-between; /* Modifica qui */
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .plan-info .info-container {
-    display: inline-block; /* Allinea i parametri sulla stessa riga del titolo */
-    font-size: 1em; /* Riduci il font dei parametri */
+    text-align: right; /* Allinea il testo a destra */
     color: darkblue;
+    font-size: 1em;
 }
 
 /* Stile per la fase attuale e il conto alla rovescia */
@@ -300,58 +306,6 @@ input:checked + .slider:before {
     align-items: center;
     margin-top: 0.5rem;
     font-size: 1.1em; /* Stessa dimensione del titolo */
-}
-
-.plan-info .fase-attuale .nome-fase {
-    color: #007ba7; /* Blu scuro */
-    font-weight: bold;
-}
-
-.plan-info .fase-attuale .conto-alla-rovescia {
-    color: #ff9800; /* Arancione */
-    font-weight: bold;
-}
-
-/* Stile per la linea temporale */
-.timeline {
-    position: relative;
-    width: 100%;
-    height: 20px;
-    background-color: #e0e0e0; /* Colore di sfondo della linea */
-    border-radius: 10px;
-    margin-top: 1rem;
-    overflow: hidden;
-}
-
-/* Stile per i segmenti della linea temporale (fasi) */
-.timeline .segment {
-    position: absolute;
-    height: 100%;
-    background-color: #007ba7; /* Colore delle fasi */
-    transition: width 0.3s ease;
-}
-
-/* Stile per il cursore */
-.timeline .cursor {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background-color: #ff9800; /* Colore del cursore (arancione) */
-    z-index: 2;
-    transition: left 0.5s linear;
-}
-
-/* Stile per l'indicatore della fase attuale */
-.timeline .current-phase {
-    position: absolute;
-    top: -25px;
-    font-size: 0.9em;
-    color: #007ba7; /* Colore del testo */
-    font-weight: bold;
-    white-space: nowrap;
-    z-index: 3;
 }
 
 /* Stile per l'istogramma */
@@ -395,4 +349,59 @@ input:checked + .slider:before {
     color: DarkBlue; 
     white-space: nowrap; /* Evita che il testo vada a capo */
     text-align: center; /* Centra il testo */
+}
+
+/* Stile per evidenziare la barra attiva */
+.plan-histogram .bar.active {
+    border: 2px solid #ff9800; /* Colore arancione */
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7); /* Ombra per un effetto più carino */
+}
+
+/* Stile per il messaggio di completamento */
+.completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4caf50; /* Verde */
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1000; /* Assicurati che sia sopra tutto il resto */
+    display: none; /* Nascondi di default */
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animazione per far apparire il messaggio */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Stile per la fase attuale e il conto alla rovescia */
+.fase-attuale {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.fase-attuale .nome-fase {
+    color: orange;
+    font-size: 1.1em; 
+}
+
+.fase-attuale .conto-alla-rovescia {
+    font-size: 1em; 
+    color: darkblue;
+    margin-left: 0.5rem;
 }
