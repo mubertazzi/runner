@@ -16,6 +16,12 @@ body {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 600px; /* Larghezza fissa */
+    max-width: 90%; /* Adatta la larghezza al 90% dello schermo su dispositivi più piccoli */
+    margin: 0 auto; /* Centra il contenitore */
+    overflow: hidden; /* Evita che il contenuto fuoriesca */
+    box-sizing: border-box; /* Include padding e bordi nella larghezza totale */
+    position: relative; /* Per posizionare la X */
 }
 
 /* Intestazione */
@@ -29,16 +35,14 @@ body {
 .header h1 {
     color: #333;
     margin: 0;
+    font-size: 1.5rem;
 }
 
 /* Interruttore di connessione */
 .switch-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    position: relative;
-    left: 0;
-    margin-left: 1rem;
+    align-items: flex-end;
 }
 
 .switch {
@@ -63,6 +67,7 @@ body {
     bottom: 0;
     background-color: #ccc;
     transition: 0.4s;
+    border-radius: 34px;
 }
 
 .slider:before {
@@ -74,6 +79,7 @@ body {
     bottom: 4px;
     background-color: white;
     transition: 0.4s;
+    border-radius: 50%;
 }
 
 input:checked + .slider {
@@ -86,14 +92,6 @@ input:focus + .slider {
 
 input:checked + .slider:before {
     transform: translateX(26px);
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
 }
 
 .connection-status {
@@ -119,7 +117,7 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .speed-control button {
@@ -157,7 +155,9 @@ input:checked + .slider:before {
 .speed-dots {
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .speed-dots .dot {
@@ -169,7 +169,6 @@ input:checked + .slider:before {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 0.5rem;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -178,69 +177,99 @@ input:checked + .slider:before {
     background-color: #3700b3;
 }
 
-/* Parametri (velocità, tempo, distanza) */
-.parameter-row {
+.icon-button {
+    background-color: #6200ea;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: flex-end;
-    margin-top: 1rem;
 }
 
-.parameter-name {
-    font-family: 'Arial', sans-serif;
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: #333;
-    margin-right: 0.5rem;
+.icon-button svg {
+    fill: white;
+    width: 24px;
+    height: 24px;
+}
+
+.icon-button:hover {
+    background-color: #3700b3;
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* Contenitore per i parametri (velocità, tempo, distanza) */
+.parameter-container {
     display: flex;
-    align-items: flex-end;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.parameter-item {
+    text-align: center;
+}
+
+.parameter-label {
+    font-size: 0.9rem;
+    color: #555;
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
 .parameter-value {
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #6200ea;
-    margin-top: 1rem;
 }
 
 /* Pulsanti di controllo */
 .bottom-controls {
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-top: 1.5rem;
-    width: 100%;
 }
 
 .start-stop-controls {
     display: flex;
-    margin-left: 2rem;
+    gap: 0.5rem;
 }
 
 .start-stop-controls button {
-    background-color: #4caf50; /* Verde */
-    color: white;
-    border: none;
+    flex: 1;
+    min-width: 80px;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
-    margin: 0 0.5rem;
     transition: background-color 0.3s;
+    text-align: center;
+    border: none;
+    color: white;
 }
 
-.start-stop-controls button:hover {
+.start-stop-controls button#start {
+    background-color: #4caf50; /* Verde */
+}
+
+.start-stop-controls button#start:hover {
     background-color: #388e3c; /* Verde scuro */
 }
 
 .start-stop-controls button#stop {
     background-color: #f44336; /* Rosso */
-    color: white;
 }
 
 .start-stop-controls button#stop:hover {
     background-color: #d32f2f; /* Rosso scuro */
-    color: white;
 }
 
 .start-stop-controls button#pause {
@@ -251,119 +280,21 @@ input:checked + .slider:before {
     background-color: #f57c00; /* Arancione scuro */
 }
 
-.auto-button {
-    background-color: #008CBA; /* Colore blu */
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 1rem;
+.start-stop-controls button#auto {
+    background-color: #008CBA; /* Blu */
 }
 
-.auto-button:hover {
-    background-color: #007ba7; /* Colore blu scuro */
+.start-stop-controls button#auto:hover {
+    background-color: #007ba7; /* Blu scuro */
 }
 
-/* Stile per il contenitore delle informazioni del piano */
-.plan-info {
-    margin-top: 1rem;
-    padding: 1rem;
-    border: 1px solid #008CBA;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    display: none; /* Nasconde la div di default */
-    font-size: 14px; /* Riduci il font di 2-3 unità */
-}
-
-/* Stile per il titolo del piano e i parametri */
-.plan-info h3 {
-    margin: 0;
-    color: orange;
-    font-size: 1.1em; 
-    display: inline-block; /* Permette al titolo e ai parametri di stare sulla stessa riga */
-    margin-right: 1rem; /* Aggiunge spazio tra il titolo e i parametri */
-}
-
-.plan-info .header-container {
-    display: flex;
-    justify-content: space-between; /* Modifica qui */
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.plan-info .info-container {
-    text-align: right; /* Allinea il testo a destra */
-    color: darkblue;
-    font-size: 1em;
-}
-
-/* Stile per la fase attuale e il conto alla rovescia */
-.plan-info .fase-attuale {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
-    font-size: 1.1em; /* Stessa dimensione del titolo */
-}
-
-/* Stile per l'istogramma */
-.plan-histogram {
-    display: flex;
-    margin-top: 0.5rem;
-    position: relative;
-    height: 120px;
-    align-items: flex-end;
-    gap: 0; /* Rimuove lo spazio tra le barre */
-}
-
-/* Stile per ogni barra */
-.plan-histogram .bar {
-    background-color: #008CBA;
-    height: 20px; /* Altezza di default, verrà sovrascritta dinamicamente */
-    position: absolute;
-    flex: 1 1 auto; /* Le barre si espandono per occupare lo spazio disponibile */
-    margin-right: 0; /* Rimuove il margine tra le barre */
-}
-
-/* Stile per le etichette del tempo (alla base della barra) */
-.plan-histogram .bar .time-label {
-    position: absolute;
-    bottom: -10px; /* Sposta più in alto, a circa 1mm dalla base della barra */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 8px; /* Font ridotto a 8px */
-    color: DarkBlue; 
-    white-space: nowrap; /* Evita che il testo vada a capo */
-    text-align: center; /* Centra il testo */
-}
-
-/* Stile per le etichette della velocità (all'estremità superiore della barra) */
-.plan-histogram .bar .speed-label {
-    position: absolute;
-    top: -10px; /* Sposta più in basso, a circa 1mm dalla barra */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 8px; /* Font ridotto a 8px */
-    color: DarkBlue; 
-    white-space: nowrap; /* Evita che il testo vada a capo */
-    text-align: center; /* Centra il testo */
-}
-
-/* Stile per evidenziare la barra attiva */
-.plan-histogram .bar.active {
-    border: 2px solid #ff9800; /* Colore arancione */
-    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7); /* Ombra per un effetto più carino */
-}
-
-/* Stile per il messaggio di completamento */
+/* Messaggio di completamento */
 .completion-message {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #4caf50; /* Verde */
+    background-color: #4caf50;
     color: white;
     padding: 20px 40px;
     border-radius: 10px;
@@ -371,12 +302,11 @@ input:checked + .slider:before {
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    z-index: 1000; /* Assicurati che sia sopra tutto il resto */
-    display: none; /* Nascondi di default */
+    z-index: 1000;
+    display: none;
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Animazione per far apparire il messaggio */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -388,20 +318,164 @@ input:checked + .slider:before {
     }
 }
 
-/* Stile per la fase attuale e il conto alla rovescia */
+/* Sezione piano di allenamento */
+.plan-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #008CBA;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: none; /* Nascosto di default */
+    font-size: 0.9rem;
+    position: relative; /* Per posizionare la X */
+}
+
+.plan-row {
+    display: flex;
+    justify-content: space-between; /* Allinea a sinistra e destra */
+    align-items: center; /* Allinea verticalmente al centro */
+    margin-top: 0; /* Nessun margine per compattare */
+    font-size: 1rem;
+    width: 100%;
+}
+
+.plan-title {
+    color: orange; /* Colore arancione, come #allenamento-titolo */
+    text-align: left; /* Allineato a sinistra */
+}
+
+.plan-params {
+    color: darkblue; /* Colore blu scuro, come .parametri */
+    text-align: right; /* Allineato a destra */
+    font-size: 1rem;
+}
+
+.close-button {
+    position: absolute;
+    top: -0.5rem; /* Allineato verticalmente con l'inizio di .plan-info */
+    right: -1.25rem; /* Sposta fuori dal bordo destro di .plan-info */
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #555;
+    padding: 0.25rem;
+    z-index: 10; /* Assicurati che sia sopra altri elementi */
+    display: none; /* Nascosto di default, mostrato dal JavaScript */
+}
+
+.close-button:hover {
+    color: #f44336; /* Rosso al passaggio del mouse */
+}
+
+#allenamento-titolo {
+    text-align: left; /* Allinea il testo a sinistra */
+    margin-right: 2rem; /* Aumenta lo spazio a destra per staccarlo dai parametri */
+    margin-left: 0; /* Rimuovi eventuali margini a sinistra */
+    width: 100%; /* Occupa tutta la larghezza disponibile */
+    display: initial; /* Assicurati che sia su una riga separata */
+}
+
+/* Parametri allineati a destra */
+.parametri-container {
+    text-align: right; /* Allineato a destra */
+    display: initial; /* Rimuove il contenitore */
+}
+
+.parametri {
+    font-size: 1rem;
+    color: darkblue; /* Colore dark blue, come il conto alla rovescia */
+}
+
+/* Nome della fase e conto alla rovescia */
 .fase-attuale {
+    display: flex;
+    justify-content: space-between; /* Allinea il nome a sinistra e il conto alla rovescia a destra */
+    align-items: center;
     margin-top: 0.5rem;
-    text-align: center;
-    font-size: 1.1em;
+    font-size: 1rem;
+	color: orange; /* Colore arancione */
 }
 
 .fase-attuale .nome-fase {
-    color: orange;
-    font-size: 1.1em; 
+    color: orange; /* Colore arancione */
+    text-align: left; /* Allineato a sinistra */
 }
 
 .fase-attuale .conto-alla-rovescia {
-    font-size: 1em; 
+    color: darkblue; /* Colore dark blue */
+    text-align: right; /* Allineato a destra */
+}
+
+/* Lampeggiamento del conto alla rovescia */
+@keyframes lampeggia {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.conto-alla-rovescia.lampeggia {
+    animation: lampeggia 1s infinite;
+    color: red; /* Cambia colore per maggiore visibilità */
+}
+
+/* Istogramma */
+.plan-histogram {
+    display: flex;
+    margin-top: 0.5rem;
+    position: relative;
+    height: 120px;
+    align-items: flex-end;
+    gap: 0;
+}
+
+.plan-histogram .bar {
+    background-color: #008CBA;
+    height: 20px;
+    position: absolute;
+    flex: 1 1 auto;
+    margin-right: 0;
+}
+
+.plan-histogram .bar .time-label {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
     color: darkblue;
-    margin-left: 0.5rem;
+    white-space: nowrap;
+}
+
+.plan-histogram .bar .speed-label {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
+    color: darkblue;
+    white-space: nowrap;
+}
+
+.plan-histogram .bar.active {
+    border: 0px solid #ff9800;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+}
+
+.bar .progress {
+    height: 100%;
+    background-color: orange;
+    width: 0%; /* Inizia vuota */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+@keyframes lampeggia {
+    0%, 100% { opacity: 1; } /* Colore originale */
+    50% { opacity: 0.5; }    /* Opacità ridotta */
+}
+
+.pausa-lampeggiante {
+    animation: lampeggia 1s infinite; /* Durata: 1 secondo, ripetizione infinita */
 }
