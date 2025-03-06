@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Intestazione -->
         <div class="header">
             <h1>FITSHOW FS-BT-D2</h1>
             <div class="switch-container">
@@ -19,11 +20,15 @@
                 <div id="connectionStatus" class="connection-status">Disconnesso</div>
             </div>
         </div>
+
+        <!-- Controlli della velocità -->
         <div class="speed-control">
             <button id="decreaseSpeed">-</button>
             <input type="text" id="speedInput" value="1.0" readonly>
             <button id="increaseSpeed">+</button>
         </div>
+
+        <!-- Pallini di velocità -->
         <div class="speed-dots">
             <span class="dot" data-speed="1">1</span>
             <span class="dot" data-speed="2">2</span>
@@ -36,29 +41,78 @@
             <span class="dot" data-speed="9">9</span>
             <span class="dot" data-speed="10">10</span>
         </div>
-        <div class="parameter-row">
-            <span class="parameter-name">Velocità:</span>
-            <span id="currentSpeed" class="parameter-value">0.0 km/h</span>
-        </div>
-        <div class="parameter-row">
-            <span class="parameter-name">Tempo:</span>
-            <span id="elapsedTime" class="parameter-value">00:00:00</span>
-        </div>
-        <div class="parameter-row">
-            <span class="parameter-name">Km percorsi:</span>
-            <span id="distance" class="parameter-value">0.00</span>
-        </div>
-        <div class="bottom-controls">
-            <div class="start-stop-controls">
-                <button id="start">START</button>
-                <button id="pause">PAUSA</button>
-                <button id="stop">STOP</button>
+
+        <!-- Parametri (velocità, tempo, distanza) -->
+        <div class="parameter-container">
+            <div class="parameter-item">
+                <span class="parameter-label">Velocità:</span>
+                <span id="currentSpeed" class="parameter-value">0.0 km/h</span>
             </div>
-            <div>
-                <button id="auto" class="auto-button">AUTO</button>
+            <div class="parameter-item">
+                <span class="parameter-label">Tempo:</span>
+                <span id="elapsedTime" class="parameter-value">00:00:00</span>
+            </div>
+            <div class="parameter-item">
+                <span class="parameter-label">Distanza:</span>
+                <span id="distance" class="parameter-value">0.000 km</span>
             </div>
         </div>
-        <div id="plan-info" class="plan-info"></div>
+
+        <!-- Pulsanti di controllo -->
+		<div class="bottom-controls">
+			<div class="start-stop-controls">
+				<!-- Pulsante START -->
+				<button id="start" class="icon-button">
+					<svg viewBox="0 0 24 24" width="24" height="24">
+						<path fill="currentColor" d="M8 5v14l11-7z"/>
+					</svg>
+				</button>
+
+				<!-- Pulsante PAUSA/RIPRENDI -->
+				<button id="pause" class="icon-button">
+					<svg viewBox="0 0 26 26" width="26" height="26">
+						<!-- Barra sinistra (pausa) -->
+						<rect x="4" y="5" width="4" height="14" fill="currentColor"/>
+						<!-- Barra destra (pausa) -->
+						<rect x="10" y="5" width="4" height="14" fill="currentColor"/>
+						<!-- Triangolo (play) -->
+						<path fill="currentColor" d="M16 5v14l11-7z"/>
+					</svg>
+				</button>
+
+				<!-- Pulsante STOP -->
+				<button id="stop" class="icon-button">
+					<svg viewBox="0 0 24 24" width="24" height="24">
+						<path fill="currentColor" d="M6 6h12v12H6z"/>
+					</svg>
+				</button>
+
+				<!-- Pulsante PIANO -->
+				<button id="auto" class="icon-button">
+					<svg viewBox="0 0 26 24" width="26" height="24">
+						<!-- Icona piano di allenamento (grafico a barre con 5 barre) -->
+						<rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+						<rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+						<rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+						<rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+						<rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+        <!-- Sezione piano di allenamento -->
+        <div id="plan-info" class="plan-info">
+            <button class="close-button">×</button> <!-- Icona X -->
+            <h3 id="allenamento-titolo">ALLENAMENTO: </h3> <!-- Titolo dinamico -->
+            <div class="parametri-container">
+                <span class="parametri">Tempo: <span id="tempo-totale">0 min</span> - Distanza: <span id="distanza-totale">0.00 km</span></span>
+            </div>
+            <div class="fase-attuale">
+                <span class="nome-fase"></span>
+                <span class="conto-alla-rovescia"></span>
+            </div>
+            <div class="plan-histogram"></div>
+        </div>
     </div>
 
     <!-- Messaggio di completamento -->
