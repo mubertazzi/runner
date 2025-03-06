@@ -71,50 +71,41 @@ function startAutomaticReading() {
             console.log("Notifiche Treadmill Data abilitate, in ascolto...");
 
             // Listener per aggiornamenti in tempo reale
-            readCharacteristic.addEventListener('characteristicvaluechanged', event => {
-                const value = event.target.value;
+			 readCharacteristic.addEventListener('characteristicvaluechanged', event => {
+				const value = event.target.value;
 
-                // Leggi la velocità (Byte 2 e Byte 3)
-                const speed = value.getUint16(2, true) / 100;
+				// Leggi la velocità (Byte 2 e Byte 3)
+				const speed = value.getUint16(2, true) / 100; // Velocità in km/h
 
-                // Aggiorna la velocità corrente
-                currentSpeedValue = speed;
+				// Leggi la distanza (Byte 4 e Byte 5)
+				const distance = value.getUint16(4, true) / 1000; // Distanza in km (convertita da metri)
 
-                // Aggiorna l'interfaccia utente
-                document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
-                document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
+				// Leggi il tempo (Byte 12 e Byte 13)
+				const elapsedTime = value.getUint16(12, true); // Tempo in secondi
 
-                // Stampa i byte per debug
-                console.log("Valore grezzo (Treadmill Data):", value);
-                for (let i = 0; i < value.byteLength; i++) {
-                    console.log(`Byte ${i}:`, value.getUint8(i));
-                }
-            });
+				// Formatta il tempo in hh:mm:ss
+				const hours = Math.floor(elapsedTime / 3600);
+				const minutes = Math.floor((elapsedTime % 3600) / 60);
+				const seconds = elapsedTime % 60;
+				const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+
+				// Aggiorna l'interfaccia utente
+				document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
+				document.getElementById('distance').textContent = distance.toFixed(3) + " km";
+				document.getElementById('elapsedTime').textContent = formattedTime;
+
+				// Aggiorna le variabili globali
+				startTime = Date.now() - elapsedTime * 1000; // Sincronizza startTime con il tempo ricevuto
+				pausedTime = 0; // Resetta pausedTime
+			});
         })
         .catch(error => {
             console.error("Errore abilitazione notifiche Treadmill Data:", error);
         });
+}
 
-    // Abilita notifiche per Training Status
-    device.gatt.getPrimaryService(serviceUuid)
-        .then(service => service.getCharacteristic("00002ad3-0000-1000-8000-00805f9b34fb"))
-        .then(trainingStatusCharacteristic => {
-            trainingStatusCharacteristic.startNotifications()
-                .then(() => {
-                    console.log("Notifiche Training Status abilitate, in ascolto...");
-
-                    trainingStatusCharacteristic.addEventListener('characteristicvaluechanged', event => {
-                        const value = event.target.value;
-                        const status = new TextDecoder().decode(value); // Decodifica il valore come stringa
-
-                        console.log("Training Status:", status);
-                        updateUIBasedOnTrainingStatus(status); // Aggiorna l'UI
-                    });
-                })
-                .catch(error => {
-                    console.error("Errore abilitazione notifiche Training Status:", error);
-                });
-        });
+function padZero(num) {
+    return num < 10 ? `0${num}` : num;
 }
 
 function sendStartCommand() {
@@ -159,6 +150,9 @@ function setSpeed(speed) {
         // Invia i dati
         writeCharacteristic.writeValue(buffer);
         console.log(`Velocità impostata a ${speed.toFixed(1)} km/h`);
+
+        // Aggiorna la textbox della velocità
+        document.getElementById('speedInput').value = speed.toFixed(1);
     } catch (error) {
         alert("Errore scrittura: " + error.message);
         console.error(error);
