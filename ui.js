@@ -88,7 +88,7 @@ function stopAll() {
     tempoRimanente = 0; // Resetta il conto alla rovescia
     startTime = null; // Resetta il timer
     pausedTime = 0; // Resetta il tempo in pausa
-	currentSetSpeed = 0;
+    currentSetSpeed = 0;
 
     // Imposta la textbox della velocità a 0
     document.getElementById('speedInput').value = "0.0";
@@ -102,6 +102,7 @@ function stopAll() {
         document.getElementById('plan-info').innerHTML = ''; // Pulisci l'interfaccia
         document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
         document.getElementById('auto').style.display = 'inline-block'; // Ripristina il pulsante AUTO
+        document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
         isAutoMode = false; // Disabilita la modalità automatica
     }
 }
@@ -208,16 +209,23 @@ function padZero(num) {
 // ==================== GESTIONE DELLA MODALITÀ AUTO ====================
 const autoButton = document.getElementById('auto');
 autoButton.addEventListener('click', function autoClickHandler() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.onchange = (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                caricaPianoAllenamento(file); // Carica il piano di allenamento
-            }
-        };
-        input.click();
+//    if (!isConnected) {
+//        alert("Collegati prima al dispositivo!");
+//        return;
+//    }	
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            caricaPianoAllenamento(file); // Carica il piano di allenamento
+
+            // Nascondi il pulsante "Pausa"
+            document.getElementById('pause').style.display = 'none';
+        }
+    };
+    input.click();
 });
 
 // Funzione per caricare il piano di allenamento e trasformarlo in array piatto
@@ -339,9 +347,12 @@ function visualizzaPiano(pianoPiatto, nomePianoAllenamento) {
     const closeButton = document.createElement('button');
     closeButton.classList.add('close-button');
     closeButton.textContent = '×';
-    closeButton.addEventListener('click', () => {
-        stopAll();
-    });
+	closeButton.addEventListener('click', () => {
+		stopAll(); // Ferma tutto e resetta lo stato
+
+		// Mostra nuovamente il pulsante "Pausa"
+		document.getElementById('pause').style.display = 'inline-block';
+	});
     planInfoDiv.appendChild(closeButton);
 }
 
@@ -354,6 +365,18 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     bar.style.left = `${(currentTime / durataTotale) * 100}%`;
     bar.style.backgroundColor = `hsl(200, 100%, ${100 - velocita * 5}%)`;
 
+    // Aggiungi un identificatore univoco per la barra
+    bar.dataset.index = index;
+
+    // Aggiungi un event listener per il clic sulla barra
+    bar.addEventListener('click', () => {
+        if (isAutoMode && pianoPiatto.length > 0) {
+            // Cambia alla fase corrispondente
+            faseCorrente = index; // Imposta l'indice della fase corrente
+            caricaFaseCorrente(); // Carica la fase selezionata
+        }
+    });
+
     // Aggiunge etichette
     const timeLabel = document.createElement('div');
     timeLabel.classList.add('time-label');
@@ -364,9 +387,6 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     speedLabel.classList.add('speed-label');
     speedLabel.textContent = `${velocita}`;
     bar.appendChild(speedLabel);
-
-    // Aggiunge un identificatore univoco per la barra
-    bar.dataset.index = index;
 
     return bar;
 }
@@ -398,12 +418,9 @@ function avviaAllenamento() {
         return;
     }
 
-    const fase = pianoPiatto[faseCorrente];
-    console.log(`Avvio fase ${faseCorrente + 1}: ${fase.descrizione} (${fase.tempo} minuti a ${fase.velocita} km/h)`);
+    // Carica la fase corrente
+    caricaFaseCorrente();
 
-    // Evidenzia la barra della fase attiva
-    evidenziaBarraAttiva(faseCorrente);
-	currentSetSpeed = fase.velocita;
     if (faseCorrente === 0) {
         // Invia il comando 0x07 SOLO per la prima fase
         sendStartCommand();
@@ -414,33 +431,35 @@ function avviaAllenamento() {
 
         // Imposta la velocità e avvia il timer dopo 5 secondi
         setTimeout(() => {
-            setSpeed(fase.velocita);
+            setSpeed(currentSetSpeed);
             startElapsedTime(); // Avvia il timer (già sincronizzato con startTime)
-            aggiornaFaseAttuale(fase.descrizione, fase.tempo * 60); // Converti minuti in secondi
             // Avvia l'aggiornamento della fase
-            avviaAggiornamentoFase(fase);
+            avviaAggiornamentoFase(pianoPiatto[faseCorrente]);
         }, 5000); // Ritardo di 5 secondi
     } else {
         // Per le fasi successive, imposta direttamente la velocità e avvia il timer
-        setSpeed(fase.velocita);
+        setSpeed(currentSetSpeed);
         startElapsedTime(); // Avvia il timer
-        aggiornaFaseAttuale(fase.descrizione, fase.tempo * 60); // Converti minuti in secondi
-
         // Avvia l'aggiornamento della fase
-        avviaAggiornamentoFase(fase);
+        avviaAggiornamentoFase(pianoPiatto[faseCorrente]);
     }
 }
 
 // Funzione ausiliaria per avviare l'aggiornamento della fase
 function avviaAggiornamentoFase(fase) {
     let tempoTrascorso = 0;
+
+    // Cancella eventuali intervalli precedenti
+    clearInterval(allenamentoInterval);
+
+    // Avvia un nuovo intervallo per la fase corrente
     allenamentoInterval = setInterval(() => {
         tempoTrascorso++;
         if (tempoTrascorso >= fase.tempo * 60) {
             clearInterval(allenamentoInterval);
             faseCorrente++;
             if (faseCorrente < pianoPiatto.length) {
-                avviaAllenamento(); // Passa alla fase successiva
+                caricaFaseCorrente(); // Passa alla fase successiva
             } else {
                 // Allenamento completato
                 console.log("Allenamento completato!");
@@ -484,7 +503,6 @@ function aggiornaFaseAttuale(nomeFase, tempoIniziale) {
     // Inizializza variabili per il conto alla rovescia e il progresso
     let tempoRimanente = tempoIniziale; // Tempo in secondi
     let tempoTrascorso = 0;
-    let bipEmesso = false; // Flag per tracciare se il bip è già stato emesso
 
     // Avvia l'intervallo per aggiornare il conto alla rovescia e il progresso
     clearInterval(contoAllaRovesciaInterval); // Resetta eventuali intervalli precedenti
@@ -497,9 +515,8 @@ function aggiornaFaseAttuale(nomeFase, tempoIniziale) {
             faseAttualeDiv.querySelector('.conto-alla-rovescia').textContent = formattaTempo(tempoRimanente);
 
             // Emetti un bip di 1 secondo quando mancano 5 secondi
-            if (tempoRimanente === 5 && !bipEmesso) {
+            if ((tempoRimanente === 10 || tempoRimanente === 5)) {
                 emettiBip(); // Emette un bip di 1 secondo
-                bipEmesso = true; // Imposta il flag per evitare bip multipli
             }
 
             // Aggiorna il progresso della barra
@@ -526,7 +543,7 @@ function emettiBip() {
 
     oscillator.type = 'sine'; // Tipo di suono (onda sinusoidale)
     oscillator.frequency.setValueAtTime(800, context.currentTime); // Frequenza del bip (800 Hz)
-    gainNode.gain.setValueAtTime(1, context.currentTime); // Volume
+    gainNode.gain.setValueAtTime(2, context.currentTime); // Volume
 
     // Collega i nodi
     oscillator.connect(gainNode);
@@ -576,4 +593,48 @@ function aggiornaProgressoFase(tempoTrascorso, durataFase) {
 
     // Imposta la larghezza della barra di progresso
     progressBar.style.width = `${progressoPercentuale}%`;
+}
+
+document.addEventListener('keydown', (event) => {
+    if (isAutoMode && pianoPiatto.length > 0) { // Solo in modalità automatica
+        if (event.key === 'ArrowLeft') {
+            // Torna alla fase precedente
+            if (faseCorrente > 0) {
+                faseCorrente--;
+                caricaFaseCorrente(); // Carica la fase precedente
+            }
+        } else if (event.key === 'ArrowRight') {
+            // Passa alla fase successiva
+            if (faseCorrente < pianoPiatto.length - 1) {
+                faseCorrente++;
+                caricaFaseCorrente(); // Carica la fase successiva
+            }
+        }
+    }
+});
+
+function caricaFaseCorrente() {
+    const fase = pianoPiatto[faseCorrente];
+
+    // Aggiorna il nome della fase
+    const faseAttualeDiv = document.querySelector('.fase-attuale');
+    faseAttualeDiv.innerHTML = `
+        FASE ${faseCorrente + 1}: ${fase.descrizione} <span class="conto-alla-rovescia">${formattaTempo(fase.tempo * 60)}</span>
+    `;
+
+    // Aggiorna il conto alla rovescia
+    tempoRimanente = fase.tempo * 60;
+    aggiornaFaseAttuale(fase.descrizione, tempoRimanente);
+
+    // Aggiorna la barra di progresso
+    evidenziaBarraAttiva(faseCorrente);
+
+    // Aggiorna la velocità
+    currentSetSpeed = fase.velocita;
+    document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
+    setSpeed(currentSetSpeed);
+
+    // Riavvia l'intervallo di aggiornamento della fase
+    clearInterval(allenamentoInterval); // Cancella l'intervallo precedente
+    avviaAggiornamentoFase(fase); // Riavvia l'intervallo per la nuova fase
 }
