@@ -394,7 +394,7 @@ input:checked + .slider:before {
     align-items: center;
     margin-top: 0.5rem;
     font-size: 1rem;
-	color: orange; /* Colore arancione */
+    color: orange; /* Colore arancione */
 }
 
 .fase-attuale .nome-fase {
@@ -436,29 +436,45 @@ input:checked + .slider:before {
     margin-right: 0;
 }
 
-.plan-histogram .bar .time-label {
+/* Stile predefinito per le etichette (fase non attiva) */
+.plan-histogram .bar .time-label,
+.plan-histogram .bar .speed-label {
     position: absolute;
-    bottom: -12px;
+    font-size: 0.6rem; /* Dimensione del font */
+    color: darkblue; /* Colore predefinito */
+    white-space: nowrap;
+    background-color: transparent; /* Nessuno sfondo */
+    padding: 0; /* Nessun padding */
+    border-radius: 0; /* Nessun bordo arrotondato */
+}
+
+.plan-histogram .bar .time-label {
+    bottom: -12px; /* Posizione per l'etichetta del tempo */
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.6rem;
-    color: darkblue;
-    white-space: nowrap;
 }
 
 .plan-histogram .bar .speed-label {
-    position: absolute;
-    top: -10px;
+    top: -10px; /* Posizione per l'etichetta della velocità */
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.6rem;
-    color: darkblue;
-    white-space: nowrap;
 }
 
-.plan-histogram .bar.active {
-    border: 0px solid #ff9800;
-    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+/* Stile per le etichette della fase attiva */
+.plan-histogram .bar.active .time-label,
+.plan-histogram .bar.active .speed-label {
+    color: #ff5722; /* Colore arancione per il testo */
+    background-color: transparent; /* Nessuno sfondo */
+    padding: 0; /* Nessun padding */
+    border-radius: 0; /* Nessun bordo arrotondato */
+}
+
+.plan-histogram .bar.active .time-label {
+    bottom: -14px; /* Spostato di 2px più in basso (era -12px) */
+}
+
+.plan-histogram .bar.active .speed-label {
+    top: -12px; /* Spostato di 2px più in alto (era -10px) */
 }
 
 .bar .progress {
@@ -478,4 +494,23 @@ input:checked + .slider:before {
 
 .pausa-lampeggiante {
     animation: lampeggia 1s infinite; /* Durata: 1 secondo, ripetizione infinita */
+}
+
+/* Stile per le fasi completate */
+.plan-histogram .bar.completata {
+    opacity: 0.5; /* Opacità ridotta */
+    transition: opacity 0.3s ease; /* Transizione fluida */
+}
+
+/* Stile per la fase attiva */
+.plan-histogram .bar.active {
+    border-bottom: 3px solid #ff9800; /* Bordo inferiore più spesso */
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7); /* Ombra per maggiore evidenza */
+    opacity: 1; /* Opacità piena */
+}
+
+/* Stile per le fasi future */
+.plan-histogram .bar {
+    opacity: 1; /* Opacità piena */
+    transition: opacity 0.3s ease; /* Transizione fluida */
 }
