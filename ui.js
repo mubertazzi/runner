@@ -258,6 +258,9 @@ function caricaPianoAllenamento(file) {
             if (closeButton) {
                 closeButton.style.display = 'block'; // Mostra la X quando il piano è visibile
             }
+
+            // Evidenzia automaticamente la prima fase
+            evidenziaBarraAttiva(0); // Evidenzia la prima fase (indice 0)
         } catch (error) {
             console.error("Errore durante il caricamento del JSON:", error);
         }
@@ -363,7 +366,8 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     bar.style.width = `${(tempo / durataTotale) * 100}%`;
     bar.style.height = `${velocita * 10}px`;
     bar.style.left = `${(currentTime / durataTotale) * 100}%`;
-    bar.style.backgroundColor = `hsl(200, 100%, ${100 - velocita * 5}%)`;
+    bar.style.backgroundColor = `hsl(200, 100%, ${85 - velocita * 5}%)`; // Scuriamo il colore
+    // Nota: Ho cambiato 100 a 85 per scurire ulteriormente il colore
 
     // Aggiungi un identificatore univoco per la barra
     bar.dataset.index = index;
@@ -380,12 +384,12 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     // Aggiunge etichette
     const timeLabel = document.createElement('div');
     timeLabel.classList.add('time-label');
-    timeLabel.textContent = `${tempo}`;
+    timeLabel.textContent = `${tempo}`; // Solo il valore, senza unità di misura
     bar.appendChild(timeLabel);
 
     const speedLabel = document.createElement('div');
     speedLabel.classList.add('speed-label');
-    speedLabel.textContent = `${velocita}`;
+    speedLabel.textContent = `${velocita}`; // Solo il valore, senza unità di misura
     bar.appendChild(speedLabel);
 
     return bar;
@@ -395,18 +399,53 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
 function evidenziaBarraAttiva(indiceFase) {
     const bars = document.querySelectorAll('.plan-histogram .bar');
     bars.forEach((bar, index) => {
+        const timeLabel = bar.querySelector('.time-label');
+        const speedLabel = bar.querySelector('.speed-label');
+
         if (index === indiceFase) {
             // Evidenzia la barra attiva
+            bar.classList.remove('completata'); // Rimuovi la classe completata
             bar.classList.add('active');
-            bar.style.borderBottom = '2px solid #ff9800';
+            bar.style.borderBottom = '3px solid #ff9800';
             bar.style.boxShadow = '0 0 10px rgba(255, 152, 0, 0.7)';
             bar.style.zIndex = '1';
-        } else {
-            // Ripristina le altre barre
+
+            // Aggiungi le unità di misura
+            if (timeLabel && speedLabel) {
+                timeLabel.textContent = `${pianoPiatto[indiceFase].tempo} min`; // Aggiungi "min"
+                speedLabel.textContent = `${pianoPiatto[indiceFase].velocita} Km/h`; // Aggiungi "Km/h"
+            }
+        } else if (index < indiceFase) {
+            // Fase completata
             bar.classList.remove('active');
+            bar.classList.add('completata');
             bar.style.borderBottom = 'none';
             bar.style.boxShadow = 'none';
             bar.style.zIndex = '0';
+
+            // Rimuovi la classe .progress per ripristinare il colore originale
+            const progressBar = bar.querySelector('.progress');
+            if (progressBar) {
+                progressBar.remove(); // Rimuovi la barra di progresso
+            }
+
+            // Rimuovi le unità di misura
+            if (timeLabel && speedLabel) {
+                timeLabel.textContent = `${pianoPiatto[index].tempo}`;
+                speedLabel.textContent = `${pianoPiatto[index].velocita}`;
+            }
+        } else {
+            // Fase futura
+            bar.classList.remove('active', 'completata');
+            bar.style.borderBottom = 'none';
+            bar.style.boxShadow = 'none';
+            bar.style.zIndex = '0';
+
+            // Rimuovi le unità di misura
+            if (timeLabel && speedLabel) {
+                timeLabel.textContent = `${pianoPiatto[index].tempo}`;
+                speedLabel.textContent = `${pianoPiatto[index].velocita}`;
+            }
         }
     });
 }
@@ -418,9 +457,6 @@ function avviaAllenamento() {
         return;
     }
 
-    // Carica la fase corrente
-    caricaFaseCorrente();
-
     if (faseCorrente === 0) {
         // Invia il comando 0x07 SOLO per la prima fase
         sendStartCommand();
@@ -431,12 +467,16 @@ function avviaAllenamento() {
 
         // Imposta la velocità e avvia il timer dopo 5 secondi
         setTimeout(() => {
+			// Carica la fase corrente
+			caricaFaseCorrente();			
             setSpeed(currentSetSpeed);
             startElapsedTime(); // Avvia il timer (già sincronizzato con startTime)
             // Avvia l'aggiornamento della fase
             avviaAggiornamentoFase(pianoPiatto[faseCorrente]);
         }, 5000); // Ritardo di 5 secondi
     } else {
+		// Carica la fase corrente
+		caricaFaseCorrente();		
         // Per le fasi successive, imposta direttamente la velocità e avvia il timer
         setSpeed(currentSetSpeed);
         startElapsedTime(); // Avvia il timer
@@ -633,6 +673,17 @@ function caricaFaseCorrente() {
     currentSetSpeed = fase.velocita;
     document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
     setSpeed(currentSetSpeed);
+
+    // Aggiungi le unità di misura alle etichette della fase attiva
+    const barraAttiva = document.querySelector('.plan-histogram .bar.active');
+    if (barraAttiva) {
+        const timeLabel = barraAttiva.querySelector('.time-label');
+        const speedLabel = barraAttiva.querySelector('.speed-label');
+        if (timeLabel && speedLabel) {
+            timeLabel.textContent = `${fase.tempo} min`; // Aggiungi "min"
+            speedLabel.textContent = `${fase.velocita} kmh`; // Aggiungi "kmh"
+        }
+    }
 
     // Riavvia l'intervallo di aggiornamento della fase
     clearInterval(allenamentoInterval); // Cancella l'intervallo precedente
