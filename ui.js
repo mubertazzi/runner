@@ -271,7 +271,7 @@ document.getElementById('confirmPlanSelection').addEventListener('click', () => 
 
     // Costruisci l'URL relativo del file JSON con un parametro di query univoco
     const cacheBuster = Date.now(); // Genera un timestamp univoco
-    const fileUrl = `/Piani/${selectedFile}?cacheBuster=${cacheBuster}`;
+    const fileUrl = '/runner/Piani/${selectedFile}?cacheBuster=${cacheBuster}';
     console.log("Tentativo di caricare il file:", fileUrl); // Debug
 
     // Carica il file JSON
