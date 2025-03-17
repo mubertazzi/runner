@@ -101,7 +101,7 @@ function stopAll() {
         pianoPiatto = []; // Resetta il piano di allenamento
         document.getElementById('plan-info').innerHTML = ''; // Pulisci l'interfaccia
         document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
-        document.getElementById('auto').style.display = 'inline-block'; // Ripristina il pulsante AUTO
+        document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
         document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
         isAutoMode = false; // Disabilita la modalità automatica
     }
@@ -207,12 +207,20 @@ function padZero(num) {
 }
 
 // ==================== GESTIONE DELLA MODALITÀ AUTO ====================
-const autoButton = document.getElementById('auto');
-autoButton.addEventListener('click', function autoClickHandler() {
-//    if (!isConnected) {
-//        alert("Collegati prima al dispositivo!");
-//        return;
-//    }	
+const selectPlanButton = document.getElementById('selectPlan');
+// Simulazione dei file JSON disponibili nella cartella "Piani"
+const mockJsonFiles = [
+    { file: "1-lun.json", nome: "Lunedì" },
+    { file: "2-mar.json", nome: "Martedì" },
+    { file: "3-mer.json", nome: "Mercoledì" },
+    { file: "4-gio.json", nome: "Giovedì" },
+    { file: "5-ven.json", nome: "Venerdì" },
+    { file: "6-sab.json", nome: "Sabato" },
+    { file: "7-dom.json", nome: "Domenica" }
+];
+
+// Aggiunta del listener per il nuovo pulsante UPLOAD
+document.getElementById('uploadPlan').addEventListener('click', function () {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -220,13 +228,106 @@ autoButton.addEventListener('click', function autoClickHandler() {
         const file = event.target.files[0];
         if (file) {
             caricaPianoAllenamento(file); // Carica il piano di allenamento
-
             // Nascondi il pulsante "Pausa"
             document.getElementById('pause').style.display = 'none';
+			// Nascondi la popup
+			document.getElementById('planSelectionPopup').style.display = 'none';
         }
     };
     input.click();
 });
+
+// Mostra la popup quando si clicca su "Select Plan"
+document.getElementById('selectPlan').addEventListener('click', () => {
+    try {
+        // Usa l'elenco simulato dei file JSON
+        const files = mockJsonFiles;
+
+        // Popola la dropdown con i nomi visualizzati
+        const dropdown = document.getElementById('planDropdown');
+        dropdown.innerHTML = ''; // Resetta il contenuto precedente
+        files.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file.file; // Valore: nome del file JSON
+            option.textContent = file.nome; // Testo visualizzato: nome del giorno
+            dropdown.appendChild(option);
+        });
+
+        // Mostra la popup
+        document.getElementById('planSelectionPopup').style.display = 'flex';
+    } catch (error) {
+        console.error("Errore durante il caricamento dei piani:", error);
+        alert("Impossibile caricare i piani di allenamento.");
+    }
+});
+
+// Gestione del pulsante "Conferma"
+document.getElementById('confirmPlanSelection').addEventListener('click', () => {
+    const selectedFile = document.getElementById('planDropdown').value;
+    if (!selectedFile) {
+        alert("Seleziona un piano di allenamento!");
+        return;
+    }
+
+    // Costruisci l'URL relativo del file JSON con un parametro di query univoco
+    const cacheBuster = Date.now(); // Genera un timestamp univoco
+    const fileUrl = `/Piani/${selectedFile}?cacheBuster=${cacheBuster}`;
+    console.log("Tentativo di caricare il file:", fileUrl); // Debug
+
+    // Carica il file JSON
+    fetch(fileUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Errore durante il caricamento del file: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("File JSON caricato correttamente:", data); // Debug
+            // Usa la funzione esistente per caricare il piano
+            caricaPianoAllenamentoFromData(data);
+            // Chiudi la popup
+            document.getElementById('planSelectionPopup').style.display = 'none';
+        })
+        .catch(error => {
+            console.error("Errore durante il caricamento del file JSON:", error); // Debug
+            alert("Impossibile caricare il piano selezionato.");
+        });
+});
+
+// Gestione del pulsante "Annulla"
+document.getElementById('cancelPlanSelection').addEventListener('click', () => {
+    document.getElementById('planSelectionPopup').style.display = 'none';
+});
+
+// Funzione ausiliaria per caricare il piano da dati JSON
+function caricaPianoAllenamentoFromData(piano) {
+    // Resetta lo stato del piano precedente
+    pianoPiatto = [];
+    faseCorrente = 0;
+    distance = 0;
+    document.getElementById('distance').textContent = distance.toFixed(3);
+    document.getElementById('elapsedTime').textContent = "00:00:00";
+
+    // Trasforma il JSON in array piatto
+    trasformaInArrayPiatto(piano);
+
+    // Visualizza il piano con il nome
+    const nomePianoAllenamento = piano.nome || "Piano di allenamento";
+    visualizzaPiano(pianoPiatto, nomePianoAllenamento);
+
+    // Imposta la modalità automatica
+    isAutoMode = true;
+    selectPlanButton.style.display = 'none';
+    document.getElementById('plan-info').style.display = 'block';
+    const closeButton = document.querySelector('.close-button');
+    if (closeButton) {
+        closeButton.style.display = 'block';
+    }
+
+    // Evidenzia automaticamente la prima fase
+    evidenziaBarraAttiva(0);
+}
 
 // Funzione per caricare il piano di allenamento e trasformarlo in array piatto
 function caricaPianoAllenamento(file) {
@@ -252,7 +353,7 @@ function caricaPianoAllenamento(file) {
 
             // Imposta la modalità automatica
             isAutoMode = true;
-            autoButton.style.display = 'none'; // Nascondi il pulsante AUTO
+            selectPlanButton.style.display = 'none'; // Nascondi il pulsante SELECT PLAN
             document.getElementById('plan-info').style.display = 'block'; // Mostra la sezione
             const closeButton = document.querySelector('.close-button');
             if (closeButton) {
@@ -346,17 +447,25 @@ function visualizzaPiano(pianoPiatto, nomePianoAllenamento) {
 
     planInfoDiv.appendChild(histogramDiv);
 
-    // Aggiunge la X come elemento figlio di plan-info, posizionata fuori a destra
-    const closeButton = document.createElement('button');
-    closeButton.classList.add('close-button');
-    closeButton.textContent = '×';
+	// Aggiunge la X come elemento figlio di plan-info, posizionata fuori a destra
+	const closeButton = document.createElement('button');
+	closeButton.classList.add('close-button');
+	closeButton.textContent = '×';
 	closeButton.addEventListener('click', () => {
-		stopAll(); // Ferma tutto e resetta lo stato
-
-		// Mostra nuovamente il pulsante "Pausa"
-		document.getElementById('pause').style.display = 'inline-block';
+		if (isAutoMode && startTime && faseCorrente < pianoPiatto.length) {
+			// Se c'è un allenamento attivo, ferma tutto e resetta lo stato
+			stopAll(); // Ferma tutto e resetta lo stato
+		} else {
+			// Se non c'è un allenamento attivo, nascondi semplicemente la sezione
+			document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
+			document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
+			document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
+			isAutoMode = false; // Disabilita la modalità automatica
+		}
+		// Nascondi la X
+		closeButton.style.display = 'none';
 	});
-    planInfoDiv.appendChild(closeButton);
+	planInfoDiv.appendChild(closeButton);
 }
 
 // Funzione per creare una barra dell'istogramma
@@ -575,23 +684,33 @@ function aggiornaFaseAttuale(nomeFase, tempoIniziale) {
     }, 1000);
 }
 
-// Funzione per emettere un bip
 function emettiBip() {
     const context = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = context.createOscillator();
-    const gainNode = context.createGain();
+    const frequencies = [880, 1320]; // Frequenze più acute (A5 e E6)
 
-    oscillator.type = 'sine'; // Tipo di suono (onda sinusoidale)
-    oscillator.frequency.setValueAtTime(800, context.currentTime); // Frequenza del bip (800 Hz)
-    gainNode.gain.setValueAtTime(2, context.currentTime); // Volume
+    // Funzione per emettere un singolo bip
+    function playTone(frequency, duration) {
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
 
-    // Collega i nodi
-    oscillator.connect(gainNode);
-    gainNode.connect(context.destination);
+        oscillator.frequency.value = frequency; // Frequenza del bip
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
 
-    // Durata del bip: 1 secondo
-    oscillator.start();
-    oscillator.stop(context.currentTime + 1); // Ferma dopo 1 secondo
+        // Avvia il bip
+        oscillator.start();
+        gainNode.gain.setValueAtTime(1, context.currentTime); // Volume massimo
+        gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration); // Attenuazione rapida
+
+        // Ferma l'oscillatore dopo la durata del bip
+        oscillator.stop(context.currentTime + duration);
+    }
+
+    // Emetti due bip in rapida successione
+    playTone(frequencies[0], 0.2); // Primo bip (durata: 0.2 secondi)
+    setTimeout(() => {
+        playTone(frequencies[1], 0.2); // Secondo bip (durata: 0.2 secondi)
+    }, 250); // Intervallo tra i due bip: 250 ms
 }
 
 // Funzione per formattare il tempo in mm:ss
