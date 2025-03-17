@@ -59,47 +59,47 @@
         </div>
 
         <!-- Pulsanti di controllo -->
-		<div class="bottom-controls">
-			<div class="start-stop-controls">
-				<!-- Pulsante START -->
-				<button id="start" class="icon-button">
-					<svg viewBox="0 0 24 24" width="24" height="24">
-						<path fill="currentColor" d="M8 5v14l11-7z"/>
-					</svg>
-				</button>
+        <div class="bottom-controls">
+            <div class="start-stop-controls">
+                <!-- Pulsante START -->
+                <button id="start" class="icon-button">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
 
-				<!-- Pulsante PAUSA/RIPRENDI -->
-				<button id="pause" class="icon-button">
-					<svg viewBox="0 0 26 26" width="26" height="26">
-						<!-- Barra sinistra (pausa) -->
-						<rect x="4" y="5" width="4" height="14" fill="currentColor"/>
-						<!-- Barra destra (pausa) -->
-						<rect x="10" y="5" width="4" height="14" fill="currentColor"/>
-						<!-- Triangolo (play) -->
-						<path fill="currentColor" d="M16 5v14l11-7z"/>
-					</svg>
-				</button>
+                <!-- Pulsante PAUSA/RIPRENDI -->
+                <button id="pause" class="icon-button">
+                    <svg viewBox="0 0 26 26" width="26" height="26">
+                        <!-- Barra sinistra (pausa) -->
+                        <rect x="4" y="5" width="4" height="14" fill="currentColor"/>
+                        <!-- Barra destra (pausa) -->
+                        <rect x="10" y="5" width="4" height="14" fill="currentColor"/>
+                        <!-- Triangolo (play) -->
+                        <path fill="currentColor" d="M16 5v14l11-7z"/>
+                    </svg>
+                </button>
 
-				<!-- Pulsante STOP -->
-				<button id="stop" class="icon-button">
-					<svg viewBox="0 0 24 24" width="24" height="24">
-						<path fill="currentColor" d="M6 6h12v12H6z"/>
-					</svg>
-				</button>
+                <!-- Pulsante STOP -->
+                <button id="stop" class="icon-button">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M6 6h12v12H6z"/>
+                    </svg>
+                </button>
 
-				<!-- Pulsante PIANO -->
-				<button id="auto" class="icon-button">
-					<svg viewBox="0 0 26 24" width="26" height="24">
-						<!-- Icona piano di allenamento (grafico a barre con 5 barre) -->
-						<rect x="2" y="8" width="3" height="8" fill="currentColor"/>
-						<rect x="7" y="4" width="3" height="12" fill="currentColor"/>
-						<rect x="12" y="6" width="3" height="10" fill="currentColor"/>
-						<rect x="17" y="2" width="3" height="14" fill="currentColor"/>
-						<rect x="22" y="10" width="3" height="6" fill="currentColor"/>
-					</svg>
-				</button>
-			</div>
-		</div>
+                <!-- Pulsante PIANO -->
+                <button id="selectPlan" class="icon-button">
+                    <svg viewBox="0 0 26 24" width="26" height="24">
+                        <!-- Icona piano di allenamento (grafico a barre con 5 barre) -->
+                        <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+                        <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+                        <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+                        <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+                        <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
         <!-- Sezione piano di allenamento -->
         <div id="plan-info" class="plan-info">
             <button class="close-button">×</button> <!-- Icona X -->
@@ -119,6 +119,27 @@
     <div id="completionMessage" class="completion-message">
         Complimenti! Hai completato l'allenamento. 🎉
     </div>
+
+	<!-- Popup per la selezione del piano -->
+	<div id="planSelectionPopup" class="popup">
+		<div class="popup-content">
+			<h3>Seleziona un piano di allenamento</h3>
+			<div class="dropdown-container">
+				<select id="planDropdown" class="styled-dropdown">
+					<!-- Opzioni dei file JSON verranno caricate dinamicamente -->
+				</select>
+			</div>
+			<div class="popup-buttons">
+				<button id="cancelPlanSelection" class="popup-button cancel">Annulla</button>
+                <button id="uploadPlan" class="popup-button upload">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                </button>				
+				<button id="confirmPlanSelection" class="popup-button confirm">Conferma</button>				
+			</div>
+		</div>
+	</div>
 
     <script src="bluetooth.js"></script>
     <script src="ui.js"></script>
