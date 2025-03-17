@@ -2,9 +2,29 @@
   "nome": "Mercoledì",
   "allenamento": [
     {
-      "tempo": 0,
-      "velocita": 0,
-      "descrizione": "Riposo"
+      "tempo": 1,
+      "velocita": 4,
+      "descrizione": "Riscaldiamoci"
+    },
+    {
+      "ripetizioni": 1,
+      "serie": [
+        {
+          "tempo": 1,
+          "velocita": 5,
+          "descrizione": "Corriiiii"
+        },
+        {
+          "tempo": 1,
+          "velocita": 3,
+          "descrizione": "Cammina piano capra"
+        }
+      ]
+    },
+    {
+      "tempo": 1,
+      "velocita": 3,
+      "descrizione": "Defaticamento con calma"
     }
   ]
 }
