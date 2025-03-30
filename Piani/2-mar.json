@@ -3,19 +3,19 @@
   "allenamento": [
     {
       "tempo": 5,
-      "velocita": 5.5,
-      "descrizione": "Riscaldamento (camminata)"
+      "velocita": 6,
+      "descrizione": "Riscaldamento (camminata veloce)"
     },
     {
       "ripetizioni": 6,
       "serie": [
         {
-          "tempo": 1,
+          "tempo": 1.5,
           "velocita": 9,
           "descrizione": "Corsa veloce"
         },
         {
-          "tempo": 2,
+          "tempo": 1.5,
           "velocita": 6,
           "descrizione": "Camminata"
         }
