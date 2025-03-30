@@ -91,16 +91,16 @@ function startAutomaticReading() {
 				const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 
 				// Calcolo diretto del tempo rimanente 
-				if (isAutoMode && pianoPiatto.length > 0) {
-					//const tempoFase = pianoPiatto[faseCorrente].tempo * 60;
+				if (isAutoMode && pianoAllenamento.length > 0) {
+					//const tempoFase = pianoAllenamento[faseCorrente].tempo * 60;
 					//const tempoInFase = elapsedTime % tempoFase; 
 					//tempoRimanente = Math.max(0, tempoFase - tempoInFase);
 					let tempoCumulativoPrecedente = 0;
 					for (let i = 0; i < faseCorrente; i++) {
-						tempoCumulativoPrecedente += pianoPiatto[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
+						tempoCumulativoPrecedente += pianoAllenamento[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
 					}
 					const tempoTrascorsoFaseAttuale = elapsedTime - tempoCumulativoPrecedente;	
-					tempoRimanente = Math.max(0, (pianoPiatto[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
+					tempoRimanente = Math.max(0, (pianoAllenamento[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
 					//console.log("tempoRimanente: " + tempoRimanente);
 					gestioneFasi();			
 				}
