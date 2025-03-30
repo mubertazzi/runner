@@ -613,22 +613,37 @@ function gestioneFasi()
 }
 
 // Funzione per emettere un bip
+let audioContext;
 function playTone(frequency, duration) {
-	const context = new (window.AudioContext || window.webkitAudioContext)();
-	const oscillator = context.createOscillator();
-	const gainNode = context.createGain();
+    // Crea l'AudioContext solo se non esiste (evita problemi su Chrome)
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
 
-	oscillator.frequency.value = frequency; // Frequenza del bip
-	oscillator.connect(gainNode);
-	gainNode.connect(context.destination);
+    // Configura oscillatore e gain
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    // Connessioni
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
 
-	// Avvia il bip
-	oscillator.start();
-	gainNode.gain.setValueAtTime(1, context.currentTime); // Volume massimo
-	gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration); // Attenuazione rapida
+    // Imposta la frequenza (con tipo d'onda "sine" per un suono pulito)
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
 
-	// Ferma l'oscillatore dopo la durata del bip
-	oscillator.stop(context.currentTime + duration);
+    // Fade-in per evitare click (da 0 a 1 in 5ms)
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.005);
+
+    // Avvia l'oscillatore
+    oscillator.start();
+
+    // Fade-out (esponenziale per un suono più naturale)
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+
+    // Spegni l'oscillatore dopo la durata
+    oscillator.stop(audioContext.currentTime + duration + 0.01); // +10ms per sicurezza
 }
 
 
