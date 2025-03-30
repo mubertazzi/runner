@@ -3,6 +3,7 @@ let writeCharacteristic;
 let readCharacteristic;
 let isConnected = false;
 let currentSpeedValue = 0; // Aggiunta per tenere traccia della velocità corrente
+let tempoRimanente = 0; // Tempo rimanente per la fase corrente (in secondi)
 
 // UUID del servizio e delle caratteristiche (convertiti in formato lungo)
 const serviceUuid = "00001826-0000-1000-8000-00805f9b34fb";         // Fitness Machine Service
@@ -89,6 +90,21 @@ function startAutomaticReading() {
 				const seconds = elapsedTime % 60;
 				const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 
+				// Calcolo diretto del tempo rimanente 
+				if (isAutoMode && pianoPiatto.length > 0) {
+					//const tempoFase = pianoPiatto[faseCorrente].tempo * 60;
+					//const tempoInFase = elapsedTime % tempoFase; 
+					//tempoRimanente = Math.max(0, tempoFase - tempoInFase);
+					let tempoCumulativoPrecedente = 0;
+					for (let i = 0; i < faseCorrente; i++) {
+						tempoCumulativoPrecedente += pianoPiatto[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
+					}
+					const tempoTrascorsoFaseAttuale = elapsedTime - tempoCumulativoPrecedente;	
+					tempoRimanente = Math.max(0, (pianoPiatto[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
+					//console.log("tempoRimanente: " + tempoRimanente);
+					gestioneFasi();			
+				}
+				
 				// Aggiorna l'interfaccia utente
 				document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
 				document.getElementById('distance').textContent = distance.toFixed(3) + " km";
@@ -119,6 +135,19 @@ function sendStopCommand() {
         sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento        
     }, 500); // Piccolo ritardo per garantire che la velocità sia impostata a 0
     console.log("Comando STOP (0x08) inviato");
+}
+
+let isWriting = false;
+async function sendCommand(opcode) {
+    if (isWriting) return;
+    isWriting = true;
+    try {
+        const buffer = new ArrayBuffer(1);
+        new DataView(buffer).setUint8(0, opcode);
+        await writeCharacteristic.writeValue(buffer);
+    } finally {
+        isWriting = false;
+    }
 }
 
 function setSpeed(speed) {
