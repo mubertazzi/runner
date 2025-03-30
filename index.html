@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FITSHOW FS-BT-D2</title>
+    <title>Tapis Control - Controllo Tapis Roulant</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- Intestazione -->
+        <!-- Intestazione con nuovo titolo -->
         <div class="header">
-            <h1>FITSHOW FS-BT-D2</h1>
+            <h1 class="app-title">
+                <span class="logo-icon">🏃‍♂️</span>
+                <span class="app-name">TAPIS</span>
+                <span class="app-name-secondary">CONTROL</span>
+            </h1>
             <div class="switch-container">
                 <label class="switch">
                     <input type="checkbox" id="connectSwitch">
@@ -100,6 +105,7 @@
                 </button>
             </div>
         </div>
+        
         <!-- Sezione piano di allenamento -->
         <div id="plan-info" class="plan-info">
             <button class="close-button">×</button> <!-- Icona X -->
@@ -120,26 +126,26 @@
         Complimenti! Hai completato l'allenamento. 🎉
     </div>
 
-	<!-- Popup per la selezione del piano -->
-	<div id="planSelectionPopup" class="popup">
-		<div class="popup-content">
-			<h3>Seleziona un piano di allenamento</h3>
-			<div class="dropdown-container">
-				<select id="planDropdown" class="styled-dropdown">
-					<!-- Opzioni dei file JSON verranno caricate dinamicamente -->
-				</select>
-			</div>
-			<div class="popup-buttons">
-				<button id="cancelPlanSelection" class="popup-button cancel">Annulla</button>
+    <!-- Popup per la selezione del piano -->
+    <div id="planSelectionPopup" class="popup">
+        <div class="popup-content">
+            <h3>Seleziona un piano di allenamento</h3>
+            <div class="dropdown-container">
+                <select id="planDropdown" class="styled-dropdown">
+                    <!-- Opzioni dei file JSON verranno caricate dinamicamente -->
+                </select>
+            </div>
+            <div class="popup-buttons">
+                <button id="cancelPlanSelection" class="popup-button cancel">Annulla</button>
                 <button id="uploadPlan" class="popup-button upload">
                     <svg viewBox="0 0 24 24" width="24" height="24">
                         <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
                     </svg>
-                </button>				
-				<button id="confirmPlanSelection" class="popup-button confirm">Conferma</button>				
-			</div>
-		</div>
-	</div>
+                </button>                
+                <button id="confirmPlanSelection" class="popup-button confirm">Conferma</button>                
+            </div>
+        </div>
+    </div>
 
     <script src="bluetooth.js"></script>
     <script src="ui.js"></script>
