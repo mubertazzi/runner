@@ -38,6 +38,76 @@ body {
     font-size: 1.5rem;
 }
 
+/* Stile Titolo Moderno */
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #0066ff, #00ccff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    position: relative;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logo-icon {
+    margin-right: 10px;
+    font-size: 2.2rem;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+}
+
+.app-name {
+    position: relative;
+    z-index: 2;
+}
+
+.app-name-secondary {
+    color: #333;
+    display: block;
+    font-size: 1.8rem;
+    margin-top: -8px;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+/* Effetto hover */
+.app-title:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
+}
+
+/* Header responsive */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .header {
+        flex-direction: column;
+    }
+    .app-title {
+        font-size: 2rem;
+    }
+    .app-name-secondary {
+        font-size: 1.5rem;
+    }
+}
+
 /* Interruttore di connessione */
 .switch-container {
     display: flex;
