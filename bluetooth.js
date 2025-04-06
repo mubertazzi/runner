@@ -130,10 +130,11 @@ function sendStartCommand() {
 }
 
 function sendStopCommand() {
-    setSpeed(0); // Imposta la velocità a 0
-    setTimeout(() => {
-        sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento        
-    }, 500); // Piccolo ritardo per garantire che la velocità sia impostata a 0
+    //setSpeed(0); // Imposta la velocità a 0
+    //setTimeout(() => {
+    //    sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento        
+    //}, 500); // Piccolo ritardo per garantire che la velocità sia impostata a 0
+	sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento
     console.log("Comando STOP (0x08) inviato");
 }
 
@@ -161,8 +162,8 @@ function setSpeed(speed) {
         speed = 0;
     }
 
-    if (isNaN(speed) || speed < 0 || speed > 20) {  // Modifica il range secondo le specifiche del tapis
-        alert("Velocità non valida (0-20 km/h)");
+    if (isNaN(speed) || speed < 0 || speed > 10) {  // Modifica il range secondo le specifiche del tapis
+        alert("Velocità non valida (0-10 km/h)");
         return;
     }
 
