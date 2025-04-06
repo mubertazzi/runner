@@ -536,11 +536,11 @@ function avviaAllenamento() {
 function mostraMessaggioCompletamento() {
     const completionMessage = document.getElementById('completionMessage');
     completionMessage.style.display = 'block'; // Mostra il messaggio
-
-    // Nascondi il messaggio dopo 5 secondi
-    setTimeout(() => {
+    
+    // Aggiungi event listener solo sul messaggio
+    completionMessage.addEventListener('click', () => {
         completionMessage.style.display = 'none';
-    }, 5000); // Durata del messaggio: 5 secondi
+    }, { once: true }); // L'event listener verrà rimosso automaticamente dopo il primo click
 }
 
 function gestioneFasi()
@@ -711,5 +711,4 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
-
 
