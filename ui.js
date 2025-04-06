@@ -162,6 +162,12 @@ const mockJsonFiles = [
     { file: "7-dom.json", nome: "Domenica" }
 ];
 
+// pusante edit piano
+document.getElementById('editPlan').addEventListener('click', function() {
+    showEditor(); // Funzione dal file creaPiano.js
+    document.getElementById('planSelectionPopup').style.display = 'none';
+});
+
 // Aggiunta del listener per il nuovo pulsante UPLOAD
 document.getElementById('uploadPlan').addEventListener('click', function () {
     const input = document.createElement('input');
@@ -212,30 +218,30 @@ document.getElementById('confirmPlanSelection').addEventListener('click', () => 
         return;
     }
 
-    // Costruisci l'URL relativo del file JSON con un parametro di query univoco
-    const cacheBuster = Date.now(); // Genera un timestamp univoco
-    const fileUrl = `/runner/Piani/${selectedFile}?cacheBuster=${cacheBuster}`;
-    console.log("Tentativo di caricare il file:", fileUrl); // Debug
-
-    // Carica il file JSON
-    fetch(fileUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Errore durante il caricamento del file: ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("File JSON caricato correttamente:", data); // Debug
-            // Usa la funzione esistente per caricare il piano
-            caricaPianoAllenamentoFromData(data);
-            // Chiudi la popup
-            document.getElementById('planSelectionPopup').style.display = 'none';
-        })
-        .catch(error => {
-            console.error("Errore durante il caricamento del file JSON:", error); // Debug
-            alert("Impossibile caricare il piano selezionato.");
-        });
+    // CERCA PRIMA NEI PIANI SALVATI IN MEMORIA
+    const savedPlan = window.mockJsonFiles.find(p => p.file === selectedFile);
+    
+    if (savedPlan && savedPlan.data) {
+        // 1. Caso: Piano personalizzato (carica da memoria)
+        caricaPianoAllenamentoFromData(savedPlan.data);
+        document.getElementById('planSelectionPopup').style.display = 'none';
+    } else {
+        // 2. Caso: Piano predefinito (carica da file)
+        const cacheBuster = Date.now();
+        fetch(`/runner/Piani/${selectedFile}?cacheBuster=${cacheBuster}`)
+            .then(response => {
+                if (!response.ok) throw new Error("File non trovato");
+                return response.json();
+            })
+            .then(data => {
+                caricaPianoAllenamentoFromData(data);
+                document.getElementById('planSelectionPopup').style.display = 'none';
+            })
+            .catch(error => {
+                console.error("Errore:", error);
+                alert("Piano non trovato o formato non valido");
+            });
+    }
 });
 
 // Gestione del pulsante "Annulla"
@@ -705,4 +711,5 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
+
 
