@@ -301,6 +301,34 @@ input:checked + .slider:before {
     color: #6200ea;
 }
 
+/* Stile base per tutte le icone */
+.parameter-icon .icon {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+/* Colori specifici per categoria */
+.speed-icon .icon path,
+.speed-icon .icon circle {
+  fill: #0066ff; /* Blu */
+}
+
+.time-icon .icon path {
+  fill: #00cc99; /* Verde */
+}
+
+.distance-icon .icon path,
+.distance-icon .icon circle {
+  stroke: #ff9933; /* Arancione */
+  fill: none;
+}
+
+/* Ereditarietà colore per i valori */
+#currentSpeed { color: #0066ff; } /* Blu */
+#elapsedTime { color: #00cc99; } /* Verde */
+#distance { color: #ff9933; } /* Arancione */
+
 /* Pulsanti di controllo */
 .bottom-controls {
     display: flex;
