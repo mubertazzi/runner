@@ -676,3 +676,98 @@ input:checked + .slider:before {
 .popup-button.cancel:hover {
     background-color: #d32f2f; /* Rosso scuro */
 }
+
+/* Stili per l'editor dei piani */
+.editor-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.styled-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.editor-button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.editor-button:hover {
+    background-color: #3700b3;
+}
+
+.phase-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.phase-details {
+    display: flex;
+    gap: 1rem;
+}
+
+.series-item {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+.edit-phase, .delete-phase {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+}
+
+.delete-phase {
+    color: #f44336;
+}
+
+.editor-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.phase-edit-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.phase-edit-group h4 {
+    margin-top: 0;
+    color: #6200ea;
+}
+
+.popup-button.edit {
+    background-color: #008CBA;
+    color: white;
+}
