@@ -55,41 +55,47 @@ document.getElementById('start').addEventListener('click', () => {
         alert("Collegati prima al dispositivo!");
         return;
     }
-
     // Invia il comando 0x07 per predisporre il tapis
     sendStartCommand();
-
     if (isAutoMode && pianoAllenamento.length > 0) {
         // Modalità automatica: avvia il piano di allenamento
         avviaAllenamento();
     } else {
         // Modalità manuale: imposta la velocità manuale dopo 5 secondi
         setTimeout(() => {
-			currentSetSpeed = Math.max(0, parseFloat(document.getElementById('speedInput').value));
+            currentSetSpeed = Math.max(0, parseFloat(document.getElementById('speedInput').value));
             setSpeed(currentSetSpeed);
         }, 5000); // Ritardo di 5 secondi
     }
 });
 
+// Listener per il pulsante "Stop"
 document.getElementById('stop').addEventListener('click', () => {
+    // Chiama la funzione stopAll() per fermare tutto
+    stopAll();
 
-    stopAll(); // Ferma tutto e invia il comando 0x08
+    // Ripristina il pulsante "Select Plan" alla sua icona predefinita
+    document.getElementById('selectPlan').innerHTML = `
+        <svg viewBox="0 0 26 24" width="26" height="24">
+            <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+            <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+            <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+            <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+            <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+        </svg>
+    `;
 });
 
 function stopAll() {
     sendStopCommand(); // Invia il comando di stop (0x08)
-    //stopElapsedTime(); // Ferma il timer
-
     // Resetta le variabili globali
     distance = 0; // Azzera i km percorsi
     tempoRimanente = 0; // Resetta il conto alla rovescia
     startTime = null; // Resetta il timer
     pausedTime = 0; // Resetta il tempo in pausa
     currentSetSpeed = 0;
-
     // Imposta la textbox della velocità a 0
     document.getElementById('speedInput').value = "0.0";
-
     if (isAutoMode) {
         // Gestisci la modalità automatica
         pianoAllenamento = []; // Resetta il piano di allenamento
@@ -107,15 +113,12 @@ document.getElementById('pause').addEventListener('click', () => {
         alert("Collegati prima al dispositivo!");
         return;
     }
-
     const pauseButton = document.getElementById('pause');
-
     if (pausedSpeed === null) {
         // Pausa
         pausedSpeed = currentSetSpeed;
         setSpeed(0);
         pausedTime = Date.now() - startTime;
-
         // Aggiungi la classe per il lampeggiamento
         pauseButton.classList.add('pausa-lampeggiante');
     } else {
@@ -124,7 +127,6 @@ document.getElementById('pause').addEventListener('click', () => {
         currentSetSpeed = pausedSpeed;
         document.getElementById('speedInput').value = pausedSpeed.toFixed(1);
         pausedSpeed = null;
-
         // Rimuovi la classe per il lampeggiamento
         pauseButton.classList.remove('pausa-lampeggiante');
     }
@@ -151,6 +153,7 @@ function padZero(num) {
 
 // ==================== GESTIONE DELLA MODALITÀ AUTO ====================
 const selectPlanButton = document.getElementById('selectPlan');
+
 // Simulazione dei file JSON disponibili nella cartella "Piani"
 const mockJsonFiles = [
     { file: "1-lun.json", nome: "Lunedì" },
@@ -162,7 +165,7 @@ const mockJsonFiles = [
     { file: "7-dom.json", nome: "Domenica" }
 ];
 
-// pusante edit piano
+// Pulsante edit piano
 document.getElementById('editPlan').addEventListener('click', function() {
     showEditor(); // Funzione dal file creaPiano.js
     document.getElementById('planSelectionPopup').style.display = 'none';
@@ -179,8 +182,8 @@ document.getElementById('uploadPlan').addEventListener('click', function () {
             caricaPianoAllenamento(file); // Carica il piano di allenamento
             // Nascondi il pulsante "Pausa"
             document.getElementById('pause').style.display = 'none';
-			// Nascondi la popup
-			document.getElementById('planSelectionPopup').style.display = 'none';
+            // Nascondi la popup
+            document.getElementById('planSelectionPopup').style.display = 'none';
         }
     };
     input.click();
@@ -188,25 +191,41 @@ document.getElementById('uploadPlan').addEventListener('click', function () {
 
 // Mostra la popup quando si clicca su "Select Plan"
 document.getElementById('selectPlan').addEventListener('click', () => {
-    try {
-        // Usa l'elenco simulato dei file JSON
-        const files = mockJsonFiles;
-
-        // Popola la dropdown con i nomi visualizzati
-        const dropdown = document.getElementById('planDropdown');
-        dropdown.innerHTML = ''; // Resetta il contenuto precedente
-        files.forEach(file => {
-            const option = document.createElement('option');
-            option.value = file.file; // Valore: nome del file JSON
-            option.textContent = file.nome; // Testo visualizzato: nome del giorno
-            dropdown.appendChild(option);
-        });
-
-        // Mostra la popup
-        document.getElementById('planSelectionPopup').style.display = 'flex';
-    } catch (error) {
-        console.error("Errore durante il caricamento dei piani:", error);
-        alert("Impossibile caricare i piani di allenamento.");
+    if (isAutoMode && pianoAllenamento.length > 0) {
+        // Comportamento da X - Chiudi il piano
+        if (startTime && faseCorrente < pianoAllenamento.length) {
+            stopAll(); // Chiamata originale a stopAll()
+        } else {
+            document.getElementById('plan-info').style.display = 'none';
+            isAutoMode = false;
+        }
+        // RIPRISTINO ICONA (UNICA MODIFICA RICHIESTA)
+        document.getElementById('selectPlan').innerHTML = `
+            <svg viewBox="0 0 26 24" width="26" height="24">
+                <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+                <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+                <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+                <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+                <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+            </svg>
+        `;
+    } else {
+        // Comportamento originale - Mostra selezione piano
+        try {
+            const files = mockJsonFiles;
+            const dropdown = document.getElementById('planDropdown');
+            dropdown.innerHTML = '';
+            files.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.file;
+                option.textContent = file.nome;
+                dropdown.appendChild(option);
+            });
+            document.getElementById('planSelectionPopup').style.display = 'flex';
+        } catch (error) {
+            console.error("Errore durante il caricamento dei piani:", error);
+            alert("Impossibile caricare i piani di allenamento.");
+        }
     }
 });
 
@@ -217,10 +236,8 @@ document.getElementById('confirmPlanSelection').addEventListener('click', () => 
         alert("Seleziona un piano di allenamento!");
         return;
     }
-
     // CERCA PRIMA NEI PIANI SALVATI IN MEMORIA
     const savedPlan = window.mockJsonFiles.find(p => p.file === selectedFile);
-    
     if (savedPlan && savedPlan.data) {
         // 1. Caso: Piano personalizzato (carica da memoria)
         caricaPianoAllenamentoFromData(savedPlan.data);
@@ -257,22 +274,19 @@ function caricaPianoAllenamentoFromData(piano) {
     distance = 0;
     document.getElementById('distance').textContent = distance.toFixed(3);
     document.getElementById('elapsedTime').textContent = "00:00:00";
-
     // Trasforma il JSON in array piatto
     trasformaInArrayPiatto(piano);
-
     // Visualizza il piano con il nome
     const nomePianoAllenamento = piano.nome || "Piano di allenamento";
     visualizzaPiano(pianoAllenamento, nomePianoAllenamento);
-
     // Imposta la modalità automatica
     isAutoMode = true;
-    selectPlanButton.style.display = 'none';
     document.getElementById('plan-info').style.display = 'block';
-    const closeButton = document.querySelector('.close-button');
-    if (closeButton) {
-        closeButton.style.display = 'block';
-    }
+    document.getElementById('selectPlan').innerHTML = `
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    `;
 }
 
 // Funzione per caricare il piano di allenamento e trasformarlo in array piatto
@@ -281,38 +295,31 @@ function caricaPianoAllenamento(file) {
     reader.onload = (e) => {
         try {
             const piano = JSON.parse(e.target.result);
-
             // Resetta lo stato del piano precedente
             pianoAllenamento = []; // Resetta l'array piatto
             faseCorrente = 0; // Resetta l'indice della fase corrente
             distance = 0; // Resetta la distanza percorsa
             document.getElementById('distance').textContent = distance.toFixed(3); // Aggiorna l'interfaccia
             document.getElementById('elapsedTime').textContent = "00:00:00"; // Resetta il timer
-
             // Trasforma il JSON in array piatto
             trasformaInArrayPiatto(piano);
             console.log("Piano di allenamento caricato:", pianoAllenamento);
-
             // Visualizza il piano con il nome
             const nomePianoAllenamento = piano.nome || "Piano di allenamento";
             visualizzaPiano(pianoAllenamento, nomePianoAllenamento);
-
             // Imposta la modalità automatica
             isAutoMode = true;
-            selectPlanButton.style.display = 'none'; // Nascondi il pulsante SELECT PLAN
             document.getElementById('plan-info').style.display = 'block'; // Mostra la sezione
-            const closeButton = document.querySelector('.close-button');
-            if (closeButton) {
-                closeButton.style.display = 'block'; // Mostra la X quando il piano è visibile
-            }
-
-            // Evidenzia automaticamente la prima fase
-            evidenziaFaseAttiva(0); // Evidenzia la prima fase (indice 0)
         } catch (error) {
             console.error("Errore durante il caricamento del JSON:", error);
         }
     };
     reader.readAsText(file); // Legge il file come testo
+    document.getElementById('selectPlan').innerHTML = `
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    `;
 }
 
 // Funzione per trasformare il JSON in array piatto
@@ -345,7 +352,6 @@ function trasformaInArrayPiatto(piano) {
 function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
     const planInfoDiv = document.getElementById('plan-info');
     planInfoDiv.innerHTML = ''; // Pulisce il contenuto precedente
-
     // Prima riga: Titolo e parametri
     const titleRow = document.createElement('div');
     titleRow.classList.add('plan-row');
@@ -354,20 +360,16 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
         <span class="plan-params">Tempo: <span id="tempo-totale">0 min</span> - Distanza: <span id="distanza-totale">0.00 km</span></span>
     `;
     planInfoDiv.appendChild(titleRow);
-
     // Calcola durata e distanza totale
     let durataTotale = 0;
     let distanzaTotale = 0;
-
     pianoAllenamento.forEach(fase => {
         durataTotale += fase.tempo;
         distanzaTotale += fase.velocita * (fase.tempo / 60);
     });
-
     // Aggiorna i valori dei parametri
     document.getElementById('tempo-totale').textContent = `${durataTotale} min`;
     document.getElementById('distanza-totale').textContent = `${distanzaTotale.toFixed(2)} km`;
-
     // Seconda riga: Nome della fase e conto alla rovescia
     const faseAttualeDiv = document.createElement('div');
     faseAttualeDiv.classList.add('fase-attuale');
@@ -376,42 +378,38 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
         <span class="conto-alla-rovescia">${formattaTempo(pianoAllenamento[0].tempo * 60)}</span>
     `;
     planInfoDiv.appendChild(faseAttualeDiv);
-
     // Aggiunge l'istogramma
     const histogramDiv = document.createElement('div');
     histogramDiv.classList.add('plan-histogram');
     let currentTime = 0;
-
     pianoAllenamento.forEach((fase, index) => {
         const bar = creaBarra(fase.tempo, fase.velocita, currentTime, durataTotale, index);
         histogramDiv.appendChild(bar);
         currentTime += fase.tempo;
     });
-
     planInfoDiv.appendChild(histogramDiv);
-
-	// Evidenzia la fase attiva
-	evidenziaFaseAttiva(faseCorrente);
-
-	// Aggiunge la X come elemento figlio di plan-info, posizionata fuori a destra
-	const closeButton = document.createElement('button');
-	closeButton.classList.add('close-button');
-	closeButton.textContent = '×';
-	closeButton.addEventListener('click', () => {
-		if (isAutoMode && startTime && faseCorrente < pianoAllenamento.length) {
-			// Se c'è un allenamento attivo, ferma tutto e resetta lo stato
-			stopAll(); // Ferma tutto e resetta lo stato
-		} else {
-			// Se non c'è un allenamento attivo, nascondi semplicemente la sezione
-			document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
-			document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
-			document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
-			isAutoMode = false; // Disabilita la modalità automatica
-		}
-		// Nascondi la X
-		closeButton.style.display = 'none';
-	});
-	planInfoDiv.appendChild(closeButton);
+    // Evidenzia la fase attiva
+    evidenziaFaseAttiva(faseCorrente);
+    // Aggiunge la X come elemento figlio di plan-info, posizionata fuori a destra
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('close-button');
+    closeButton.textContent = '×';
+    closeButton.style.display = 'none';
+    closeButton.addEventListener('click', () => {
+        if (isAutoMode && startTime && faseCorrente < pianoAllenamento.length) {
+            // Se c'è un allenamento attivo, ferma tutto e resetta lo stato
+            stopAll(); // Ferma tutto e resetta lo stato
+        } else {
+            // Se non c'è un allenamento attivo, nascondi semplicemente la sezione
+            document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
+            document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
+            document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
+            isAutoMode = false; // Disabilita la modalità automatica
+        }
+        // Nascondi la X
+        closeButton.style.display = 'none';
+    });
+    planInfoDiv.appendChild(closeButton);
 }
 
 // Funzione per creare una barra dell'istogramma
@@ -423,10 +421,8 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     bar.style.left = `${(currentTime / durataTotale) * 100}%`;
     bar.style.backgroundColor = `hsl(200, 100%, ${85 - velocita * 5}%)`; // Scuriamo il colore
     // Nota: Ho cambiato 100 a 85 per scurire ulteriormente il colore
-
     // Aggiungi un identificatore univoco per la barra
     bar.dataset.index = index;
-
     // Aggiungi un event listener per il clic sulla barra
     bar.addEventListener('click', () => {
         if (isAutoMode && pianoAllenamento.length > 0) {
@@ -435,18 +431,15 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
             gestioneFasi(); // Carica la fase selezionata
         }
     });
-
     // Aggiunge etichette
     const timeLabel = document.createElement('div');
     timeLabel.classList.add('time-label');
     timeLabel.textContent = `${tempo}`; // Solo il valore, senza unità di misura
     bar.appendChild(timeLabel);
-
     const speedLabel = document.createElement('div');
     speedLabel.classList.add('speed-label');
     speedLabel.textContent = `${velocita}`; // Solo il valore, senza unità di misura
     bar.appendChild(speedLabel);
-
     return bar;
 }
 
@@ -456,7 +449,6 @@ function evidenziaFaseAttiva(indiceFase) {
     bars.forEach((bar, index) => {
         const timeLabel = bar.querySelector('.time-label');
         const speedLabel = bar.querySelector('.speed-label');
-
         if (index === indiceFase) {
             // Evidenzia la barra attiva
             bar.classList.remove('completata'); // Rimuovi la classe completata
@@ -464,7 +456,6 @@ function evidenziaFaseAttiva(indiceFase) {
             bar.style.borderBottom = '3px solid #ff9800';
             bar.style.boxShadow = '0 0 10px rgba(255, 152, 0, 0.7)';
             bar.style.zIndex = '1';
-
             // Aggiungi le unità di misura
             if (timeLabel && speedLabel) {
                 timeLabel.textContent = `${pianoAllenamento[indiceFase].tempo} min`; // Aggiungi "min"
@@ -477,13 +468,11 @@ function evidenziaFaseAttiva(indiceFase) {
             bar.style.borderBottom = 'none';
             bar.style.boxShadow = 'none';
             bar.style.zIndex = '0';
-
             // Rimuovi la classe .progress per ripristinare il colore originale
             const progressBar = bar.querySelector('.progress');
             if (progressBar) {
                 progressBar.remove(); // Rimuovi la barra di progresso
             }
-
             // Rimuovi le unità di misura
             if (timeLabel && speedLabel) {
                 timeLabel.textContent = `${pianoAllenamento[index].tempo}`;
@@ -495,7 +484,6 @@ function evidenziaFaseAttiva(indiceFase) {
             bar.style.borderBottom = 'none';
             bar.style.boxShadow = 'none';
             bar.style.zIndex = '0';
-
             // Rimuovi le unità di misura
             if (timeLabel && speedLabel) {
                 timeLabel.textContent = `${pianoAllenamento[index].tempo}`;
@@ -511,111 +499,93 @@ function avviaAllenamento() {
         console.log("Nessun piano caricato o allenamento già completato.");
         return;
     }
-
-	// Invia il comando 0x07
-	sendStartCommand();
-
-	// Imposta startTime prima del ritardo per iniziare a contare subito
-	startTime = Date.now(); // Inizializza startTime subito
-	pausedTime = 0; // Resetta pausedTime
-	currentSetSpeed = pianoAllenamento[faseCorrente].velocita;
-	
-	
-	// Imposta la velocità e avvia il timer dopo 5 secondi
-	setTimeout(() => {
-		// Carica la fase corrente
-		gestioneFasi();			
-		setSpeed(currentSetSpeed);
-		//startElapsedTime(); // Avvia il timer (già sincronizzato con startTime)
-		// Avvia l'aggiornamento della fase
-		//avviaAggiornamentoFase(pianoAllenamento[faseCorrente]);
-	}, 5000); // Ritardo di 5 secondi
+    // Invia il comando 0x07
+    sendStartCommand();
+    // Imposta startTime prima del ritardo per iniziare a contare subito
+    startTime = Date.now(); // Inizializza startTime subito
+    pausedTime = 0; // Resetta pausedTime
+    currentSetSpeed = pianoAllenamento[faseCorrente].velocita;
+    // Imposta la velocità e avvia il timer dopo 5 secondi
+    setTimeout(() => {
+        // Carica la fase corrente
+        gestioneFasi();
+        setSpeed(currentSetSpeed);
+    }, 5000); // Ritardo di 5 secondi
 }
 
 // Funzione per mostrare il messaggio di completamento
 function mostraMessaggioCompletamento() {
     const completionMessage = document.getElementById('completionMessage');
     completionMessage.style.display = 'block'; // Mostra il messaggio
-
-    // Nascondi il messaggio dopo 5 secondi
-    setTimeout(() => {
-        completionMessage.style.display = 'none';
-    }, 5000); // Durata del messaggio: 5 secondi
+    // Aggiungi un listener per il click sul messaggio
+    completionMessage.addEventListener('click', function() {
+        completionMessage.style.display = 'none'; // Nascondi al click
+    });
 }
 
-function gestioneFasi()
-{
-		document.querySelector('.conto-alla-rovescia').textContent = 
-						`${Math.floor(tempoRimanente/60)}:${('0'+(tempoRimanente%60)).slice(-2)}`;
-		let fase = pianoAllenamento[faseCorrente];
-		const planInfoDiv = document.getElementById('plan-info');
-		let faseAttualeDiv = planInfoDiv.querySelector('.fase-attuale');
-		const contoAllaRovescia = document.querySelector('.conto-alla-rovescia').textContent;
-		const tempoTrascorso = (fase.tempo * 60) - tempoRimanente
-		//console.log("Tempo trascorso: " + tempoTrascorso);
-		//console.log("fase.tempo: " + fase.tempo*60);		
-		//console.log("tempoRimanente: " + tempoRimanente);		
-		if (tempoRimanente >= 0) {
-		
-			// Aggiorna il progresso della barra
-			aggiornaProgressoFase(tempoTrascorso, fase.tempo * 60);
-			// Attiva il lampeggio negli ultimi 5 secondi
-			if (tempoRimanente <= 5) {
-				faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.add('lampeggia');
-			} else {
-				faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
-			}				
-           // Emetti un bip 
-           if (tempoRimanente === 10 || tempoRimanente === 5) {          
-				playTone(1000, 0.4);  
-            }
-           if (tempoTrascorso === 1) {          
-				playTone(800, 0.7);  
-            }			
-			if (tempoTrascorso >= fase.tempo * 60) {
-			//CAMBIO FASE!
-				//console.log("faseCorrente: " + faseCorrente);
-				//console.log("pianoAllenamento.length: " + pianoAllenamento.length);
-				faseCorrente++;
-				if (faseCorrente < pianoAllenamento.length) {
-					// Passa alla fase successiva
-					fase = pianoAllenamento[faseCorrente];
-					currentSetSpeed = fase.velocita;
-					console.log("INIZIO FASE " + faseCorrente + ": " + fase.descrizione + " - velocità: " + fase.velocita + " - tempo: " + fase.tempo);
-					// Aggiorna il nome della fase
-					faseAttualeDiv.innerHTML = `
-						FASE ${faseCorrente + 1}: ${fase.descrizione} <span class="conto-alla-rovescia">${formattaTempo(fase.tempo * 60)}</span>
-					`;
+function gestioneFasi() {
+    document.querySelector('.conto-alla-rovescia').textContent =
+        `${Math.floor(tempoRimanente / 60)}:${('0' + (tempoRimanente % 60)).slice(-2)}`;
+    let fase = pianoAllenamento[faseCorrente];
+    const planInfoDiv = document.getElementById('plan-info');
+    let faseAttualeDiv = planInfoDiv.querySelector('.fase-attuale');
+    const contoAllaRovescia = document.querySelector('.conto-alla-rovescia').textContent;
+    const tempoTrascorso = (fase.tempo * 60) - tempoRimanente;
 
-					// Aggiorna la barra di progresso
-					evidenziaFaseAttiva(faseCorrente);
-
-					// Aggiorna la velocità
-					document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
-					setSpeed(currentSetSpeed);
-
-					// Aggiungi le unità di misura alle etichette della fase attiva
-					const barraAttiva = document.querySelector('.plan-histogram .bar.active');
-					if (barraAttiva) {
-						const timeLabel = barraAttiva.querySelector('.time-label');
-						const speedLabel = barraAttiva.querySelector('.speed-label');
-						if (timeLabel && speedLabel) {
-							timeLabel.textContent = `${fase.tempo} min`; 
-							speedLabel.textContent = `${fase.velocita} kmh`;
-						}
-					}					
-					
-				} else {
-					// Allenamento completato
-					console.log("Allenamento completato!");
-					setSpeed(0);
-					mostraMessaggioCompletamento();
-					stopAll();
-				}
-			}
+    if (tempoRimanente >= 0) {
+        // Aggiorna il progresso della barra
+        aggiornaProgressoFase(tempoTrascorso, fase.tempo * 60);
+        // Attiva il lampeggio negli ultimi 5 secondi
+        if (tempoRimanente <= 5) {
+            faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.add('lampeggia');
         } else {
             faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
-        }		
+        }
+        // Emetti un bip 
+        if (tempoRimanente === 10 || tempoRimanente === 5) {
+            playTone(1000, 0.4);
+        }
+        if (tempoTrascorso === 1) {
+            playTone(800, 0.7);
+        }
+
+        if (tempoTrascorso >= fase.tempo * 60) {
+            // CAMBIO FASE!
+            faseCorrente++;
+            if (faseCorrente < pianoAllenamento.length) {
+                // Passa alla fase successiva
+                fase = pianoAllenamento[faseCorrente];
+                currentSetSpeed = fase.velocita;
+                console.log("INIZIO FASE " + faseCorrente + ": " + fase.descrizione + " - velocità: " + fase.velocita + " - tempo: " + fase.tempo);
+                // Aggiorna il nome della fase
+                faseAttualeDiv.innerHTML = `
+                    FASE ${faseCorrente + 1}: ${fase.descrizione} <span class="conto-alla-rovescia">${formattaTempo(fase.tempo * 60)}</span>
+                `;
+                // Aggiorna la barra di progresso
+                evidenziaFaseAttiva(faseCorrente);
+                // Aggiorna la velocità
+                document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
+                setSpeed(currentSetSpeed);
+                // Aggiungi le unità di misura alle etichette della fase attiva
+                const barraAttiva = document.querySelector('.plan-histogram .bar.active');
+                if (barraAttiva) {
+                    const timeLabel = barraAttiva.querySelector('.time-label');
+                    const speedLabel = barraAttiva.querySelector('.speed-label');
+                    if (timeLabel && speedLabel) {
+                        timeLabel.textContent = `${fase.tempo} min`;
+                        speedLabel.textContent = `${fase.velocita} kmh`;
+                    }
+                }
+            } else {
+                // Allenamento completato
+                console.log("Allenamento completato!");
+                mostraMessaggioCompletamento();
+                stopAll();
+            }
+        }
+    } else {
+        faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
+    }
 }
 
 // Funzione per emettere un bip
@@ -625,33 +595,25 @@ function playTone(frequency, duration) {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-
     // Configura oscillatore e gain
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
     // Connessioni
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-
     // Imposta la frequenza (con tipo d'onda "sine" per un suono pulito)
     oscillator.type = "sine";
     oscillator.frequency.value = frequency;
-
     // Fade-in per evitare click (da 0 a 1 in 5ms)
     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
     gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.005);
-
     // Avvia l'oscillatore
     oscillator.start();
-
     // Fade-out (esponenziale per un suono più naturale)
     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-
     // Spegni l'oscillatore dopo la durata
     oscillator.stop(audioContext.currentTime + duration + 0.01); // +10ms per sicurezza
 }
-
 
 // Funzione per formattare il tempo in mm:ss
 function formattaTempo(secondi) {
@@ -665,23 +627,18 @@ let kmTotaliPrecedenti = 0; // Variabile per memorizzare i km delle fasi precede
 function aggiornaKmTotali(velocitaFaseAttuale, tempoTrascorsoFaseAttuale) {
     // Calcola i km percorsi nella fase attuale
     const kmFaseAttuale = (velocitaFaseAttuale * tempoTrascorsoFaseAttuale) / 3600; // km = velocità (km/h) * tempo (s) / 3600
-
     // Somma i km delle fasi precedenti e quelli della fase attuale
     const kmTotali = kmTotaliPrecedenti + kmFaseAttuale;
-
     // Aggiorna l'interfaccia utente con i km totali
     document.getElementById('distance').textContent = kmTotali.toFixed(3);
-
     return kmTotali;
 }
 
 function aggiornaProgressoFase(tempoTrascorso, durataFase) {
     const progressoPercentuale = (tempoTrascorso / durataFase) * 100;
-
     // Seleziona la barra attiva
     const barraAttiva = document.querySelector('.plan-histogram .bar.active');
     if (!barraAttiva) return;
-
     // Crea o aggiorna la barra di progresso all'interno della barra attiva
     let progressBar = barraAttiva.querySelector('.progress');
     if (!progressBar) {
@@ -689,7 +646,6 @@ function aggiornaProgressoFase(tempoTrascorso, durataFase) {
         progressBar.classList.add('progress');
         barraAttiva.appendChild(progressBar);
     }
-
     // Imposta la larghezza della barra di progresso
     progressBar.style.width = `${progressoPercentuale}%`;
 }
@@ -711,5 +667,3 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
-
-
