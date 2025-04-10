@@ -31,13 +31,13 @@ function initEditor() {
             
             <div class="editor-section">
                 <h4>Fasi dell'allenamento:</h4>
-                <div id="phasesContainer"></div>
+                <div id="phasesContainer" style="max-height: 300px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; padding: 5px;"></div>
                 <button id="addPhase" class="editor-button">+ Aggiungi Fase</button>
             </div>
             
-            <div class="editor-buttons">
+            <div class="editor-buttons" style="justify-content: center;">
+                <button id="cancelEdit" class="popup-button cancel">Annulla</button>			
                 <button id="savePlan" class="popup-button confirm">Salva</button>
-                <button id="cancelEdit" class="popup-button cancel">Annulla</button>
             </div>
         </div>
     `;
@@ -116,8 +116,9 @@ function editPhase(index) {
     const editPopup = document.createElement('div');
     editPopup.className = 'popup';
     editPopup.style.display = 'flex';
+    editPopup.id = 'editPhasePopup';
     editPopup.innerHTML = `
-        <div class="popup-content">
+        <div class="popup-content" style="text-align: center;">
             <h3>Modifica Fase</h3>
             <div class="form-group">
                 <label>Descrizione:</label>
@@ -125,15 +126,15 @@ function editPhase(index) {
             </div>
             <div class="form-group">
                 <label>Tempo (min):</label>
-                <input type="number" id="editTime" value="${phase.tempo}" min="1" class="styled-input">
+                <input type="number" id="editTime" value="${phase.tempo}" min="0.1" step="0.1" class="styled-input">
             </div>
             <div class="form-group">
                 <label>Velocità (km/h):</label>
                 <input type="number" id="editSpeed" value="${phase.velocita}" min="0.5" max="20" step="0.1" class="styled-input">
             </div>
-            <div class="editor-buttons">
+            <div class="editor-buttons" style="display: flex; justify-content: center; gap: 10px;">
+                <button id="cancelEditPhase" class="popup-button cancel">Annulla</button>
                 <button id="saveEdit" class="popup-button confirm">Salva</button>
-                <button id="cancelEdit" class="popup-button cancel">Annulla</button>
             </div>
         </div>
     `;
@@ -144,13 +145,19 @@ function editPhase(index) {
         phase.descrizione = document.getElementById('editDesc').value;
         phase.tempo = parseInt(document.getElementById('editTime').value);
         phase.velocita = parseFloat(document.getElementById('editSpeed').value);
-        document.body.removeChild(editPopup);
+        closeEditPopup();
         renderPhases();
     });
 
-    document.getElementById('cancelEdit').addEventListener('click', () => {
+    document.getElementById('cancelEditPhase').addEventListener('click', closeEditPopup);
+}
+
+// Aggiungi questa funzione per chiudere la popup
+function closeEditPopup() {
+    const editPopup = document.getElementById('editPhasePopup');
+    if (editPopup) {
         document.body.removeChild(editPopup);
-    });
+    }
 }
 
 function savePlan() {
