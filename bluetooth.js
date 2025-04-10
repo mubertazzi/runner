@@ -72,48 +72,44 @@ function startAutomaticReading() {
             console.log("Notifiche Treadmill Data abilitate, in ascolto...");
 
             // Listener per aggiornamenti in tempo reale
-			 readCharacteristic.addEventListener('characteristicvaluechanged', event => {
-				const value = event.target.value;
+            readCharacteristic.addEventListener('characteristicvaluechanged', event => {
+                const value = event.target.value;
 
-				// Leggi la velocità (Byte 2 e Byte 3)
-				const speed = value.getUint16(2, true) / 100; // Velocità in km/h
+                // Leggi la velocità (Byte 2 e Byte 3)
+                const speed = value.getUint16(2, true) / 100; // Velocità in km/h
 
-				// Leggi la distanza (Byte 4 e Byte 5)
-				const distance = value.getUint16(4, true) / 1000; // Distanza in km (convertita da metri)
+                // Leggi la distanza (Byte 4 e Byte 5)
+                const distance = value.getUint16(4, true) / 1000; // Distanza in km (convertita da metri)
 
-				// Leggi il tempo (Byte 12 e Byte 13)
-				const elapsedTime = value.getUint16(12, true); // Tempo in secondi
+                // Leggi il tempo (Byte 12 e Byte 13)
+                const elapsedTime = value.getUint16(12, true); // Tempo in secondi
 
-				// Formatta il tempo in hh:mm:ss
-				const hours = Math.floor(elapsedTime / 3600);
-				const minutes = Math.floor((elapsedTime % 3600) / 60);
-				const seconds = elapsedTime % 60;
-				const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+                // Formatta il tempo in hh:mm:ss
+                const hours = Math.floor(elapsedTime / 3600);
+                const minutes = Math.floor((elapsedTime % 3600) / 60);
+                const seconds = elapsedTime % 60;
+                const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 
-				// Calcolo diretto del tempo rimanente 
-				if (isAutoMode && pianoAllenamento.length > 0) {
-					//const tempoFase = pianoAllenamento[faseCorrente].tempo * 60;
-					//const tempoInFase = elapsedTime % tempoFase; 
-					//tempoRimanente = Math.max(0, tempoFase - tempoInFase);
-					let tempoCumulativoPrecedente = 0;
-					for (let i = 0; i < faseCorrente; i++) {
-						tempoCumulativoPrecedente += pianoAllenamento[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
-					}
-					const tempoTrascorsoFaseAttuale = elapsedTime - tempoCumulativoPrecedente;	
-					tempoRimanente = Math.max(0, (pianoAllenamento[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
-					//console.log("tempoRimanente: " + tempoRimanente);
-					gestioneFasi();			
-				}
-				
-				// Aggiorna l'interfaccia utente
-				document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
-				document.getElementById('distance').textContent = distance.toFixed(3) + " km";
-				document.getElementById('elapsedTime').textContent = formattedTime;
+                // Calcolo diretto del tempo rimanente 
+                if (isAutoMode && pianoAllenamento.length > 0) {
+                    let tempoCumulativoPrecedente = 0;
+                    for (let i = 0; i < faseCorrente; i++) {
+                        tempoCumulativoPrecedente += pianoAllenamento[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
+                    }
+                    const tempoTrascorsoFaseAttuale = elapsedTime - tempoCumulativoPrecedente;	
+                    tempoRimanente = Math.max(0, (pianoAllenamento[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
+                    gestioneFasi();			
+                }
+                
+                // Aggiorna l'interfaccia utente
+                document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
+                document.getElementById('distance').textContent = distance.toFixed(3) + " km";
+                document.getElementById('elapsedTime').textContent = formattedTime;
 
-				// Aggiorna le variabili globali
-				startTime = Date.now() - elapsedTime * 1000; // Sincronizza startTime con il tempo ricevuto
-				pausedTime = 0; // Resetta pausedTime
-			});
+                // Aggiorna le variabili globali
+                startTime = Date.now() - elapsedTime * 1000; // Sincronizza startTime con il tempo ricevuto
+                pausedTime = 0; // Resetta pausedTime
+            });
         })
         .catch(error => {
             console.error("Errore abilitazione notifiche Treadmill Data:", error);
@@ -130,11 +126,7 @@ function sendStartCommand() {
 }
 
 function sendStopCommand() {
-    //setSpeed(0); // Imposta la velocità a 0
-    //setTimeout(() => {
-    //    sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento        
-    //}, 500); // Piccolo ritardo per garantire che la velocità sia impostata a 0
-	sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento
+    sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento
     console.log("Comando STOP (0x08) inviato");
 }
 
