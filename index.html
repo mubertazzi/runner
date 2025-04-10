@@ -7,6 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -25,14 +26,12 @@
                 <div id="connectionStatus" class="connection-status">Disconnesso</div>
             </div>
         </div>
-
         <!-- Controlli della velocità -->
         <div class="speed-control">
             <button id="decreaseSpeed">-</button>
             <input type="text" id="speedInput" value="1.0" readonly>
             <button id="increaseSpeed">+</button>
         </div>
-
         <!-- Pallini di velocità -->
         <div class="speed-dots">
             <span class="dot" data-speed="1">1</span>
@@ -46,94 +45,47 @@
             <span class="dot" data-speed="9">9</span>
             <span class="dot" data-speed="10">10</span>
         </div>
-
         <!-- Parametri (velocità, tempo, distanza) -->
 		<div class="parameter-container">
-		  <!-- Velocità - Blu -->
-		  <div class="parameter-item">
-			<div class="parameter-icon speed-icon">
-			  <svg viewBox="0 0 16 16" class="icon">
-				<path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-				<path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
-			  </svg>
+			<!-- Velocità - Blu -->
+			<div class="parameter-item speed">
+				<div class="parameter-icon speed-icon">
+					<svg viewBox="0 0 16 16" class="icon">
+						<path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+						<path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+					</svg>
+				</div>
+				<span id="currentSpeed" class="parameter-value">0.0 km/h</span>
 			</div>
-			<span id="currentSpeed" class="parameter-value">0.0 km/h</span>
-		  </div>
-
-		  <!-- Tempo - Verde -->
-		<div class="parameter-item">
-			<div class="parameter-icon time-icon">
-				<svg viewBox="0 0 16 16" class="icon">
-					<path stroke-width="1" d="M9,0 C9.55229,0 10,0.447715 10,1 C10,1.55228 9.55229,2 9,2 L9,2.07089 C10.1894,2.24101 11.2823,2.71011 12.2001,3.3996 C12.2281,3.36242 12.259,3.32674 12.2929,3.29289 L13.2929,2.29289 C13.6834,1.90237 14.3166,1.90237 14.7071,2.29289 C15.0976,2.68342 15.0976,3.31658 14.7071,3.70711 L13.7071,4.70711 C13.6733,4.74096 13.6376,4.77187 13.6004,4.79985 C14.4792,5.9698 15,7.42409 15,9 C15,12.866 11.866,16 8,16 C4.13401,16 1,12.866 1,9 C1,5.47353 3.60771,2.55612 7,2.07089 L7,2 C6.44772,2 6,1.55228 6,1 C6,0.447715 6.44772,0 7,0 L9,0 Z M8,4 C5.23858,4 3,6.23858 3,9 C3,11.7614 5.23858,14 8,14 C10.7614,14 13,11.7614 13,9 C13,6.23858 10.7614,4 8,4 Z M8,5 C8.55229,5 9,5.44772 9,6 L9,8.58579 L10.7071,10.2929 C11.0976,10.6834 11.0976,11.3166 10.7071,11.7071 C10.3166,12.0976 9.68342,12.0976 9.29289,11.7071 L7,9.41421 L7,6 C7,5.44772 7.44772,5 8,5 Z"/>
-				</svg>
+			<!-- Tempo - Verde -->
+			<div class="parameter-item time">
+				<div class="parameter-icon time-icon">
+					<svg viewBox="0 0 16 16" class="icon">
+						<path stroke-width="1" d="M9,0 C9.55229,0 10,0.447715 10,1 C10,1.55228 9.55229,2 9,2 L9,2.07089 C10.1894,2.24101 11.2823,2.71011 12.2001,3.3996 C12.2281,3.36242 12.259,3.32674 12.2929,3.29289 L13.2929,2.29289 C13.6834,1.90237 14.3166,1.90237 14.7071,2.29289 C15.0976,2.68342 15.0976,3.31658 14.7071,3.70711 L13.7071,4.70711 C13.6733,4.74096 13.6376,4.77187 13.6004,4.79985 C14.4792,5.9698 15,7.42409 15,9 C15,12.866 11.866,16 8,16 C4.13401,16 1,12.866 1,9 C1,5.47353 3.60771,2.55612 7,2.07089 L7,2 C6.44772,2 6,1.55228 6,1 C6,0.447715 6.44772,0 7,0 L9,0 Z M8,4 C5.23858,4 3,6.23858 3,9 C3,11.7614 5.23858,14 8,14 C10.7614,14 13,11.7614 13,9 C13,6.23858 10.7614,4 8,4 Z M8,5 C8.55229,5 9,5.44772 9,6 L9,8.58579 L10.7071,10.2929 C11.0976,10.6834 11.0976,11.3166 10.7071,11.7071 C10.3166,12.0976 9.68342,12.0976 9.29289,11.7071 L7,9.41421 L7,6 C7,5.44772 7.44772,5 8,5 Z"/>
+					</svg>
+				</div>
+				<span id="elapsedTime" class="parameter-value">00:00:00</span>
 			</div>
-		  <span id="elapsedTime" class="parameter-value">00:00:00</span>
+			<!-- Distanza - Arancione -->
+			<div class="parameter-item distance">
+				<div class="parameter-icon distance-icon">
+					<svg viewBox="0 0 64 64" class="icon">
+						<path stroke-width="3" d="M17.94,54.81a.1.1 0,0,1-.14,0c-1-1.11-11.69-13.23-11.69-21.26,0-9.94,6.5-12.24,11.76-12.24,4.84,0,11.06,2.6,11.06,12.24C28.93,41.84,18.87,53.72,17.94,54.81Z"/>
+						<circle cx="17.52" cy="31.38" r="4.75" stroke-width="3"/>
+						<path stroke-width="3" d="M49.58,34.77a.11.11 0,0,1-.15,0c-.87-1-9.19-10.45-9.19-16.74,0-7.84,5.12-9.65,9.27-9.65,3.81,0,8.71,2,8.71,9.65C58.22,24.52,50.4,33.81,49.58,34.77Z"/>
+						<circle cx="49.23" cy="17.32" r="3.75" stroke-width="3"/>
+						<path stroke-width="2" d="M17.87,54.89a28.73,28.73 0,0,0,3.9.89"/>
+						<path stroke-width="2" stroke-dasharray="7.8 2.92" d="M24.68,56.07c2.79.12,5.85-.28,7.9-2.08,5.8-5.09,2.89-11.25,6.75-14.71a16.72,16.72 0,0,1,4.93-3"/>
+						<path stroke-width="2" d="M45.63,35.8a23,23 0,0,1,3.88-.95"/>
+					</svg>
+				</div>
+				<span id="distance" class="parameter-value">0.000 km</span>
+			</div>
 		</div>
-
-		  <!-- Distanza - Arancione -->
-		  <div class="parameter-item">
-			<div class="parameter-icon distance-icon">
-			  <svg viewBox="0 0 64 64" class="icon">
-				<path stroke-width="3" d="M17.94,54.81a.1.1,0,0,1-.14,0c-1-1.11-11.69-13.23-11.69-21.26,0-9.94,6.5-12.24,11.76-12.24,4.84,0,11.06,2.6,11.06,12.24C28.93,41.84,18.87,53.72,17.94,54.81Z"/>
-				<circle cx="17.52" cy="31.38" r="4.75" stroke-width="3"/>
-				<path stroke-width="3" d="M49.58,34.77a.11.11,0,0,1-.15,0c-.87-1-9.19-10.45-9.19-16.74,0-7.84,5.12-9.65,9.27-9.65,3.81,0,8.71,2,8.71,9.65C58.22,24.52,50.4,33.81,49.58,34.77Z"/>
-				<circle cx="49.23" cy="17.32" r="3.75" stroke-width="3"/>
-				<path stroke-width="2" d="M17.87,54.89a28.73,28.73,0,0,0,3.9.89"/>
-				<path stroke-width="2" stroke-dasharray="7.8 2.92" d="M24.68,56.07c2.79.12,5.85-.28,7.9-2.08,5.8-5.09,2.89-11.25,6.75-14.71a16.72,16.72,0,0,1,4.93-3"/>
-				<path stroke-width="2" d="M45.63,35.8a23,23,0,0,1,3.88-.95"/>
-			  </svg>
-			</div>
-			<span id="distance" class="parameter-value">0.000 km</span>
-		  </div>
-		</div>
-
-        <!-- Pulsanti di controllo -->
-        <div class="bottom-controls">
-            <div class="start-stop-controls">
-                <!-- Pulsante START -->
-                <button id="start" class="icon-button">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor" d="M8 5v14l11-7z"/>
-                    </svg>
-                </button>
-
-                <!-- Pulsante PAUSA/RIPRENDI -->
-                <button id="pause" class="icon-button">
-                    <svg viewBox="0 0 26 26" width="26" height="26">
-                        <!-- Barra sinistra (pausa) -->
-                        <rect x="4" y="5" width="4" height="14" fill="currentColor"/>
-                        <!-- Barra destra (pausa) -->
-                        <rect x="10" y="5" width="4" height="14" fill="currentColor"/>
-                        <!-- Triangolo (play) -->
-                        <path fill="currentColor" d="M16 5v14l11-7z"/>
-                    </svg>
-                </button>
-
-                <!-- Pulsante STOP -->
-                <button id="stop" class="icon-button">
-                    <svg viewBox="0 0 24 24" width="24" height="24">
-                        <path fill="currentColor" d="M6 6h12v12H6z"/>
-                    </svg>
-                </button>
-
-                <!-- Pulsante PIANO -->
-                <button id="selectPlan" class="icon-button">
-                    <svg viewBox="0 0 26 24" width="26" height="24">
-                        <!-- Icona piano di allenamento (grafico a barre con 5 barre) -->
-                        <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
-                        <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
-                        <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
-                        <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
-                        <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        
         <!-- Sezione piano di allenamento -->
         <div id="plan-info" class="plan-info">
-            <button class="close-button">×</button> <!-- Icona X -->
-            <h3 id="allenamento-titolo">ALLENAMENTO: </h3> <!-- Titolo dinamico -->
+            <button class="close-button">×</button>
+            <h3 id="allenamento-titolo">ALLENAMENTO: </h3>
             <div class="parametri-container">
                 <span class="parametri">Tempo: <span id="tempo-totale">0 min</span> - Distanza: <span id="distanza-totale">0.00 km</span></span>
             </div>
@@ -143,13 +95,46 @@
             </div>
             <div class="plan-histogram"></div>
         </div>
+        <!-- Pulsanti di controllo -->
+        <div class="bottom-controls">
+            <div class="start-stop-controls">
+                <!-- Pulsante START -->
+                <button id="start" class="icon-button">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <!-- Pulsante PAUSA/RIPRENDI -->
+                <button id="pause" class="icon-button">
+                    <svg viewBox="0 0 26 26" width="26" height="26">
+                        <rect x="4" y="5" width="4" height="14" fill="currentColor"/>
+                        <rect x="10" y="5" width="4" height="14" fill="currentColor"/>
+                        <path fill="currentColor" d="M16 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <!-- Pulsante STOP -->
+                <button id="stop" class="icon-button">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M6 6h12v12H6z"/>
+                    </svg>
+                </button>
+                <!-- Pulsante PIANO -->
+                <button id="selectPlan" class="icon-button">
+                    <svg viewBox="0 0 26 24" width="26" height="24">
+                        <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+                        <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+                        <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+                        <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+                        <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
-
     <!-- Messaggio di completamento -->
     <div id="completionMessage" class="completion-message">
         Complimenti! Hai completato l'allenamento. 🎉
     </div>
-
     <!-- Popup per la selezione del piano -->
     <div id="planSelectionPopup" class="popup">
         <div class="popup-content">
@@ -161,11 +146,11 @@
             </div>
             <div class="popup-buttons">
                 <button id="cancelPlanSelection" class="popup-button cancel">Annulla</button>
-				<button id="editPlan" class="popup-button" style="background-color: #008CBA;">
-					<svg viewBox="0 0 24 24" width="24" height="24">
-						<path fill="white" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-					</svg>
-				</button>				
+                <button id="editPlan" class="popup-button" style="background-color: #008CBA;">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="white" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    </svg>
+                </button>                
                 <button id="uploadPlan" class="popup-button upload">
                     <svg viewBox="0 0 24 24" width="24" height="24">
                         <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
@@ -175,9 +160,8 @@
             </div>
         </div>
     </div>
-
     <script src="bluetooth.js"></script>
     <script src="ui.js"></script>
-	<script src="creaPiano.js"></script>
+    <script src="creaPiano.js"></script>
 </body>
 </html>
