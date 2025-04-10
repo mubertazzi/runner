@@ -7,21 +7,27 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-/* Contenitore principale */
+/* Contenitore principale - MODIFICATO */
 .container {
     text-align: center;
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 600px; /* Larghezza fissa */
-    max-width: 90%; /* Adatta la larghezza al 90% dello schermo su dispositivi più piccoli */
-    margin: 0 auto; /* Centra il contenitore */
-    overflow: hidden; /* Evita che il contenuto fuoriesca */
-    box-sizing: border-box; /* Include padding e bordi nella larghezza totale */
-    position: relative; /* Per posizionare la X */
+    width: 95vw; /* Larghezza relativa alla finestra */
+    height: 90vh; /* Altezza relativa alla finestra */
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    overflow: auto;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Intestazione */
@@ -30,17 +36,19 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .header h1 {
     color: #333;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: calc(1.5rem + 1vw); /* Font size responsivo */
 }
 
 /* Stile Titolo Moderno */
 .app-title {
-    font-size: 2.5rem;
+    font-size: calc(2.5rem + 1vw);
     font-weight: 800;
     background: linear-gradient(45deg, #0066ff, #00ccff);
     -webkit-background-clip: text;
@@ -60,7 +68,7 @@ body {
 
 .logo-icon {
     margin-right: 10px;
-    font-size: 2.2rem;
+    font-size: calc(2.2rem + 0.5vw);
     vertical-align: middle;
     filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
 }
@@ -73,7 +81,7 @@ body {
 .app-name-secondary {
     color: #333;
     display: block;
-    font-size: 1.8rem;
+    font-size: calc(1.8rem + 0.5vw);
     margin-top: -8px;
     letter-spacing: 3px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
@@ -84,28 +92,6 @@ body {
 .app-title:hover {
     transform: scale(1.02);
     text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
-}
-
-/* Header responsive */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-@media (max-width: 600px) {
-    .header {
-        flex-direction: column;
-    }
-    .app-title {
-        font-size: 2rem;
-    }
-    .app-name-secondary {
-        font-size: 1.5rem;
-    }
 }
 
 /* Interruttore di connessione */
@@ -195,9 +181,9 @@ input:checked + .slider:before {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
+    width: calc(40px + 1vw);
+    height: calc(40px + 1vw);
+    font-size: calc(1.5rem + 0.5vw);
     cursor: pointer;
     margin: 0 1rem;
     transition: background-color 0.3s;
@@ -208,9 +194,9 @@ input:checked + .slider:before {
 }
 
 .speed-control input {
-    width: 100px;
+    width: calc(100px + 2vw);
     padding: 0.5rem;
-    font-size: 1.2rem;
+    font-size: calc(1.2rem + 0.5vw);
     text-align: center;
     border: 2px solid #ddd;
     border-radius: 5px;
@@ -231,8 +217,8 @@ input:checked + .slider:before {
 }
 
 .speed-dots .dot {
-    width: 30px;
-    height: 30px;
+    width: calc(30px + 0.5vw);
+    height: calc(30px + 0.5vw);
     border-radius: 50%;
     background-color: #6200ea;
     color: white;
@@ -251,8 +237,8 @@ input:checked + .slider:before {
     background-color: #6200ea;
     border: none;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: calc(50px + 1vw);
+    height: calc(50px + 1vw);
     cursor: pointer;
     margin: 0 10px;
     transition: background-color 0.3s ease;
@@ -263,8 +249,8 @@ input:checked + .slider:before {
 
 .icon-button svg {
     fill: white;
-    width: 24px;
-    height: 24px;
+    width: calc(24px + 0.5vw);
+    height: calc(24px + 0.5vw);
 }
 
 .icon-button:hover {
@@ -275,65 +261,117 @@ input:checked + .slider:before {
     transform: scale(0.95);
 }
 
-/* Contenitore per i parametri (velocità, tempo, distanza) */
+/* Contenitore principale per i parametri */
 .parameter-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between; /* Distribuisce uniformemente gli elementi */
     align-items: center;
     margin-bottom: 1rem;
     gap: 1rem;
+    width: 100%; /* Occupa tutta la larghezza disponibile */
 }
 
+/* Stile per ciascun parametro */
 .parameter-item {
+    background: linear-gradient(145deg, #ffffff, #f0f0f8);
+    border-radius: 15px; /* Bordo arrotondato */
+    padding: 1rem; /* Spazio interno */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Ombra leggera */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effetto hover */
+    width: 30%; /* Larghezza fissa più grande */
+    height: auto; /* Altezza automatica */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
-.parameter-label {
-    font-size: 0.9rem;
-    color: #555;
-    display: block;
-    margin-bottom: 0.25rem;
+/* Effetto hover sui parametri */
+.parameter-item:hover {
+    transform: translateY(-5px); /* Solleva leggermente */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata */
 }
 
+/* Etichette dei parametri */
+.parameter-label {
+    font-size: 1rem; /* Testo più grande */
+    color: #555;
+    margin-bottom: 0.5rem; /* Spazio sotto l'etichetta */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Valori dei parametri */
 .parameter-value {
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Testo molto più grande */
     font-weight: bold;
-    color: #6200ea;
+    margin: 0;
+}
+
+/* Icone dei parametri */
+.parameter-icon .icon {
+    width: 60px; /* Icona più grande */
+    height: 60px;
+    margin-bottom: 0.5rem; /* Spazio sotto l'icona */
+}
+
+/* Effetto hover sui parametri */
+.parameter-item:hover {
+    transform: translateY(-5px); /* Solleva leggermente */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata */
+}
+
+/* Colori personalizzati per ciascun parametro */
+.parameter-item.speed {
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border: 1px solid #90caf9;
+}
+
+.parameter-item.time {
+    background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    border: 1px solid #a5d6a7;
+}
+
+.parameter-item.distance {
+    background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+    border: 1px solid #ffcc80;
 }
 
 /* Stile base per tutte le icone */
 .parameter-icon .icon {
-  width: 60px;
-  height: 60px;
-  display: block;
+    width: calc(60px + 1vw);
+    height: calc(60px + 1vw);
+    display: block;
 }
 
 /* Colori specifici per categoria */
 .speed-icon .icon path,
 .speed-icon .icon circle {
-  fill: #0066ff; /* Blu */
+    fill: #0066ff;
 }
 
 .time-icon .icon path {
-  fill: #00cc99; /* Verde */
+    fill: #00cc99;
 }
 
 .distance-icon .icon path,
 .distance-icon .icon circle {
-  stroke: #ff9933; /* Arancione */
-  fill: none;
+    stroke: #ff9933;
+    fill: none;
 }
 
 /* Ereditarietà colore per i valori */
-#currentSpeed { color: #0066ff; } /* Blu */
-#elapsedTime { color: #00cc99; } /* Verde */
-#distance { color: #ff9933; } /* Arancione */
+#currentSpeed { color: #0066ff; }
+#elapsedTime { color: #00cc99; }
+#distance { color: #ff9933; }
 
 /* Pulsanti di controllo */
 .bottom-controls {
     display: flex;
     justify-content: center;
-    margin-top: 1.5rem;
+    margin-top: auto;
+    padding-bottom: 1rem;
 }
 
 .start-stop-controls {
@@ -343,9 +381,9 @@ input:checked + .slider:before {
 
 .start-stop-controls button {
     flex: 1;
-    min-width: 80px;
+    min-width: calc(80px + 2vw);
     padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    font-size: calc(1rem + 0.2vw);
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -355,35 +393,35 @@ input:checked + .slider:before {
 }
 
 .start-stop-controls button#start {
-    background-color: #4caf50; /* Verde */
+    background-color: #4caf50;
 }
 
 .start-stop-controls button#start:hover {
-    background-color: #388e3c; /* Verde scuro */
+    background-color: #388e3c;
 }
 
 .start-stop-controls button#stop {
-    background-color: #f44336; /* Rosso */
+    background-color: #f44336;
 }
 
 .start-stop-controls button#stop:hover {
-    background-color: #d32f2f; /* Rosso scuro */
+    background-color: #d32f2f;
 }
 
 .start-stop-controls button#pause {
-    background-color: #ff9800; /* Arancione */
+    background-color: #ff9800;
 }
 
 .start-stop-controls button#pause:hover {
-    background-color: #f57c00; /* Arancione scuro */
+    background-color: #f57c00;
 }
 
 .start-stop-controls button#selectPlan {
-    background-color: #008CBA; /* Blu */
+    background-color: #008CBA;
 }
 
 .start-stop-controls button#selectPlan:hover {
-    background-color: #007ba7; /* Blu scuro */
+    background-color: #007ba7;
 }
 
 /* Messaggio di completamento */
@@ -397,7 +435,7 @@ input:checked + .slider:before {
     padding: 20px 40px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: 1.2rem;
+    font-size: calc(1.2rem + 0.5vw);
     font-weight: bold;
     text-align: center;
     z-index: 1000;
@@ -423,86 +461,108 @@ input:checked + .slider:before {
     border: 1px solid #008CBA;
     border-radius: 5px;
     background-color: #f9f9f9;
-    display: none; /* Nascosto di default */
-    font-size: 0.9rem;
-    position: relative; /* Per posizionare la X */
+    display: none;
+    font-size: calc(0.9rem + 0.2vw);
+    position: relative;
+    overflow: auto; /* Mantieni solo scroll verticale */
+    max-height: 30vh;
+    width: 100%; /* Assicura che occupi tutto lo spazio */
+    box-sizing: border-box; /* Include padding nel calcolo della larghezza */
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .plan-row {
     display: flex;
-    justify-content: space-between; /* Allinea a sinistra e destra */
-    align-items: center; /* Allinea verticalmente al centro */
-    margin-top: 0; /* Nessun margine per compattare */
-    font-size: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0;
+    font-size: calc(1rem + 0.2vw);
     width: 100%;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .plan-title {
-    color: orange; /* Colore arancione, come #allenamento-titolo */
-    text-align: left; /* Allineato a sinistra */
+    color: orange;
+    text-align: left;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .plan-params {
-    color: darkblue; /* Colore blu scuro, come .parametri */
-    text-align: right; /* Allineato a destra */
-    font-size: 1rem;
+    color: darkblue;
+    text-align: right;
+    font-size: calc(1rem + 0.2vw);
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .close-button {
     position: absolute;
-    top: -0.5rem; /* Allineato verticalmente con l'inizio di .plan-info */
-    right: -1.25rem; /* Sposta fuori dal bordo destro di .plan-info */
+    top: -6px; /* Mantiene la posizione verticale originale */
+    left: 50%; /* Centra orizzontalmente */
+    transform: translateX(-50%); /* Compensa la metà della larghezza */
     background: none;
     border: none;
-    font-size: 1.2rem;
+    font-size: calc(1.2rem + 0.2vw);
     cursor: pointer;
     color: #555;
     padding: 0.25rem;
-    z-index: 10; /* Assicurati che sia sopra altri elementi */
-    display: none; /* Nascosto di default, mostrato dal JavaScript */
+    z-index: 10;
+    display: none;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
 }
 
 .close-button:hover {
-    color: #f44336; /* Rosso al passaggio del mouse */
+    color: #f44336;
+    background-color: rgba(255,255,255,1);
 }
 
 #allenamento-titolo {
-    text-align: left; /* Allinea il testo a sinistra */
-    margin-right: 2rem; /* Aumenta lo spazio a destra per staccarlo dai parametri */
-    margin-left: 0; /* Rimuovi eventuali margini a sinistra */
-    width: 100%; /* Occupa tutta la larghezza disponibile */
-    display: initial; /* Assicurati che sia su una riga separata */
+    text-align: left;
+    margin-right: 2rem;
+    margin-left: 0;
+    width: 100%;
+    display: initial;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 /* Parametri allineati a destra */
 .parametri-container {
-    text-align: right; /* Allineato a destra */
-    display: initial; /* Rimuove il contenitore */
+    text-align: right;
+    display: initial;
 }
 
 .parametri {
-    font-size: 1rem;
-    color: darkblue; /* Colore dark blue, come il conto alla rovescia */
+    font-size: calc(1rem + 0.2vw);
+    color: darkblue;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 /* Nome della fase e conto alla rovescia */
 .fase-attuale {
     display: flex;
-    justify-content: space-between; /* Allinea il nome a sinistra e il conto alla rovescia a destra */
+    justify-content: space-between;
     align-items: center;
     margin-top: 0.5rem;
-    font-size: 1rem;
-    color: orange; /* Colore arancione */
+    font-size: calc(1rem + 0.2vw);
+    color: orange;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .fase-attuale .nome-fase {
-    color: orange; /* Colore arancione */
-    text-align: left; /* Allineato a sinistra */
+    color: orange;
+    text-align: left;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .fase-attuale .conto-alla-rovescia {
-    color: darkblue; /* Colore dark blue */
-    text-align: right; /* Allineato a destra */
+    color: darkblue;
+    text-align: right;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 /* Lampeggiamento del conto alla rovescia */
@@ -513,7 +573,7 @@ input:checked + .slider:before {
 
 .conto-alla-rovescia.lampeggia {
     animation: lampeggia 1s infinite;
-    color: red; /* Cambia colore per maggiore visibilità */
+    color: red;
 }
 
 /* Istogramma */
@@ -521,64 +581,64 @@ input:checked + .slider:before {
     display: flex;
     margin-top: 0.5rem;
     position: relative;
-    height: 120px;
+    height: calc(120px + 2vw);
     align-items: flex-end;
     gap: 0;
 }
 
 .plan-histogram .bar {
     background-color: #008CBA;
-    height: 20px;
+    height: calc(20px + 1vw);
     position: absolute;
     flex: 1 1 auto;
     margin-right: 0;
 }
 
-/* Stile predefinito per le etichette (fase non attiva) */
 .plan-histogram .bar .time-label,
 .plan-histogram .bar .speed-label {
     position: absolute;
-    font-size: 0.6rem; /* Dimensione del font */
-    color: darkblue; /* Colore predefinito */
+    font-size: calc(0.6rem + 0.2vw);
+    color: darkblue;
     white-space: nowrap;
-    background-color: transparent; /* Nessuno sfondo */
-    padding: 0; /* Nessun padding */
-    border-radius: 0; /* Nessun bordo arrotondato */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .plan-histogram .bar .time-label {
-    bottom: -12px; /* Posizione per l'etichetta del tempo */
+    bottom: -16px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .plan-histogram .bar .speed-label {
-    top: -10px; /* Posizione per l'etichetta della velocità */
+    top: -16px;
     left: 50%;
     transform: translateX(-50%);
 }
 
-/* Stile per le etichette della fase attiva */
 .plan-histogram .bar.active .time-label,
 .plan-histogram .bar.active .speed-label {
-    color: #ff5722; /* Colore arancione per il testo */
-    background-color: transparent; /* Nessuno sfondo */
-    padding: 0; /* Nessun padding */
-    border-radius: 0; /* Nessun bordo arrotondato */
+    color: #ff5722;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: 'Roboto Slab', serif; /* Nuovo font */
 }
 
 .plan-histogram .bar.active .time-label {
-    bottom: -14px; /* Spostato di 2px più in basso (era -12px) */
+    bottom: -16px;
 }
 
 .plan-histogram .bar.active .speed-label {
-    top: -12px; /* Spostato di 2px più in alto (era -10px) */
+    bottom: -18px;
 }
 
 .bar .progress {
     height: 100%;
     background-color: orange;
-    width: 0%; /* Inizia vuota */
+    width: 0%;
     position: absolute;
     top: 0;
     left: 0;
@@ -586,42 +646,42 @@ input:checked + .slider:before {
 }
 
 @keyframes lampeggia {
-    0%, 100% { opacity: 1; } /* Colore originale */
-    50% { opacity: 0.5; }    /* Opacità ridotta */
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 .pausa-lampeggiante {
-    animation: lampeggia 1s infinite; /* Durata: 1 secondo, ripetizione infinita */
+    animation: lampeggia 1s infinite;
 }
 
 /* Stile per le fasi completate */
 .plan-histogram .bar.completata {
-    opacity: 0.2; /* Opacità ridotta */
-    transition: opacity 0.3s ease; /* Transizione fluida */
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
 }
 
 /* Stile per la fase attiva */
 .plan-histogram .bar.active {
-    border-bottom: 3px solid #ff9800; /* Bordo inferiore più spesso */
-    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7); /* Ombra per maggiore evidenza */
-    opacity: 1; /* Opacità piena */
+    border-bottom: 3px solid #ff9800;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+    opacity: 1;
 }
 
 /* Stile per le fasi future */
 .plan-histogram .bar {
-    opacity: 1; /* Opacità piena */
-    transition: opacity 0.3s ease; /* Transizione fluida */
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
 /* Stile generale della popup */
 .popup {
-    display: none; /* Nascosta di default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Sfondo semi-trasparente */
+    background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -640,7 +700,7 @@ input:checked + .slider:before {
 .popup-content h3 {
     margin-bottom: 1rem;
     color: #333;
-    font-size: 1.2rem;
+    font-size: calc(1.2rem + 0.5vw);
 }
 
 .dropdown-container {
@@ -650,7 +710,7 @@ input:checked + .slider:before {
 .styled-dropdown {
     width: 100%;
     padding: 0.5rem;
-    font-size: 1rem;
+    font-size: calc(1rem + 0.2vw);
     border: 2px solid #ddd;
     border-radius: 5px;
     outline: none;
@@ -667,13 +727,13 @@ input:checked + .slider:before {
 }
 
 .popup-button {
-	color: white;
-	border-radius: 10%;
+    color: white;
+    border-radius: 10%;
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: calc(1rem + 0.2vw);
     transition: background-color 0.3s;
 }
 
@@ -688,21 +748,21 @@ input:checked + .slider:before {
 }
 
 .popup-button.confirm {
-    background-color: #4caf50; /* Verde */
+    background-color: #4caf50;
     color: white;
 }
 
 .popup-button.cancel {
-    background-color: #f44336; /* Rosso */
+    background-color: #f44336;
     color: white;
 }
 
 .popup-button.confirm:hover {
-    background-color: #388e3c; /* Verde scuro */
+    background-color: #388e3c;
 }
 
 .popup-button.cancel:hover {
-    background-color: #d32f2f; /* Rosso scuro */
+    background-color: #d32f2f;
 }
 
 /* Stili per l'editor dei piani */
@@ -719,7 +779,7 @@ input:checked + .slider:before {
     margin-bottom: 1rem;
     border: 2px solid #ddd;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: calc(1rem + 0.2vw);
 }
 
 .editor-button {
@@ -768,7 +828,7 @@ input:checked + .slider:before {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: calc(1rem + 0.2vw);
     margin-left: 0.5rem;
 }
 
@@ -798,4 +858,152 @@ input:checked + .slider:before {
 .popup-button.edit {
     background-color: #008CBA;
     color: white;
+}
+
+#phasesContainer {
+    max-height: 300px; 
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#phasesContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#phasesContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#phasesContainer::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#phasesContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Media query per schermi piccoli */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .app-title {
+        font-size: calc(2rem + 0.5vw);
+    }
+
+    .app-name-secondary {
+        font-size: calc(1.5rem + 0.2vw);
+    }
+
+    .speed-control button {
+        width: calc(35px + 0.5vw);
+        height: calc(35px + 0.5vw);
+        font-size: calc(1.2rem + 0.2vw);
+    }
+
+    .speed-control input {
+        width: calc(80px + 1vw);
+        font-size: calc(1.1rem + 0.2vw);
+    }
+
+    .parameter-item {
+        min-width: 30%;
+    }
+
+    .parameter-icon .icon {
+        width: calc(50px + 0.5vw);
+        height: calc(50px + 0.5vw);
+    }
+}
+
+/* Media query per schermi molto piccoli */
+@media (max-width: 480px) {
+    .container {
+        width: 95vw;
+        height: 95vh;
+        padding: 0.8rem;
+    }
+
+    .app-title {
+        font-size: calc(1.8rem + 0.2vw);
+        padding: 0.5rem;
+    }
+
+    .app-name-secondary {
+        font-size: calc(1.2rem + 0.2vw);
+    }
+
+    .speed-control button {
+        width: calc(30px + 0.5vw);
+        height: calc(30px + 0.5vw);
+        font-size: calc(1rem + 0.2vw);
+        margin: 0 0.5rem;
+    }
+
+    .speed-control input {
+        width: calc(70px + 1vw);
+        font-size: calc(1rem + 0.2vw);
+    }
+
+    .speed-dots .dot {
+        width: calc(25px + 0.5vw);
+        height: calc(25px + 0.5vw);
+        font-size: calc(0.8rem + 0.2vw);
+    }
+
+    .parameter-container {
+        flex-wrap: wrap;
+    }
+
+    .parameter-item {
+        width: 45%;
+        margin-bottom: 0.5rem;
+    }
+
+    .parameter-icon .icon {
+        width: calc(40px + 0.5vw);
+        height: calc(40px + 0.5vw);
+    }
+
+    .parameter-value {
+        font-size: calc(1rem + 0.2vw);
+    }
+
+    .start-stop-controls button {
+        padding: 0.5rem 1rem;
+        font-size: calc(0.9rem + 0.2vw);
+    }
+}
+
+/* Media query per orientamento orizzontale su mobile */
+@media (max-height: 500px) {
+    .container {
+        height: 95vh;
+        padding: 0.5rem;
+    }
+
+    .header {
+        margin-bottom: 0.5rem;
+    }
+
+    .speed-control {
+        margin: 0.3rem 0;
+    }
+
+    .speed-dots {
+        margin: 0.5rem 0;
+    }
+
+    .parameter-container {
+        margin: 0.3rem 0;
+    }
+
+    .plan-info {
+        max-height: 25vh;
+    }
 }
