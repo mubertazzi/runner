@@ -76,6 +76,7 @@ document.getElementById('stop').addEventListener('click', () => {
 
     // Ripristina il pulsante "Select Plan" alla sua icona predefinita
 	ripristinaPulsantePiano();
+	inizializzaPlanSection();
 });
 
 function stopAll() {
@@ -91,8 +92,8 @@ function stopAll() {
     if (isAutoMode) {
         // Gestisci la modalità automatica
         pianoAllenamento = []; // Resetta il piano di allenamento
-        document.getElementById('plan-section').innerHTML = ''; // Pulisci l'interfaccia
-        document.getElementById('plan-section').style.display = 'none'; // Nascondi la sezione
+        //document.getElementById('plan-section').innerHTML = ''; // Pulisci l'interfaccia
+        //document.getElementById('plan-section').style.display = 'none'; // Nascondi la sezione
         document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
         document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
         isAutoMode = false; // Disabilita la modalità automatica
@@ -188,10 +189,12 @@ document.getElementById('selectPlan').addEventListener('click', () => {
         if (startTime && faseCorrente < pianoAllenamento.length) {
             stopAll(); // Chiamata originale a stopAll()
         } else {
-            document.getElementById('plan-section').style.display = 'none';
+            //document.getElementById('plan-section').style.display = 'none';
+			document.getElementById('plan-section').innerHTML = ''; // Pulisci l'interfaccia
             isAutoMode = false;
         }
         ripristinaPulsantePiano();
+		inizializzaPlanSection();
 
     } else {
         // Comportamento originale - Mostra selezione piano
@@ -375,7 +378,8 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
     // Evidenzia la fase attiva
     evidenziaFaseAttiva(faseCorrente);
     // Aggiunge la X come elemento figlio di plan-section, posizionata fuori a destra
-    const closeButton = document.createElement('button');
+    /*
+	const closeButton = document.createElement('button');
     closeButton.classList.add('close-button');
     closeButton.textContent = '×';
     closeButton.style.display = 'none';
@@ -394,6 +398,7 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
         closeButton.style.display = 'none';
     });
     planInfoDiv.appendChild(closeButton);
+	*/
 }
 
 // Funzione per creare una barra dell'istogramma
@@ -504,6 +509,7 @@ function mostraMessaggioCompletamento() {
     // Aggiungi un listener per il click sul messaggio
     completionMessage.addEventListener('click', function() {
         completionMessage.style.display = 'none'; // Nascondi al click
+		inizializzaPlanSection();
     });
 }
 
@@ -665,3 +671,22 @@ function ripristinaPulsantePiano()
             </svg>
         `;
 }
+
+function inizializzaPlanSection() {
+    const planSection = document.getElementById('plan-section');
+    planSection.innerHTML = `
+        <div class="empty-plan-section">
+            <div class="empty-plan-content">
+                <span class="runner-emoji">🏃‍♂️</span>
+                <div class="treadmill-container">
+                    <div class="treadmill-belt"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    planSection.style.display = 'block';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	inizializzaPlanSection();
+});
