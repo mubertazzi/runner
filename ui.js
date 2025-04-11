@@ -75,15 +75,7 @@ document.getElementById('stop').addEventListener('click', () => {
     stopAll();
 
     // Ripristina il pulsante "Select Plan" alla sua icona predefinita
-    document.getElementById('selectPlan').innerHTML = `
-        <svg viewBox="0 0 26 24" width="26" height="24">
-            <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
-            <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
-            <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
-            <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
-            <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
-        </svg>
-    `;
+	ripristinaPulsantePiano();
 });
 
 function stopAll() {
@@ -99,8 +91,8 @@ function stopAll() {
     if (isAutoMode) {
         // Gestisci la modalità automatica
         pianoAllenamento = []; // Resetta il piano di allenamento
-        document.getElementById('plan-info').innerHTML = ''; // Pulisci l'interfaccia
-        document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
+        document.getElementById('plan-section').innerHTML = ''; // Pulisci l'interfaccia
+        document.getElementById('plan-section').style.display = 'none'; // Nascondi la sezione
         document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
         document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
         isAutoMode = false; // Disabilita la modalità automatica
@@ -196,19 +188,11 @@ document.getElementById('selectPlan').addEventListener('click', () => {
         if (startTime && faseCorrente < pianoAllenamento.length) {
             stopAll(); // Chiamata originale a stopAll()
         } else {
-            document.getElementById('plan-info').style.display = 'none';
+            document.getElementById('plan-section').style.display = 'none';
             isAutoMode = false;
         }
-        // RIPRISTINO ICONA (UNICA MODIFICA RICHIESTA)
-        document.getElementById('selectPlan').innerHTML = `
-            <svg viewBox="0 0 26 24" width="26" height="24">
-                <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
-                <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
-                <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
-                <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
-                <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
-            </svg>
-        `;
+        ripristinaPulsantePiano();
+
     } else {
         // Comportamento originale - Mostra selezione piano
         try {
@@ -281,7 +265,7 @@ function caricaPianoAllenamentoFromData(piano) {
     visualizzaPiano(pianoAllenamento, nomePianoAllenamento);
     // Imposta la modalità automatica
     isAutoMode = true;
-    document.getElementById('plan-info').style.display = 'block';
+    document.getElementById('plan-section').style.display = 'block';
     document.getElementById('selectPlan').innerHTML = `
         <svg viewBox="0 0 24 24" width="24" height="24">
             <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -309,7 +293,7 @@ function caricaPianoAllenamento(file) {
             visualizzaPiano(pianoAllenamento, nomePianoAllenamento);
             // Imposta la modalità automatica
             isAutoMode = true;
-            document.getElementById('plan-info').style.display = 'block'; // Mostra la sezione
+            document.getElementById('plan-section').style.display = 'block'; // Mostra la sezione
         } catch (error) {
             console.error("Errore durante il caricamento del JSON:", error);
         }
@@ -350,7 +334,7 @@ function trasformaInArrayPiatto(piano) {
 
 // Funzione per visualizzare il piano di allenamento
 function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
-    const planInfoDiv = document.getElementById('plan-info');
+    const planInfoDiv = document.getElementById('plan-section');
     planInfoDiv.innerHTML = ''; // Pulisce il contenuto precedente
     // Prima riga: Titolo e parametri
     const titleRow = document.createElement('div');
@@ -390,7 +374,7 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
     planInfoDiv.appendChild(histogramDiv);
     // Evidenzia la fase attiva
     evidenziaFaseAttiva(faseCorrente);
-    // Aggiunge la X come elemento figlio di plan-info, posizionata fuori a destra
+    // Aggiunge la X come elemento figlio di plan-section, posizionata fuori a destra
     const closeButton = document.createElement('button');
     closeButton.classList.add('close-button');
     closeButton.textContent = '×';
@@ -401,7 +385,7 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
             stopAll(); // Ferma tutto e resetta lo stato
         } else {
             // Se non c'è un allenamento attivo, nascondi semplicemente la sezione
-            document.getElementById('plan-info').style.display = 'none'; // Nascondi la sezione
+            document.getElementById('plan-section').style.display = 'none'; // Nascondi la sezione
             document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
             document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
             isAutoMode = false; // Disabilita la modalità automatica
@@ -527,7 +511,7 @@ function gestioneFasi() {
     document.querySelector('.conto-alla-rovescia').textContent =
         `${Math.floor(tempoRimanente / 60)}:${('0' + (tempoRimanente % 60)).slice(-2)}`;
     let fase = pianoAllenamento[faseCorrente];
-    const planInfoDiv = document.getElementById('plan-info');
+    const planInfoDiv = document.getElementById('plan-section');
     let faseAttualeDiv = planInfoDiv.querySelector('.fase-attuale');
     const contoAllaRovescia = document.querySelector('.conto-alla-rovescia').textContent;
     const tempoTrascorso = (fase.tempo * 60) - tempoRimanente;
@@ -579,6 +563,7 @@ function gestioneFasi() {
             } else {
                 // Allenamento completato
                 console.log("Allenamento completato!");
+				ripristinaPulsantePiano();
                 mostraMessaggioCompletamento();
                 stopAll();
             }
@@ -667,3 +652,16 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
+
+function ripristinaPulsantePiano()
+{
+        document.getElementById('selectPlan').innerHTML = `
+            <svg viewBox="0 0 26 24" width="26" height="24">
+                <rect x="2" y="8" width="3" height="8" fill="currentColor"/>
+                <rect x="7" y="4" width="3" height="12" fill="currentColor"/>
+                <rect x="12" y="6" width="3" height="10" fill="currentColor"/>
+                <rect x="17" y="2" width="3" height="14" fill="currentColor"/>
+                <rect x="22" y="10" width="3" height="6" fill="currentColor"/>
+            </svg>
+        `;
+}
