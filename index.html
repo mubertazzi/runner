@@ -98,20 +98,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Sezione piano di allenamento -->
-        <div id="plan-section" class="plan-section">
-            <button class="close-button">×</button>
-            <h3 id="allenamento-titolo">ALLENAMENTO: </h3>
-            <div class="parametri-container">
-                <span class="parametri">Tempo: <span id="tempo-totale">0 min</span> - Distanza: <span id="distanza-totale">0.00 km</span></span>
-            </div>
-            <div class="fase-attuale">
-                <span class="nome-fase"></span>
-                <span class="conto-alla-rovescia"></span>
-            </div>
-            <div class="plan-histogram"></div>
-        </div>
         <!-- Pulsanti di controllo -->
         <div class="bottom-controls">
             <div class="start-stop-controls">
@@ -146,7 +132,21 @@
                     </svg>
                 </button>
             </div>
-        </div>
+        </div>        
+        <!-- Sezione piano di allenamento -->
+		<div id="plan-section" class="plan-section">
+			<div class="plan-info-container">
+				<h3 id="allenamento-titolo"></h3>
+				<div class="parametri-container">
+					<span class="parametri"><span id="tempo-totale"></span> <span id="distanza-totale"></span></span>
+				</div>
+				<div class="fase-attuale">
+					<span class="nome-fase"></span>
+					<span class="conto-alla-rovescia"></span>
+				</div>
+			</div>
+			<div class="plan-histogram"></div>
+		</div>
     </div>
     <!-- Messaggio di completamento -->
     <div id="completionMessage" class="completion-message">
