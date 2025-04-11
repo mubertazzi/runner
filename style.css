@@ -168,12 +168,55 @@ input:checked + .slider:before {
     }
 }
 
+/* MODIFICHE PRINCIPALI PER ALLINEARE LE SEZIONI */
+.device-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Allinea in alto invece di stretch */
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.speed-section {
+    background: linear-gradient(145deg, #e6d9ff, #f2eaff);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 50%; /* Larghezza moderata */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente i controlli */
+    align-items: center;
+    height: auto; /* Altezza determinata dal contenuto */
+    min-height: 180px; /* Altezza minima simile a parameter-section */
+    box-sizing: border-box;
+}
+
+.parameter-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    width: 50%; /* Occupa l'altra metà */
+    height: auto; /* Altezza naturale */
+    box-sizing: border-box;
+}
+
+/* Assicurati che i parameter-item non si allunghino troppo */
+.parameter-item {
+    height: auto; /* Altezza basata sul contenuto */
+    min-height: 180px; /* Mantieni un'altezza coerente */
+}
+
 /* Controlli della velocità */
 .speed-control {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1rem;
+    width: 100%;
+	margin-bottom: 1.5rem;
 }
 
 .speed-control button {
@@ -181,11 +224,11 @@ input:checked + .slider:before {
     color: white;
     border: none;
     border-radius: 50%;
-    width: calc(40px + 1vw);
-    height: calc(40px + 1vw);
-    font-size: calc(1.5rem + 0.5vw);
+    width: calc(50px + 1vw); /* Ingrandisce i bottoni (+10px rispetto a prima) */
+    height: calc(50px + 1vw); /* Ingrandisce i bottoni */
+    font-size: calc(2rem + 0.5vw); /* Ingrandisce il testo "+" e "-" */
     cursor: pointer;
-    margin: 0 1rem;
+    margin: 0 1.5rem; /* Aumenta lo spazio laterale tra bottoni e textbox */
     transition: background-color 0.3s;
 }
 
@@ -195,11 +238,11 @@ input:checked + .slider:before {
 
 .speed-control input {
     width: calc(100px + 2vw);
-    padding: 0.5rem;
-    font-size: calc(1.2rem + 0.5vw);
+    padding: 0.8rem; /* Aumenta il padding interno per una textbox più alta */
+    font-size: calc(1.5rem + 0.5vw); /* Ingrandisce il testo nella textbox */
     text-align: center;
     border: 2px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px; /* Bordi più arrotondati */
     outline: none;
 }
 
@@ -211,14 +254,14 @@ input:checked + .slider:before {
 .speed-dots {
     display: flex;
     justify-content: center;
-    margin: 1.5rem 0;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.8rem; /* Aumenta lo spazio tra i pallini */
+    width: 100%;
 }
 
 .speed-dots .dot {
-    width: calc(30px + 0.5vw);
-    height: calc(30px + 0.5vw);
+    width: calc(40px + 0.5vw); /* Ingrandito da 30px a 40px (+10px) */
+    height: calc(40px + 0.5vw); /* Ingrandito da 30px a 40px */
     border-radius: 50%;
     background-color: #6200ea;
     color: white;
@@ -227,10 +270,14 @@ input:checked + .slider:before {
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: calc(1.2rem + 0.3vw); /* Testo più grande (prima era ~1rem) */
+    font-weight: bold; /* Grassetto per migliore leggibilità */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ombra per profondità */
 }
 
 .speed-dots .dot:hover {
     background-color: #3700b3;
+    transform: scale(1.05); /* Leggero effetto "zoom" al hover */
 }
 
 .icon-button {
@@ -262,64 +309,49 @@ input:checked + .slider:before {
 }
 
 /* Contenitore principale per i parametri */
-.parameter-container {
-    display: flex;
-    justify-content: space-between; /* Distribuisce uniformemente gli elementi */
-    align-items: center;
-    margin-bottom: 1rem;
-    gap: 1rem;
-    width: 100%; /* Occupa tutta la larghezza disponibile */
-}
-
-/* Stile per ciascun parametro */
 .parameter-item {
     background: linear-gradient(145deg, #ffffff, #f0f0f8);
-    border-radius: 15px; /* Bordo arrotondato */
-    padding: 1rem; /* Spazio interno */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Ombra leggera */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Effetto hover */
-    width: 30%; /* Larghezza fissa più grande */
-    height: auto; /* Altezza automatica */
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 22%; 
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 /* Effetto hover sui parametri */
 .parameter-item:hover {
-    transform: translateY(-5px); /* Solleva leggermente */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata */
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Etichette dei parametri */
 .parameter-label {
-    font-size: 1rem; /* Testo più grande */
+    font-size: 1rem;
     color: #555;
-    margin-bottom: 0.5rem; /* Spazio sotto l'etichetta */
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 /* Valori dei parametri */
 .parameter-value {
-    font-size: 1.5rem; /* Testo molto più grande */
+    font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
 }
 
 /* Icone dei parametri */
 .parameter-icon .icon {
-    width: 60px; /* Icona più grande */
+    width: 60px;
     height: 60px;
-    margin-bottom: 0.5rem; /* Spazio sotto l'icona */
-}
-
-/* Effetto hover sui parametri */
-.parameter-item:hover {
-    transform: translateY(-5px); /* Solleva leggermente */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra più pronunciata */
+    margin-bottom: 0.5rem;
 }
 
 /* Colori personalizzati per ciascun parametro */
@@ -333,9 +365,39 @@ input:checked + .slider:before {
     border: 1px solid #a5d6a7;
 }
 
+.parameter-item.time .parameter-icon .icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 0.5rem;
+}
+
 .parameter-item.distance {
     background: linear-gradient(145deg, #fff3e0, #ffe0b2);
     border: 1px solid #ffcc80;
+}
+
+/* Icona calorie specifica */
+.parameter-item.calories .parameter-icon .icon {
+    width: 80px;
+    height: 80px;
+}
+
+/* Stile del path */
+.parameter-item.calories .parameter-icon .icon path {
+    stroke: #d81b60;
+    fill: none;
+    stroke-width: 1.5;
+}
+
+/* Container calorie - stesso stile degli altri */
+.parameter-item.calories {
+    background: linear-gradient(145deg, #fce4ec, #f8bbd0);
+    border: 1px solid #f48fb1;
+}
+
+/* Colore del valore delle calorie */
+#calories {
+    color: #d81b60;
 }
 
 /* Stile base per tutte le icone */
@@ -367,11 +429,12 @@ input:checked + .slider:before {
 #distance { color: #ff9933; }
 
 /* Pulsanti di controllo */
-.bottom-controls {
+.controls-section {
     display: flex;
     justify-content: center;
     margin-top: auto;
-    padding-bottom: 1rem;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .start-stop-controls {
@@ -455,7 +518,7 @@ input:checked + .slider:before {
 }
 
 /* Sezione piano di allenamento */
-.plan-info {
+.plan-section {
     margin-top: 1rem;
     padding: 1rem;
     border: 1px solid #008CBA;
@@ -464,11 +527,11 @@ input:checked + .slider:before {
     display: none;
     font-size: calc(0.9rem + 0.2vw);
     position: relative;
-    overflow: auto; /* Mantieni solo scroll verticale */
+    overflow: auto;
     max-height: 30vh;
-    width: 100%; /* Assicura che occupi tutto lo spazio */
-    box-sizing: border-box; /* Include padding nel calcolo della larghezza */
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Roboto Slab', serif;
 }
 
 .plan-row {
@@ -478,27 +541,27 @@ input:checked + .slider:before {
     margin-top: 0;
     font-size: calc(1rem + 0.2vw);
     width: 100%;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .plan-title {
     color: orange;
     text-align: left;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .plan-params {
     color: darkblue;
     text-align: right;
     font-size: calc(1rem + 0.2vw);
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .close-button {
     position: absolute;
-    top: -6px; /* Mantiene la posizione verticale originale */
-    left: 50%; /* Centra orizzontalmente */
-    transform: translateX(-50%); /* Compensa la metà della larghezza */
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
     background: none;
     border: none;
     font-size: calc(1.2rem + 0.2vw);
@@ -527,7 +590,7 @@ input:checked + .slider:before {
     margin-left: 0;
     width: 100%;
     display: initial;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 /* Parametri allineati a destra */
@@ -539,7 +602,7 @@ input:checked + .slider:before {
 .parametri {
     font-size: calc(1rem + 0.2vw);
     color: darkblue;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 /* Nome della fase e conto alla rovescia */
@@ -550,19 +613,19 @@ input:checked + .slider:before {
     margin-top: 0.5rem;
     font-size: calc(1rem + 0.2vw);
     color: orange;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .fase-attuale .nome-fase {
     color: orange;
     text-align: left;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .fase-attuale .conto-alla-rovescia {
     color: darkblue;
     text-align: right;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 /* Lampeggiamento del conto alla rovescia */
@@ -603,7 +666,7 @@ input:checked + .slider:before {
     background-color: transparent;
     padding: 0;
     border-radius: 0;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .plan-histogram .bar .time-label {
@@ -624,7 +687,7 @@ input:checked + .slider:before {
     background-color: transparent;
     padding: 0;
     border-radius: 0;
-    font-family: 'Roboto Slab', serif; /* Nuovo font */
+    font-family: 'Roboto Slab', serif;
 }
 
 .plan-histogram .bar.active .time-label {
@@ -900,6 +963,10 @@ input:checked + .slider:before {
         font-size: calc(1.5rem + 0.2vw);
     }
 
+    .speed-section {
+        width: 70%;
+    }
+
     .speed-control button {
         width: calc(35px + 0.5vw);
         height: calc(35px + 0.5vw);
@@ -912,7 +979,7 @@ input:checked + .slider:before {
     }
 
     .parameter-item {
-        min-width: 30%;
+        min-width: 22%;
     }
 
     .parameter-icon .icon {
@@ -938,6 +1005,11 @@ input:checked + .slider:before {
         font-size: calc(1.2rem + 0.2vw);
     }
 
+    .speed-section {
+        width: 90%;
+        padding: 1rem;
+    }
+
     .speed-control button {
         width: calc(30px + 0.5vw);
         height: calc(30px + 0.5vw);
@@ -956,7 +1028,7 @@ input:checked + .slider:before {
         font-size: calc(0.8rem + 0.2vw);
     }
 
-    .parameter-container {
+    .parameter-section {
         flex-wrap: wrap;
     }
 
@@ -991,19 +1063,15 @@ input:checked + .slider:before {
         margin-bottom: 0.5rem;
     }
 
-    .speed-control {
+    .speed-section {
+        width: 70%;
+    }
+
+    .parameter-section {
         margin: 0.3rem 0;
     }
 
-    .speed-dots {
-        margin: 0.5rem 0;
-    }
-
-    .parameter-container {
-        margin: 0.3rem 0;
-    }
-
-    .plan-info {
+    .plan-section {
         max-height: 25vh;
     }
 }
