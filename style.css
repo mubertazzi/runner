@@ -1187,8 +1187,8 @@ input:checked + .slider:before {
 }
 
 @keyframes beltMove {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-40px); }
+    0% { transform: translateX(-40px); }
+    100% { transform: translateX(0); }
 }
 
 @keyframes animateBg {
