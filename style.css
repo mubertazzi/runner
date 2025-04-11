@@ -11,15 +11,15 @@ body {
     box-sizing: border-box;
 }
 
-/* Contenitore principale - MODIFICATO */
+/* Container principale */
 .container {
     text-align: center;
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 95vw; /* Larghezza relativa alla finestra */
-    height: 90vh; /* Altezza relativa alla finestra */
+    width: 95vw;
+    height: 90vh;
     max-width: 100%;
     max-height: 100%;
     margin: 0 auto;
@@ -29,6 +29,7 @@ body {
     display: flex;
     flex-direction: column;
 }
+
 
 /* Intestazione */
 .header {
@@ -168,46 +169,72 @@ input:checked + .slider:before {
     }
 }
 
-/* MODIFICHE PRINCIPALI PER ALLINEARE LE SEZIONI */
+/* Sezione dispositivo (speed + parameters) */
 .device-section {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Allinea in alto invece di stretch */
+    align-items: stretch;
     gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
+    flex: 0 0 auto;
 }
 
+/* Sezione velocità */
 .speed-section {
     background: linear-gradient(145deg, #e6d9ff, #f2eaff);
     border-radius: 15px;
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 50%; /* Larghezza moderata */
+    width: 50%;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra verticalmente i controlli */
+    justify-content: center;
     align-items: center;
-    height: auto; /* Altezza determinata dal contenuto */
-    min-height: 180px; /* Altezza minima simile a parameter-section */
+    height: 100%;
+    min-height: 180px;
     box-sizing: border-box;
 }
 
+/* Sezione parametri */
 .parameter-section {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     gap: 1rem;
-    width: 50%; /* Occupa l'altra metà */
-    height: auto; /* Altezza naturale */
+    width: 50%;
+    height: 100%;
     box-sizing: border-box;
 }
 
-/* Assicurati che i parameter-item non si allunghino troppo */
+/* Pulsanti inferiori */
+/*
+.bottom-controls {
+    flex: 0 0 auto;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+*/
+
+/* Items dei parametri */
 .parameter-item {
-    height: auto; /* Altezza basata sul contenuto */
-    min-height: 180px; /* Mantieni un'altezza coerente */
+    background: linear-gradient(145deg, #ffffff, #f0f0f8);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 22%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Controlli della velocità */
@@ -519,6 +546,8 @@ input:checked + .slider:before {
 
 /* Sezione piano di allenamento */
 .plan-section {
+    flex: 1;
+    min-height: 150px;
     margin-top: 1rem;
     padding: 1rem;
     border: 1px solid #008CBA;
@@ -528,7 +557,6 @@ input:checked + .slider:before {
     font-size: calc(0.9rem + 0.2vw);
     position: relative;
     overflow: auto;
-    max-height: 30vh;
     width: 100%;
     box-sizing: border-box;
     font-family: 'Roboto Slab', serif;
@@ -644,7 +672,7 @@ input:checked + .slider:before {
     display: flex;
     margin-top: 0.5rem;
     position: relative;
-    height: calc(120px + 2vw);
+    height: 80%;/*calc(120px + 2vw);*/
     align-items: flex-end;
     gap: 0;
 }
@@ -1074,4 +1102,96 @@ input:checked + .slider:before {
     .plan-section {
         max-height: 25vh;
     }
+}
+
+.empty-plan-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 0rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.empty-plan-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h30v30H0V0zm30 30h30v30H30V30z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+    animation: animateBg 60s linear infinite;
+    z-index: 0;
+}
+
+.empty-plan-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.runner-emoji {
+    font-size: 10rem;
+    margin: 0.5rem 0;
+    display: inline-block;
+    animation: runAnimation 0.8s ease-in-out infinite alternate;
+    order: -1; /* Sposta l'emoji sopra gli elementi di testo */
+}
+
+.treadmill-container {
+    position: relative;
+    width: 250px;
+    margin-top: -15px;
+}
+
+.treadmill-belt {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.treadmill-belt::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        90deg,
+        #555 0px,
+        #555 20px,
+        #777 20px,
+        #777 40px
+    );
+    animation: beltMove 0.8s linear infinite;
+}
+
+@keyframes runAnimation {
+    0% { transform: translateY(-2px) translateX(-3px); }
+    100% { transform: translateY(2px) translateX(3px); }
+}
+
+@keyframes beltMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-40px); }
+}
+
+@keyframes animateBg {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
