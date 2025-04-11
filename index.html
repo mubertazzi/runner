@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -26,64 +26,81 @@
                 <div id="connectionStatus" class="connection-status">Disconnesso</div>
             </div>
         </div>
-        <!-- Controlli della velocità -->
-        <div class="speed-control">
-            <button id="decreaseSpeed">-</button>
-            <input type="text" id="speedInput" value="1.0" readonly>
-            <button id="increaseSpeed">+</button>
+        
+        <!-- Sezione combinata per controlli velocità e parametri -->
+        <div class="device-section">
+            <!-- Controlli della velocità -->
+			<div class="speed-section">
+				<div class="speed-control">
+					<button id="decreaseSpeed">-</button>
+					<input type="text" id="speedInput" value="1.0" readonly>
+					<button id="increaseSpeed">+</button>
+				</div>
+				<div class="speed-dots">
+					<span class="dot" data-speed="1">1</span>
+					<span class="dot" data-speed="2">2</span>
+					<span class="dot" data-speed="3">3</span>
+					<span class="dot" data-speed="4">4</span>
+					<span class="dot" data-speed="5">5</span>
+					<span class="dot" data-speed="6">6</span>
+					<span class="dot" data-speed="7">7</span>
+					<span class="dot" data-speed="8">8</span>
+					<span class="dot" data-speed="9">9</span>
+					<span class="dot" data-speed="10">10</span>
+				</div>
+			</div>
+            
+            <!-- Parametri (velocità, tempo, distanza, calorie) -->
+            <div class="parameter-section">
+                <!-- Velocità - Blu -->
+                <div class="parameter-item speed">
+                    <div class="parameter-icon speed-icon">
+                        <svg viewBox="0 0 16 16" class="icon">
+                            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+                            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+                        </svg>
+                    </div>
+                    <span id="currentSpeed" class="parameter-value">0.0 km/h</span>
+                </div>
+                <!-- Tempo - Verde -->
+                <div class="parameter-item time">
+                    <div class="parameter-icon time-icon">
+                        <svg viewBox="0 0 100 100" class="icon" fill="#00cc99" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M81.3,19.6c0.8,0.7,1.7,1,2.7,1c1.1,0,2.2-0.4,3-1.3c1.5-1.6,1.4-4.2-0.3-5.7l-5.2-4.7c0,0,0,0,0,0s0,0,0,0l-5.2-4.7 c-1.6-1.5-4.2-1.4-5.6,0.3c-1.5,1.6-1.4,4.2,0.3,5.7l2.2,2l-4,4.5c-4.6-3.4-9.9-5.9-15.7-7.2c-0.1-1.3-0.6-2.7-1.6-4 c-1-1.4-3.1-3-6.9-3.2c-0.1,0-0.1,0-0.2,0c-3.5,0-5.5,1.5-6.6,2.8c-1.2,1.4-1.7,3.1-1.9,4.4C17.8,13.4,4,29.8,4,49.4 c0,22.5,18.3,40.9,40.8,40.9c22.5,0,40.8-18.3,40.8-40.9c0-10.5-4-20.1-10.5-27.4l4-4.5L81.3,19.6z M44.8,82.2 C26.7,82.2,12,67.5,12,49.4s14.7-32.8,32.8-32.8c18.1,0,32.8,14.7,32.8,32.8S62.9,82.2,44.8,82.2z M51.8,49.4c0,3.8-3.2,6.9-7,6.9 c-3.8,0-6.8-3.1-6.8-6.9c0-2.3,1-4.4,3-5.6V27.6c0-2.2,1.8-4,4-4s4,1.8,4,4v16.2C51,45,51.8,47.1,51.8,49.4z"/>
+                        </svg>
+                    </div>
+                    <span id="elapsedTime" class="parameter-value">00:00:00</span>
+                </div>
+                <!-- Distanza - Arancione -->
+                <div class="parameter-item distance">
+                    <div class="parameter-icon distance-icon">
+                        <svg viewBox="0 0 64 64" class="icon">
+                            <path stroke-width="3" d="M17.94,54.81a.1.1 0,0,1-.14,0c-1-1.11-11.69-13.23-11.69-21.26,0-9.94,6.5-12.24,11.76-12.24,4.84,0,11.06,2.6,11.06,12.24C28.93,41.84,18.87,53.72,17.94,54.81Z"/>
+                            <circle cx="17.52" cy="31.38" r="4.75" stroke-width="3"/>
+                            <path stroke-width="3" d="M49.58,34.77a.11.11 0,0,1-.15,0c-.87-1-9.19-10.45-9.19-16.74,0-7.84,5.12-9.65,9.27-9.65,3.81,0,8.71,2,8.71,9.65C58.22,24.52,50.4,33.81,49.58,34.77Z"/>
+                            <circle cx="49.23" cy="17.32" r="3.75" stroke-width="3"/>
+                            <path stroke-width="2" d="M17.87,54.89a28.73,28.73 0,0,0,3.9.89"/>
+                            <path stroke-width="2" stroke-dasharray="7.8 2.92" d="M24.68,56.07c2.79.12,5.85-.28,7.9-2.08,5.8-5.09,2.89-11.25,6.75-14.71a16.72,16.72 0,0,1,4.93-3"/>
+                            <path stroke-width="2" d="M45.63,35.8a23,23 0,0,1,3.88-.95"/>
+                        </svg>
+                    </div>
+                    <span id="distance" class="parameter-value">0.000 km</span>
+                </div>
+                <!-- Calorie - Rosa -->
+                <div class="parameter-item calories">
+                    <div class="parameter-icon calories-icon">
+                        <svg viewBox="0 0 20 20" class="icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.5 10.0003C14.5 9.20875 15.5528 8.99895 15.8321 9.73957C16.5077 11.5311 17 13.1337 17 14.0002C17 16.7616 14.7614 19.0002 12 19.0002C9.23858 19.0002 7 16.7616 7 14.0002C7 13.0693 7.56822 11.2887 8.32156 9.33698C9.29743 6.80879 9.78536 5.54469 10.3877 5.4766C10.5804 5.45482 10.7907 5.49399 10.9626 5.58371C11.5 5.86413 11.5 7.24285 11.5 10.0003C11.5 10.8287 12.1716 11.5003 13 11.5003C13.8284 11.5003 14.5 10.8287 14.5 10.0003Z" stroke="#d81b60" stroke-width="1.5"/>
+                            <path d="M11 19L10.7372 18.343C10.2816 17.204 10.4737 15.9079 11.24 14.95V14.95C11.6296 14.463 12.3704 14.463 12.76 14.95V14.95C13.5263 15.9079 13.7184 17.204 13.2628 18.343L13 19" stroke="#d81b60" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <span id="calories" class="parameter-value">0.0 kcal</span>
+                </div>
+            </div>
         </div>
-        <!-- Pallini di velocità -->
-        <div class="speed-dots">
-            <span class="dot" data-speed="1">1</span>
-            <span class="dot" data-speed="2">2</span>
-            <span class="dot" data-speed="3">3</span>
-            <span class="dot" data-speed="4">4</span>
-            <span class="dot" data-speed="5">5</span>
-            <span class="dot" data-speed="6">6</span>
-            <span class="dot" data-speed="7">7</span>
-            <span class="dot" data-speed="8">8</span>
-            <span class="dot" data-speed="9">9</span>
-            <span class="dot" data-speed="10">10</span>
-        </div>
-        <!-- Parametri (velocità, tempo, distanza) -->
-		<div class="parameter-container">
-			<!-- Velocità - Blu -->
-			<div class="parameter-item speed">
-				<div class="parameter-icon speed-icon">
-					<svg viewBox="0 0 16 16" class="icon">
-						<path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
-						<path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
-					</svg>
-				</div>
-				<span id="currentSpeed" class="parameter-value">0.0 km/h</span>
-			</div>
-			<!-- Tempo - Verde -->
-			<div class="parameter-item time">
-				<div class="parameter-icon time-icon">
-					<svg viewBox="0 0 16 16" class="icon">
-						<path stroke-width="1" d="M9,0 C9.55229,0 10,0.447715 10,1 C10,1.55228 9.55229,2 9,2 L9,2.07089 C10.1894,2.24101 11.2823,2.71011 12.2001,3.3996 C12.2281,3.36242 12.259,3.32674 12.2929,3.29289 L13.2929,2.29289 C13.6834,1.90237 14.3166,1.90237 14.7071,2.29289 C15.0976,2.68342 15.0976,3.31658 14.7071,3.70711 L13.7071,4.70711 C13.6733,4.74096 13.6376,4.77187 13.6004,4.79985 C14.4792,5.9698 15,7.42409 15,9 C15,12.866 11.866,16 8,16 C4.13401,16 1,12.866 1,9 C1,5.47353 3.60771,2.55612 7,2.07089 L7,2 C6.44772,2 6,1.55228 6,1 C6,0.447715 6.44772,0 7,0 L9,0 Z M8,4 C5.23858,4 3,6.23858 3,9 C3,11.7614 5.23858,14 8,14 C10.7614,14 13,11.7614 13,9 C13,6.23858 10.7614,4 8,4 Z M8,5 C8.55229,5 9,5.44772 9,6 L9,8.58579 L10.7071,10.2929 C11.0976,10.6834 11.0976,11.3166 10.7071,11.7071 C10.3166,12.0976 9.68342,12.0976 9.29289,11.7071 L7,9.41421 L7,6 C7,5.44772 7.44772,5 8,5 Z"/>
-					</svg>
-				</div>
-				<span id="elapsedTime" class="parameter-value">00:00:00</span>
-			</div>
-			<!-- Distanza - Arancione -->
-			<div class="parameter-item distance">
-				<div class="parameter-icon distance-icon">
-					<svg viewBox="0 0 64 64" class="icon">
-						<path stroke-width="3" d="M17.94,54.81a.1.1 0,0,1-.14,0c-1-1.11-11.69-13.23-11.69-21.26,0-9.94,6.5-12.24,11.76-12.24,4.84,0,11.06,2.6,11.06,12.24C28.93,41.84,18.87,53.72,17.94,54.81Z"/>
-						<circle cx="17.52" cy="31.38" r="4.75" stroke-width="3"/>
-						<path stroke-width="3" d="M49.58,34.77a.11.11 0,0,1-.15,0c-.87-1-9.19-10.45-9.19-16.74,0-7.84,5.12-9.65,9.27-9.65,3.81,0,8.71,2,8.71,9.65C58.22,24.52,50.4,33.81,49.58,34.77Z"/>
-						<circle cx="49.23" cy="17.32" r="3.75" stroke-width="3"/>
-						<path stroke-width="2" d="M17.87,54.89a28.73,28.73 0,0,0,3.9.89"/>
-						<path stroke-width="2" stroke-dasharray="7.8 2.92" d="M24.68,56.07c2.79.12,5.85-.28,7.9-2.08,5.8-5.09,2.89-11.25,6.75-14.71a16.72,16.72 0,0,1,4.93-3"/>
-						<path stroke-width="2" d="M45.63,35.8a23,23 0,0,1,3.88-.95"/>
-					</svg>
-				</div>
-				<span id="distance" class="parameter-value">0.000 km</span>
-			</div>
-		</div>
+        
         <!-- Sezione piano di allenamento -->
-        <div id="plan-info" class="plan-info">
+        <div id="plan-section" class="plan-section">
             <button class="close-button">×</button>
             <h3 id="allenamento-titolo">ALLENAMENTO: </h3>
             <div class="parametri-container">
