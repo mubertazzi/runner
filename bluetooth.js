@@ -74,7 +74,9 @@ function startAutomaticReading() {
             // Listener per aggiornamenti in tempo reale
             readCharacteristic.addEventListener('characteristicvaluechanged', event => {
                 const value = event.target.value;
-
+				// Per loggare tutti i byte del buffer
+				const bufferArray = new Uint8Array(value.buffer);
+				console.log("Buffer completo:", Array.from(bufferArray).map(b => b.toString(16).padStart(2, '0')).join(' '));
                 // Leggi la velocità (Byte 2 e Byte 3)
                 const speed = value.getUint16(2, true) / 100; // Velocità in km/h
 
@@ -89,6 +91,9 @@ function startAutomaticReading() {
                 const minutes = Math.floor((elapsedTime % 3600) / 60);
                 const seconds = elapsedTime % 60;
                 const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+				
+			   // Leggi le calorie (Byte 6 e Byte 7)
+			   const calories = value.getUint16(6, true) / 256 * 100; // Calorie in kilocalorie
 
                 // Calcolo diretto del tempo rimanente 
                 if (isAutoMode && pianoAllenamento.length > 0) {
@@ -105,6 +110,7 @@ function startAutomaticReading() {
                 document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
                 document.getElementById('distance').textContent = distance.toFixed(3) + " km";
                 document.getElementById('elapsedTime').textContent = formattedTime;
+				document.getElementById('calories').textContent = calories.toFixed(0) + " kcal";
 
                 // Aggiorna le variabili globali
                 startTime = Date.now() - elapsedTime * 1000; // Sincronizza startTime con il tempo ricevuto
