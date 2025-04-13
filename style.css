@@ -196,6 +196,12 @@ input:checked + .slider:before {
     align-items: center;
     height: auto;
     box-sizing: border-box;
+    border: 1px solid #b388ff; /* Aggiungi questa linea per il bordino */
+}
+	
+.speed-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Sezione parametri */
