@@ -1,240 +1,1072 @@
-let device;
-let writeCharacteristic;
-let readCharacteristic;
-let isConnected = false;
-let currentSpeedValue = 0; // Aggiunta per tenere traccia della velocità corrente
-let tempoRimanente = 0; // Tempo rimanente per la fase corrente (in secondi)
+/* Stile generale del corpo della pagina */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
-// UUID del servizio e delle caratteristiche (convertiti in formato lungo)
-const serviceUuid = "00001826-0000-1000-8000-00805f9b34fb";         // Fitness Machine Service
-const writeCharacteristicUuid = "00002ad9-0000-1000-8000-00805f9b34fb"; // Control Point (Scrittura)
-const readCharacteristicUuid = "00002acd-0000-1000-8000-00805f9b34fb";  // Treadmill Data (Lettura)
+/* Container principale */
+.container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 95vw;
+    height: 90vh;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    overflow: auto;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
 
-async function connectDevice() {
-    try {
-        // Richiedi dispositivo Bluetooth
-        device = await navigator.bluetooth.requestDevice({
-            filters: [{ services: [serviceUuid] }],
-            optionalServices: [serviceUuid] // Aggiungi se necessario
-        });
 
-        // Listener per disconnessione
-        device.addEventListener('gattserverdisconnected', () => {
-            alert("Disconnessione effettuata.");
-            document.getElementById('connectSwitch').checked = false;
-            isConnected = false;
-            updateConnectionStatus();
-        });
+/* Intestazione */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+	max-height: 80px;
+}
 
-        // Connetti al GATT Server
-        const server = await device.gatt.connect();
+.header h1 {
+    color: #333;
+    margin: 0;
+    font-size: calc(1.5rem + 1vw); /* Font size responsivo */
+}
 
-        // Ottieni il servizio
-        const service = await server.getPrimaryService(serviceUuid);
+/* Stile Titolo Moderno */
+.app-title {
+    font-size: calc(2.5rem + 1vw);
+    font-weight: 600;
+    background: linear-gradient(45deg, #0066ff, #00ccff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    position: relative;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
+    transition: all 0.3s ease;
+}
 
-        // Ottieni le caratteristiche
-        writeCharacteristic = await service.getCharacteristic(writeCharacteristicUuid);
-        readCharacteristic = await service.getCharacteristic(readCharacteristicUuid);
+.logo-icon {
+    margin-right: 10px;
+    font-size: calc(2.2rem + 0.5vw);
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+}
 
-        // Feedback visivo
-        console.log("Connesso con successo!");
+.app-name {
+    position: relative;
+    z-index: 2;
+}
 
-        // Avvia la lettura automatica
-        startAutomaticReading();
+.app-name-secondary {
+    color: #333;
+    display: block;
+    font-size: calc(1.8rem + 0.5vw);
+    margin-top: -8px;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    font-weight: 600;
+}
 
-        isConnected = true;
-        updateConnectionStatus();
-    } catch (error) {
-        alert("Errore: " + error.message);
-        console.error(error);
-        document.getElementById('connectSwitch').checked = false;
-        updateConnectionStatus();
+/* Effetto hover */
+.app-title:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
+}
+
+/* Interruttore di connessione */
+.switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.connection-status {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: red;
+    animation: blink 1s infinite;
+}
+
+.connection-status.connected {
+    color: green;
+    animation: none;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
     }
 }
 
-function disconnectDevice() {
-    if (device && device.gatt.connected) {
-        device.gatt.disconnect();
-    }
-    isConnected = false;
-    updateConnectionStatus();
+/* Sezione dispositivo (speed + parameters) */
+.device-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    flex: 0 0 auto;
+	max-height: 140px;
 }
 
-function startAutomaticReading() {
-    if (!readCharacteristic) {
-        console.error("Nessuna caratteristica di lettura disponibile");
-        return;
-    }
-
-    // Abilita notifiche per Treadmill Data
-    readCharacteristic.startNotifications()
-        .then(() => {
-            console.log("Notifiche Treadmill Data abilitate, in ascolto...");
-
-            // Listener per aggiornamenti in tempo reale
-            readCharacteristic.addEventListener('characteristicvaluechanged', event => {
-                const value = event.target.value;
-				// Per loggare tutti i byte del buffer
-				const bufferArray = new Uint8Array(value.buffer);
-				console.log("Buffer completo:", Array.from(bufferArray).map(b => b.toString(16).padStart(2, '0')).join(' '));
-                // Leggi la velocità (Byte 2 e Byte 3)
-                const speed = value.getUint16(2, true) / 100; // Velocità in km/h
-
-                // Leggi la distanza (Byte 4 e Byte 5)
-                const distance = value.getUint16(4, true) / 1000; // Distanza in km (convertita da metri)
-
-                // Leggi il tempo (Byte 12 e Byte 13)
-                const elapsedTime = value.getUint16(12, true); // Tempo in secondi
-
-                // Formatta il tempo in hh:mm:ss
-                const hours = Math.floor(elapsedTime / 3600);
-                const minutes = Math.floor((elapsedTime % 3600) / 60);
-                const seconds = elapsedTime % 60;
-                const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
-				
-			   // Leggi le calorie (Byte 6 e Byte 7)
-			   const calories = value.getUint16(6, true) / 256 * 100; // Calorie in kilocalorie
-
-                // Calcolo diretto del tempo rimanente 
-                if (isAutoMode && pianoAllenamento.length > 0) {
-                    let tempoCumulativoPrecedente = 0;
-                    for (let i = 0; i < faseCorrente; i++) {
-                        tempoCumulativoPrecedente += pianoAllenamento[i].tempo * 60; // Somma le durate delle fasi precedenti (in secondi)
-                    }
-                    const tempoTrascorsoFaseAttuale = elapsedTime - tempoCumulativoPrecedente;	
-                    tempoRimanente = Math.max(0, (pianoAllenamento[faseCorrente].tempo * 60) - tempoTrascorsoFaseAttuale);					
-                    gestioneFasi();			
-                }
-                
-                // Aggiorna l'interfaccia utente
-                document.getElementById('currentSpeed').textContent = speed.toFixed(1) + " km/h";
-                document.getElementById('distance').textContent = distance.toFixed(3) + " km";
-                document.getElementById('elapsedTime').textContent = formattedTime;
-				document.getElementById('calories').textContent = calories.toFixed(0) + " kcal";
-
-                // Aggiorna le variabili globali
-                startTime = Date.now() - elapsedTime * 1000; // Sincronizza startTime con il tempo ricevuto
-                pausedTime = 0; // Resetta pausedTime
-            });
-        })
-        .catch(error => {
-            console.error("Errore abilitazione notifiche Treadmill Data:", error);
-        });
+/* Sezione velocità */
+.speed-section {
+    background: linear-gradient(145deg, #e6d9ff, #f2eaff);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    box-sizing: border-box;
 }
 
-function padZero(num) {
-    return num < 10 ? `0${num}` : num;
+/* Sezione parametri */
+.parameter-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-function sendStartCommand() {
-    sendCommand(0x07); // Invia il comando 0x07 per avviare l'allenamento
-    console.log("Comando START (0x07) inviato");
+/* Pulsanti inferiori */
+/*
+.bottom-controls {
+    flex: 0 0 auto;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+*/
+
+/* Items dei parametri */
+.parameter-item {
+    background: linear-gradient(145deg, #ffffff, #f0f0f8);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 22%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
 }
 
-function sendStopCommand() {
-    sendCommand(0x08); // Invia il comando 0x08 per arrestare l'allenamento
-    console.log("Comando STOP (0x08) inviato");
+/* Controlli della velocità */
+.speed-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+	margin-bottom: 1.5rem;
 }
 
-let isWriting = false;
-async function sendCommand(opcode) {
-    if (isWriting) return;
-    isWriting = true;
-    try {
-        const buffer = new ArrayBuffer(1);
-        new DataView(buffer).setUint8(0, opcode);
-        await writeCharacteristic.writeValue(buffer);
-    } finally {
-        isWriting = false;
+.speed-control button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: calc(50px + 1vw); /* Ingrandisce i bottoni (+10px rispetto a prima) */
+    height: calc(50px + 1vw); /* Ingrandisce i bottoni */
+    font-size: calc(2rem + 0.5vw); /* Ingrandisce il testo "+" e "-" */
+    cursor: pointer;
+    margin: 0 1.5rem; /* Aumenta lo spazio laterale tra bottoni e textbox */
+    transition: background-color 0.3s;
+}
+
+.speed-control button:hover {
+    background-color: #3700b3;
+}
+
+.speed-control input {
+    width: calc(100px + 2vw);
+    padding: 0.8rem; /* Aumenta il padding interno per una textbox più alta */
+    font-size: calc(1.5rem + 0.5vw); /* Ingrandisce il testo nella textbox */
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px; /* Bordi più arrotondati */
+    outline: none;
+}
+
+.speed-control input:focus {
+    border-color: #6200ea;
+}
+
+/* Pallini di velocità */
+.speed-dots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem; /* Aumenta lo spazio tra i pallini */
+    width: 100%;
+}
+
+.speed-dots .dot {
+    width: calc(30px + 0.5vw); 
+    height: calc(30px + 0.5vw); 
+    border-radius: 50%;
+    background-color: #6200ea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: calc(1.2rem + 0.3vw); 
+    font-weight: bold; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.speed-dots .dot:hover {
+    background-color: #3700b3;
+    transform: scale(1.05); /* Leggero effetto "zoom" al hover */
+}
+
+.icon-button {
+    background-color: #6200ea;
+    border: none;
+    border-radius: 50%;
+    width: calc(50px + 1vw);
+    height: calc(50px + 1vw);
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button svg {
+    fill: white;
+    width: calc(24px + 0.5vw);
+    height: calc(24px + 0.5vw);
+}
+
+.icon-button:hover {
+    background-color: #3700b3;
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* Contenitore principale per i parametri */
+.parameter-item {
+    background: linear-gradient(145deg, #ffffff, #f0f0f8);
+    border-radius: 15px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 22%; 
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Effetto hover sui parametri */
+.parameter-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Etichette dei parametri */
+.parameter-label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Valori dei parametri */
+.parameter-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Icone dei parametri */
+.parameter-icon .icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.5rem;
+}
+
+/* Colori personalizzati per ciascun parametro */
+.parameter-item.speed {
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border: 1px solid #90caf9;
+}
+
+.parameter-item.time {
+    background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    border: 1px solid #a5d6a7;
+}
+
+.parameter-item.time .parameter-icon .icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 0.5rem;
+}
+
+.parameter-item.distance {
+    background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+    border: 1px solid #ffcc80;
+}
+
+/* Icona calorie specifica */
+.parameter-item.calories .parameter-icon .icon {
+    width: 80px;
+    height: 80px;
+}
+
+/* Stile del path */
+.parameter-item.calories .parameter-icon .icon path {
+    stroke: #d81b60;
+    fill: none;
+    stroke-width: 1.5;
+}
+
+/* Container calorie - stesso stile degli altri */
+.parameter-item.calories {
+    background: linear-gradient(145deg, #fce4ec, #f8bbd0);
+    border: 1px solid #f48fb1;
+}
+
+/* Colore del valore delle calorie */
+#calories {
+    color: #d81b60;
+}
+
+/* Stile base per tutte le icone */
+.parameter-icon .icon {
+    width: calc(60px + 1vw);
+    height: calc(60px + 1vw);
+    display: block;
+}
+
+/* Colori specifici per categoria */
+.speed-icon .icon path,
+.speed-icon .icon circle {
+    fill: #0066ff;
+}
+
+.time-icon .icon path {
+    fill: #00cc99;
+}
+
+.distance-icon .icon path,
+.distance-icon .icon circle {
+    stroke: #ff9933;
+    fill: none;
+}
+
+/* Ereditarietà colore per i valori */
+#currentSpeed { color: #0066ff; }
+#elapsedTime { color: #00cc99; }
+#distance { color: #ff9933; }
+
+/* Pulsanti di controllo */
+.controls-section {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.start-stop-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.start-stop-controls button {
+    flex: 1;
+    min-width: calc(80px + 2vw);
+    padding: 0.75rem 1.5rem;
+    font-size: calc(1rem + 0.2vw);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    border: none;
+    color: white;
+	height: 100%;
+}
+
+.start-stop-controls button#start {
+    background-color: #4caf50;
+}
+
+.start-stop-controls button#start:hover {
+    background-color: #388e3c;
+}
+
+.start-stop-controls button#stop {
+    background-color: #f44336;
+}
+
+.start-stop-controls button#stop:hover {
+    background-color: #d32f2f;
+}
+
+.start-stop-controls button#pause {
+    background-color: #ff9800;
+}
+
+.start-stop-controls button#pause:hover {
+    background-color: #f57c00;
+}
+
+.start-stop-controls button#selectPlan {
+    background-color: #008CBA;
+}
+
+.start-stop-controls button#selectPlan:hover {
+    background-color: #007ba7;
+}
+
+/* Messaggio di completamento */
+.completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: calc(1.2rem + 0.5vw);
+    font-weight: bold;
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
     }
 }
 
-function setSpeed(speed) {
-    if (!writeCharacteristic) {
-        alert("Collegati prima al dispositivo!");
-        return;
-    }
-
-    // Modifica: imposta a 0 se la velocità è inferiore a 1
-    if (speed < 1) {
-        speed = 0;
-    }
-
-    if (isNaN(speed) || speed < 0 || speed > 10) {  // Modifica il range secondo le specifiche del tapis
-        alert("Velocità non valida (0-10 km/h)");
-        return;
-    }
-
-    try {
-        // Converti la velocità in centesimi di km/h
-        const speedInCentesimi = Math.round(speed * 100);
-
-        // Crea il buffer dati (esempio: opcode 0x02 + velocità in 2 byte)
-        const buffer = new ArrayBuffer(3); // 1 byte per l'opcode + 2 byte per la velocità
-        const view = new DataView(buffer);
-        view.setUint8(0, 0x02); // Opcode
-        view.setUint16(1, speedInCentesimi, true); // Velocità in centesimi di km/h (little-endian)
-
-        // Invia i dati
-        writeCharacteristic.writeValue(buffer);
-        console.log(`Velocità impostata a ${speed.toFixed(1)} km/h`);
-
-        // Aggiorna la textbox della velocità
-        document.getElementById('speedInput').value = speed.toFixed(1);
-    } catch (error) {
-        alert("Errore scrittura: " + error.message);
-        console.error(error);
-    }
+/* Sezione piano di allenamento */
+.plan-section {
+    flex: 1;
+    min-height: 150px;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #008CBA;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: none;
+    font-size: calc(0.9rem + 0.2vw);
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Roboto Slab', serif;
 }
 
-function sendCommand(opcode) {
-    if (!writeCharacteristic) {
-        alert("Collegati prima al dispositivo!");
-        return;
-    }
-
-    try {
-        const buffer = new ArrayBuffer(1);
-        const view = new DataView(buffer);
-        view.setUint8(0, opcode);
-        writeCharacteristic.writeValue(buffer);
-        console.log(`Comando inviato: ${opcode}`);
-    } catch (error) {
-        alert("Errore invio comando: " + error.message);
-        console.error(error);
-    }
+.plan-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0;
+    font-size: calc(1rem + 0.2vw);
+    width: 100%;
+    font-family: 'Roboto Slab', serif;
 }
 
-let wakeLock = null;
-
-// Funzione per attivare il Wake Lock
-async function attivaWakeLock() {
-    try {
-        // Richiedi il Wake Lock per mantenere lo schermo acceso
-        wakeLock = await navigator.wakeLock.request('screen');
-        console.log("Wake Lock attivato: lo schermo rimarrà acceso.");
-    } catch (err) {
-        console.error("Errore nell'attivazione del Wake Lock:", err);
-    }
+.plan-title {
+    color: orange;
+    text-align: left;
+    font-family: 'Roboto Slab', serif;
 }
 
-// Funzione per rilasciare il Wake Lock
-function rilasciaWakeLock() {
-    if (wakeLock !== null) {
-        wakeLock.release();
-        wakeLock = null;
-        console.log("Wake Lock rilasciato.");
-    }
+.plan-params {
+    color: darkblue;
+    text-align: right;
+    font-size: calc(1rem + 0.2vw);
+    font-family: 'Roboto Slab', serif;
 }
 
-// Attiva il Wake Lock quando la pagina è visibile
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') {
-        attivaWakeLock();
-    } else {
-        rilasciaWakeLock();
-    }
-});
+.close-button {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-size: calc(1.2rem + 0.2vw);
+    cursor: pointer;
+    color: #555;
+    padding: 0.25rem;
+    z-index: 10;
+    display: none;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
+}
 
-// Attiva il Wake Lock all'avvio
-attivaWakeLock();
+.close-button:hover {
+    color: #f44336;
+    background-color: rgba(255,255,255,1);
+}
+
+#allenamento-titolo {
+    text-align: left;
+    margin-right: 2rem;
+    margin-left: 0;
+    width: 100%;
+    display: initial;
+    font-family: 'Roboto Slab', serif;
+}
+
+/* Parametri allineati a destra */
+.parametri-container {
+    text-align: right;
+    display: initial;
+}
+
+.parametri {
+    font-size: calc(1rem + 0.2vw);
+    color: darkblue;
+    font-family: 'Roboto Slab', serif;
+}
+
+/* Nome della fase e conto alla rovescia */
+.fase-attuale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-size: calc(1rem + 0.2vw);
+    color: orange;
+    font-family: 'Roboto Slab', serif;
+}
+
+.fase-attuale .nome-fase {
+    color: orange;
+    text-align: left;
+    font-family: 'Roboto Slab', serif;
+}
+
+.fase-attuale .conto-alla-rovescia {
+    color: darkblue;
+    text-align: right;
+    font-family: 'Roboto Slab', serif;
+}
+
+/* Lampeggiamento del conto alla rovescia */
+@keyframes lampeggia {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.conto-alla-rovescia.lampeggia {
+    animation: lampeggia 1s infinite;
+    color: red;
+}
+
+/* Istogramma */
+.plan-histogram {
+    display: flex;
+    margin-top: 0.0rem;
+    position: relative;
+    height: 78%;/*calc(120px + 2vw);*/
+    align-items: flex-end;
+    gap: 0;
+}
+
+.plan-histogram .bar {
+    background-color: #008CBA;
+    height: calc(20px + 1vw);
+    position: absolute;
+    flex: 1 1 auto;
+    margin-right: 0;
+}
+
+.plan-histogram .bar .time-label,
+.plan-histogram .bar .speed-label {
+    position: absolute;
+    font-size: calc(0.6rem + 0.2vw);
+    color: darkblue;
+    white-space: nowrap;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: 'Roboto Slab', serif;
+}
+
+.plan-histogram .bar .time-label {
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.plan-histogram .bar .speed-label {
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.plan-histogram .bar.active .time-label,
+.plan-histogram .bar.active .speed-label {
+    color: #ff5722;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-family: 'Roboto Slab', serif;
+}
+
+.plan-histogram .bar.active .time-label {
+    bottom: -16px;
+}
+
+.plan-histogram .bar.active .speed-label {
+    bottom: -18px;
+}
+
+.bar .progress {
+    height: 100%;
+    background-color: orange;
+    width: 0%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+@keyframes lampeggia {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.pausa-lampeggiante {
+    animation: lampeggia 1s infinite;
+}
+
+/* Stile per le fasi completate */
+.plan-histogram .bar.completata {
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
+}
+
+/* Stile per la fase attiva */
+.plan-histogram .bar.active {
+    border-bottom: 3px solid #ff9800;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+    opacity: 1;
+}
+
+/* Stile per le fasi future */
+.plan-histogram .bar {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Stile generale della popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.popup-content h3 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: calc(1.2rem + 0.5vw);
+}
+
+.dropdown-container {
+    margin-bottom: 1.5rem;
+}
+
+.styled-dropdown {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: calc(1rem + 0.2vw);
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.styled-dropdown:focus {
+    border-color: #6200ea;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-button {
+    color: white;
+    border-radius: 10%;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: calc(1rem + 0.2vw);
+    transition: background-color 0.3s;
+}
+
+.popup-button.upload {
+    background-color: #6200ea;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-button.confirm {
+    background-color: #4caf50;
+    color: white;
+}
+
+.popup-button.cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+.popup-button.confirm:hover {
+    background-color: #388e3c;
+}
+
+.popup-button.cancel:hover {
+    background-color: #d32f2f;
+}
+
+/* Stili per l'editor dei piani */
+.editor-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.styled-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: calc(1rem + 0.2vw);
+}
+
+.editor-button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.editor-button:hover {
+    background-color: #3700b3;
+}
+
+.phase-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.phase-details {
+    display: flex;
+    gap: 1rem;
+}
+
+.series-item {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+.edit-phase, .delete-phase {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: calc(1rem + 0.2vw);
+    margin-left: 0.5rem;
+}
+
+.delete-phase {
+    color: #f44336;
+}
+
+.editor-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.phase-edit-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.phase-edit-group h4 {
+    margin-top: 0;
+    color: #6200ea;
+}
+
+.popup-button.edit {
+    background-color: #008CBA;
+    color: white;
+}
+
+#phasesContainer {
+    max-height: 300px; 
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#phasesContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#phasesContainer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#phasesContainer::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#phasesContainer::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.empty-plan-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 0rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.empty-plan-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h30v30H0V0zm30 30h30v30H30V30z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+    animation: animateBg 60s linear infinite;
+    z-index: 0;
+}
+
+.empty-plan-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.runner-emoji {
+    font-size: 10rem;
+    margin: 0.5rem 0;
+    display: inline-block;
+    animation: runAnimation 0.8s ease-in-out infinite alternate;
+    order: -1; /* Sposta l'emoji sopra gli elementi di testo */
+}
+
+.treadmill-container {
+    position: relative;
+    width: 250px;
+    margin-top: -15px;
+}
+
+.treadmill-belt {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.treadmill-belt::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        90deg,
+        #555 0px,
+        #555 20px,
+        #777 20px,
+        #777 40px
+    );
+    animation: beltMove 0.8s linear infinite;
+}
+
+@keyframes runAnimation {
+    0% { transform: translateY(-2px) translateX(-3px); }
+    100% { transform: translateY(2px) translateX(3px); }
+}
+
+@keyframes beltMove {
+    0% { transform: translateX(-40px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes animateBg {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
