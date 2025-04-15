@@ -532,14 +532,19 @@ function gestioneFasi() {
         } else {
             faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
         }
-        // Emetti un bip 
-        if (tempoRimanente === 10 || tempoRimanente === 5) {
-            playTone(1000, 0.4);
-        }
-        if (tempoTrascorso === 1) {
+		// Bip iniziale (inizio fase) - 
+		if (tempoTrascorso === 1) {
 			playMusicForSpeed(currentSetSpeed);
-            playTone(800, 0.7);
-        }
+			playTone(1500, 1.5, 1.0);  
+		}
+		// Bip a 10 secondi dalla fine 
+		else if (tempoRimanente === 10) {
+			playTone(1300, 1, 1.0);   
+		}
+		// Bip a 5 secondi dalla fine 
+		else if (tempoRimanente === 5) {
+			playTone(1400, 1, 1.0);  
+		}
 
         if (tempoTrascorso >= fase.tempo * 60) {
             // CAMBIO FASE!
@@ -547,8 +552,8 @@ function gestioneFasi() {
             if (faseCorrente < pianoAllenamento.length) {
                 // Passa alla fase successiva
                 fase = pianoAllenamento[faseCorrente];
-                currentSetSpeed = currentSetSpeed;
-				playMusicForSpeed(fase.velocita);
+                currentSetSpeed = fase.velocita;
+				playMusicForSpeed(currentSetSpeed);
                 console.log("INIZIO FASE " + faseCorrente + ": " + fase.descrizione + " - velocità: " + fase.velocita + " - tempo: " + fase.tempo);
                 // Aggiorna il nome della fase
                 faseAttualeDiv.innerHTML = `
@@ -582,31 +587,41 @@ function gestioneFasi() {
     }
 }
 
-// Funzione per emettere un bip
-let audioContext;
-function playTone(frequency, duration) {
-    // Crea l'AudioContext solo se non esiste (evita problemi su Chrome)
+let audioContext; // Mantieni una singola istanza globale
+let isPlayingTone = false; // Flag per evitare sovrapposizioni
+
+function playTone(frequency, duration, volume = 1.0) {
+    // Evita sovrapposizioni di bip
+    if (isPlayingTone) return;
+    isPlayingTone = true;
+
+    // Crea l'AudioContext solo se non esiste
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
-    // Configura oscillatore e gain
+
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    // Connessioni
+
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    // Imposta la frequenza (con tipo d'onda "sine" per un suono pulito)
+
+    // Configurazione del tono
     oscillator.type = "sine";
     oscillator.frequency.value = frequency;
-    // Fade-in per evitare click (da 0 a 1 in 5ms)
+    
+    // Imposta volume massimo e fade-in istantaneo (senza click)
     gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-    gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.005);
-    // Avvia l'oscillatore
+    gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.001);
+
+    // Ferma il bip dopo la durata specificata
     oscillator.start();
-    // Fade-out (esponenziale per un suono più naturale)
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
-    // Spegni l'oscillatore dopo la durata
-    oscillator.stop(audioContext.currentTime + duration + 0.01); // +10ms per sicurezza
+    oscillator.stop(audioContext.currentTime + duration);
+
+    // Resetta il flag alla fine
+    oscillator.onended = () => {
+        isPlayingTone = false;
+    };
 }
 
 // Funzione per formattare il tempo in mm:ss
@@ -712,10 +727,7 @@ function playMusicForSpeed(speed) {
     // Se la categoria è cambiata, cambia musica
     if (category !== currentMusicCategory) {
         // Ferma la musica corrente se c'è
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
+        stopMusic();
 
         // Scegli una canzone casuale dalla categoria
         const songNumber = Math.floor(Math.random() * 3) + 1; // 1, 2 o 3
