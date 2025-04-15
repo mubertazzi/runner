@@ -1,0 +1,30 @@
+{
+  "nome": "Mercoledì",
+  "allenamento": [
+    {
+      "tempo": 0.25,
+      "velocita": 4,
+      "descrizione": "Riscaldiamoci"
+    },
+    {
+      "ripetizioni": 1,
+      "serie": [
+        {
+          "tempo": 0.25,
+          "velocita": 5,
+          "descrizione": "Corriiiii"
+        },
+        {
+          "tempo": 0.25,
+          "velocita": 3,
+          "descrizione": "Cammina piano capra"
+        }
+      ]
+    },
+    {
+      "tempo": 0.25,
+      "velocita": 3,
+      "descrizione": "Defaticamento con calma"
+    }
+  ]
+}

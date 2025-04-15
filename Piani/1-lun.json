@@ -1,0 +1,20 @@
+{
+  "nome": "Lunedì",
+  "allenamento": [
+    {
+      "tempo": 15,
+      "velocita": 6,
+      "descrizione": "Camminata veloce"
+    },
+    {
+      "tempo": 15,
+      "velocita": 8,
+      "descrizione": "Corsa"
+    },
+    {
+      "tempo": 5,
+      "velocita": 5,
+      "descrizione": "Defaticamento"
+    }
+  ]
+}

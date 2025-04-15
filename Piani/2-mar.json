@@ -1,0 +1,30 @@
+{
+  "nome": "Martedì",
+  "allenamento": [
+    {
+      "tempo": 5,
+      "velocita": 6,
+      "descrizione": "Riscaldamento"
+    },
+    {
+      "ripetizioni": 6,
+      "serie": [
+        {
+          "tempo": 1.5,
+          "velocita": 9,
+          "descrizione": "Corsa veloce"
+        },
+        {
+          "tempo": 1.5,
+          "velocita": 6,
+          "descrizione": "Camminata veloce"
+        }
+      ]
+    },
+    {
+      "tempo": 5,
+      "velocita": 5,
+      "descrizione": "Defaticamento"
+    }
+  ]
+}

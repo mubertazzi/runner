@@ -1,0 +1,30 @@
+{
+  "nome": "Metodo 30 30",
+  "allenamento": [
+    {
+      "tempo": 3,
+      "velocita": 5,
+      "descrizione": "Riscaldamento"
+    },
+    {
+      "ripetizioni": 10,
+      "serie": [
+        {
+          "tempo": 0.5,
+          "velocita": 9,
+          "descrizione": "Sprint"
+        },
+        {
+          "tempo": 0.5,
+          "velocita": 5,
+          "descrizione": "Recupero"
+        }
+      ]
+    },
+    {
+      "tempo": 3,
+      "velocita": 5,
+      "descrizione": "Defaticamento"
+    }
+  ]
+}
