@@ -731,8 +731,8 @@ function playMusicForSpeed(speed) {
 
         // Scegli una canzone casuale dalla categoria
         const songNumber = Math.floor(Math.random() * 3) + 1; // 1, 2 o 3
-        //const songPath = `/runner/Musica/${category}0${songNumber}.mp3`;
-const songPath = 'piano01.mp3';
+        const songPath = `/runner/Musica/${category}0${songNumber}.mp3`;
+
         // Riproduci la nuova canzone
         currentAudio = new Audio(songPath);
         currentAudio.loop = true;
