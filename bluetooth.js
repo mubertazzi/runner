@@ -76,7 +76,7 @@ function startAutomaticReading() {
                 const value = event.target.value;
 				// Per loggare tutti i byte del buffer
 				const bufferArray = new Uint8Array(value.buffer);
-				console.log("Buffer completo:", Array.from(bufferArray).map(b => b.toString(16).padStart(2, '0')).join(' '));
+				//console.log("Buffer completo:", Array.from(bufferArray).map(b => b.toString(16).padStart(2, '0')).join(' '));
                 // Leggi la velocità (Byte 2 e Byte 3)
                 const speed = value.getUint16(2, true) / 100; // Velocità in km/h
 
