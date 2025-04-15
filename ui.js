@@ -80,7 +80,8 @@ document.getElementById('stop').addEventListener('click', () => {
 });
 
 function stopAll() {
-    sendStopCommand(); // Invia il comando di stop (0x08)
+	stopMusic(); // Ferma la musica
+    sendStopCommand(); // Invia il comando di stop (0x08)	
     // Resetta le variabili globali
     distance = 0; // Azzera i km percorsi
     tempoRimanente = 0; // Resetta il conto alla rovescia
@@ -536,6 +537,7 @@ function gestioneFasi() {
             playTone(1000, 0.4);
         }
         if (tempoTrascorso === 1) {
+			playMusicForSpeed(currentSetSpeed);
             playTone(800, 0.7);
         }
 
@@ -545,7 +547,8 @@ function gestioneFasi() {
             if (faseCorrente < pianoAllenamento.length) {
                 // Passa alla fase successiva
                 fase = pianoAllenamento[faseCorrente];
-                currentSetSpeed = fase.velocita;
+                currentSetSpeed = currentSetSpeed;
+				playMusicForSpeed(fase.velocita);
                 console.log("INIZIO FASE " + faseCorrente + ": " + fase.descrizione + " - velocità: " + fase.velocita + " - tempo: " + fase.tempo);
                 // Aggiorna il nome della fase
                 faseAttualeDiv.innerHTML = `
@@ -690,3 +693,46 @@ function inizializzaPlanSection() {
 document.addEventListener('DOMContentLoaded', () => {
 	inizializzaPlanSection();
 });
+
+// Variabili per la gestione della musica
+let currentAudio = null;
+let currentMusicCategory = null;
+
+function playMusicForSpeed(speed) {
+    // Determina la categoria in base alla velocità
+    let category;
+    if (speed < 6) {
+        category = 'piano';
+    } else if (speed >= 6 && speed < 8) {
+        category = 'media';
+    } else {
+        category = 'forte';
+    }
+
+    // Se la categoria è cambiata, cambia musica
+    if (category !== currentMusicCategory) {
+        // Ferma la musica corrente se c'è
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+
+        // Scegli una canzone casuale dalla categoria
+        const songNumber = Math.floor(Math.random() * 3) + 1; // 1, 2 o 3
+        const songPath = `runner/musica/${category}0${songNumber}.mp3`;
+
+        // Riproduci la nuova canzone
+        currentAudio = new Audio(songPath);
+        currentAudio.loop = true;
+        currentAudio.play().catch(e => console.log("Autoplay non permesso:", e));
+        currentMusicCategory = category;
+    }
+}
+
+function stopMusic() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
+    currentMusicCategory = null;
+}
