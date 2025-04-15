@@ -20,7 +20,7 @@ async function connectDevice() {
 
         // Listener per disconnessione
         device.addEventListener('gattserverdisconnected', () => {
-            alert("Disconnessione effettuata.");
+            //alert("Disconnessione effettuata.");
             document.getElementById('connectSwitch').checked = false;
             isConnected = false;
             updateConnectionStatus();
