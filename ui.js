@@ -7,6 +7,9 @@ let isAutoMode = false;
 let faseCorrente = 0; // Indice della fase corrente
 let pianoAllenamento = []; // Array piatto per memorizzare le fasi
 let tempoTrascorso = 0;
+let isAudioMuted = false;
+let audioVolumeBeforeMute = 1.0; // Memorizza il volume prima del mute
+
 
 // ==================== INTERRUTTORE COLLEGA/DISCONNETTI ====================
 document.getElementById('connectSwitch').addEventListener('change', async () => {
@@ -89,7 +92,7 @@ function stopAll() {
     pausedTime = 0; // Resetta il tempo in pausa
     currentSetSpeed = 0;
     // Imposta la textbox della velocità a 0
-    document.getElementById('speedInput').value = "0.0";
+    document.getElementById('speedInput').value = "3.0";
     if (isAutoMode) {
         // Gestisci la modalità automatica
         pianoAllenamento = []; // Resetta il piano di allenamento
@@ -714,6 +717,9 @@ let currentAudio = null;
 let currentMusicCategory = null;
 
 function playMusicForSpeed(speed) {
+    // Se l'audio è mutato, non fare nulla
+    if (isAudioMuted) return;
+    
     // Determina la categoria in base alla velocità
     let category;
     if (speed < 6) {
@@ -732,10 +738,11 @@ function playMusicForSpeed(speed) {
         // Scegli una canzone casuale dalla categoria
         const songNumber = Math.floor(Math.random() * 3) + 1; // 1, 2 o 3
         const songPath = `musica${category}0${songNumber}.mp3`;
-		
+
         // Riproduci la nuova canzone
         currentAudio = new Audio(songPath);
         currentAudio.loop = true;
+        currentAudio.volume = isAudioMuted ? 0 : audioVolumeBeforeMute;
         currentAudio.play().catch(e => console.log("Autoplay non permesso:", e));
         currentMusicCategory = category;
     }
@@ -748,3 +755,20 @@ function stopMusic() {
     }
     currentMusicCategory = null;
 }
+
+// Gestione toggle audio/mute
+document.getElementById('audioToggle').addEventListener('click', function() {
+    this.classList.toggle('muted');
+    isAudioMuted = !isAudioMuted;
+    
+    if (currentAudio) {
+        if (isAudioMuted) {
+            // Memorizza il volume corrente e imposta a 0
+            audioVolumeBeforeMute = currentAudio.volume;
+            currentAudio.volume = 0;
+        } else {
+            // Ripristina il volume precedente
+            currentAudio.volume = audioVolumeBeforeMute;
+        }
+    }
+});
