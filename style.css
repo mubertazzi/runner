@@ -96,79 +96,6 @@ body {
     text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
 }
 
-/* Interruttore di connessione */
-.switch-container {
-    display: flex;
-    align-items: row;
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-	flex-direction: column;
-    width: 60px;
-    height: 34px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-.connection-status {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    color: red;
-    animation: blink 1s infinite;
-}
-
-.connection-status.connected {
-    color: green;
-    animation: none;
-}
-
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
 
 /* Sezione dispositivo (speed + parameters) */
 .device-section {
@@ -1118,4 +1045,53 @@ input:checked + .slider:before {
 
 .audio-icon.muted .audio-icon-mute-bar {
     stroke: #f44336; 
+}
+
+/* Container per le icone */
+.connection-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Stili per l'icona Bluetooth */
+.bluetooth-icon {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.bluetooth-icon svg {
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+}
+
+.bluetooth-icon-path {
+    fill: #f44336; /* Rosso di default */
+    animation: bluetoothPulse 1.5s infinite;
+}
+
+/* Stato connesso */
+.bluetooth-icon.connected .bluetooth-icon-path {
+    fill: #4CAF50; /* Verde quando connesso */
+    animation: none;
+}
+
+/* Animazione lampeggiante */
+@keyframes bluetoothPulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.9);
+    }
+}
+
+/* Rimuovi lo stile del vecchio switch */
+.switch, .slider, .connection-status {
+    display: none;
 }
