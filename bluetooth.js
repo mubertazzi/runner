@@ -93,7 +93,10 @@ function startAutomaticReading() {
                 const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 				
 			   // Leggi le calorie (Byte 6 e Byte 7)
-			   const calories = value.getUint16(6, true) / 256; // Calorie in kilocalorie
+			   const caloriesInt = value.getUint8(7, true); // Calorie in kilocalorie
+			   const caloriesDecimal = 0;//value.getUint8(13) / 100;
+			   const calories = caloriesInt + caloriesDecimal;
+			  
 
                 // Calcolo diretto del tempo rimanente 
                 if (isAutoMode && pianoAllenamento.length > 0) {
