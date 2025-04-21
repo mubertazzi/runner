@@ -12,8 +12,8 @@ let audioVolumeBeforeMute = 1.0; // Memorizza il volume prima del mute
 
 
 // ==================== INTERRUTTORE COLLEGA/DISCONNETTI ====================
-document.getElementById('connectSwitch').addEventListener('change', async () => {
-    if (document.getElementById('connectSwitch').checked) {
+document.getElementById('bluetoothToggle').addEventListener('click', async () => {
+    if (!isConnected) {
         connectDevice();
     } else {
         disconnectDevice();
@@ -21,13 +21,11 @@ document.getElementById('connectSwitch').addEventListener('change', async () => 
 });
 
 function updateConnectionStatus() {
-    const connectionStatus = document.getElementById('connectionStatus');
+    const bluetoothIcon = document.getElementById('bluetoothToggle');
     if (isConnected) {
-        connectionStatus.textContent = "Connesso";
-        connectionStatus.classList.add('connected');
+        bluetoothIcon.classList.add('connected');
     } else {
-        connectionStatus.textContent = "Disconnesso";
-        connectionStatus.classList.remove('connected');
+        bluetoothIcon.classList.remove('connected');
     }
 }
 
