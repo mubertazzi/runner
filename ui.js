@@ -340,15 +340,25 @@ function trasformaInArrayPiatto(piano) {
 // Funzione per visualizzare il piano di allenamento
 function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
     const planInfoDiv = document.getElementById('plan-section');
-    planInfoDiv.innerHTML = ''; // Pulisce il contenuto precedente
-    // Prima riga: Titolo e parametri
-    const titleRow = document.createElement('div');
-    titleRow.classList.add('plan-row');
-    titleRow.innerHTML = `
-        <span class="plan-title">ALLENAMENTO: ${nomePianoAllenamento}</span>
-        <span class="plan-params">Tempo: <span id="tempo-totale">0 min</span> - Distanza: <span id="distanza-totale">0.00 km</span></span>
+    planInfoDiv.innerHTML = `
+        <div class="plan-header-container">
+            <div class="plan-info-container">
+                <span class="plan-title" id="allenamento-titolo">ALLENAMENTO: ${nomePianoAllenamento}</span>
+                <span class="plan-params">
+                    Tempo: <span id="tempo-totale">0 min</span> - 
+                    Distanza: <span id="distanza-totale">0.00 km</span>
+                </span>
+            </div>
+            <div class="phase-info-container">
+                <span class="phase-title" id="fase-corrente-titolo">FASE 1: ${pianoAllenamento[0].descrizione}</span>
+                <span class="phase-time">
+                    Tempo residuo: <span id="tempo-residuo">${formattaTempo(pianoAllenamento[0].tempo * 60)}</span>
+                </span>
+            </div>
+        </div>
+        <div class="plan-histogram"></div>
     `;
-    planInfoDiv.appendChild(titleRow);
+	planInfoDiv.classList.remove('empty');	
     // Calcola durata e distanza totale
     let durataTotale = 0;
     let distanzaTotale = 0;
@@ -356,51 +366,21 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
         durataTotale += fase.tempo;
         distanzaTotale += fase.velocita * (fase.tempo / 60);
     });
+
     // Aggiorna i valori dei parametri
     document.getElementById('tempo-totale').textContent = `${durataTotale} min`;
     document.getElementById('distanza-totale').textContent = `${distanzaTotale.toFixed(2)} km`;
-    // Seconda riga: Nome della fase e conto alla rovescia
-    const faseAttualeDiv = document.createElement('div');
-    faseAttualeDiv.classList.add('fase-attuale');
-    faseAttualeDiv.innerHTML = `
-        <span class="nome-fase">FASE 1: ${pianoAllenamento[0].descrizione}</span>
-        <span class="conto-alla-rovescia">${formattaTempo(pianoAllenamento[0].tempo * 60)}</span>
-    `;
-    planInfoDiv.appendChild(faseAttualeDiv);
-    // Aggiunge l'istogramma
-    const histogramDiv = document.createElement('div');
-    histogramDiv.classList.add('plan-histogram');
+
+    // Crea l'istogramma
+    const histogramDiv = document.querySelector('.plan-histogram');
     let currentTime = 0;
     pianoAllenamento.forEach((fase, index) => {
         const bar = creaBarra(fase.tempo, fase.velocita, currentTime, durataTotale, index);
         histogramDiv.appendChild(bar);
         currentTime += fase.tempo;
     });
-    planInfoDiv.appendChild(histogramDiv);
-    // Evidenzia la fase attiva
+
     evidenziaFaseAttiva(faseCorrente);
-    // Aggiunge la X come elemento figlio di plan-section, posizionata fuori a destra
-    /*
-	const closeButton = document.createElement('button');
-    closeButton.classList.add('close-button');
-    closeButton.textContent = '×';
-    closeButton.style.display = 'none';
-    closeButton.addEventListener('click', () => {
-        if (isAutoMode && startTime && faseCorrente < pianoAllenamento.length) {
-            // Se c'è un allenamento attivo, ferma tutto e resetta lo stato
-            stopAll(); // Ferma tutto e resetta lo stato
-        } else {
-            // Se non c'è un allenamento attivo, nascondi semplicemente la sezione
-            document.getElementById('plan-section').style.display = 'none'; // Nascondi la sezione
-            document.getElementById('selectPlan').style.display = 'inline-block'; // Ripristina il pulsante SELECT PLAN
-            document.getElementById('pause').style.display = 'inline-block'; // Mostra nuovamente il pulsante "Pausa"
-            isAutoMode = false; // Disabilita la modalità automatica
-        }
-        // Nascondi la X
-        closeButton.style.display = 'none';
-    });
-    planInfoDiv.appendChild(closeButton);
-	*/
 }
 
 // Funzione per creare una barra dell'istogramma
@@ -408,29 +388,40 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     const bar = document.createElement('div');
     bar.classList.add('bar');
     bar.style.width = `${(tempo / durataTotale) * 100}%`;
-    bar.style.height = `${velocita * 10}px`;
+    
+    // Ottieni l'altezza del contenitore plan-histogram
+    const histogramContainer = document.querySelector('.plan-histogram');
+    const containerHeight = histogramContainer.offsetHeight;
+    
+    // Calcola l'altezza massima (90% del contenitore)
+    const maxHeight = containerHeight * 0.9;
+    
+    // Calcola l'altezza proporzionale alla velocità (es. velocità massima 10 km/h)
+    const heightPercentage = (velocita / 10) * maxHeight;
+    bar.style.height = `${heightPercentage}px`;
+    
     bar.style.left = `${(currentTime / durataTotale) * 100}%`;
-    bar.style.backgroundColor = `hsl(200, 100%, ${85 - velocita * 5}%)`; // Scuriamo il colore
-    // Nota: Ho cambiato 100 a 85 per scurire ulteriormente il colore
-    // Aggiungi un identificatore univoco per la barra
+    bar.style.backgroundColor = `hsl(200, 100%, ${85 - velocita * 5}%)`;
+    
     bar.dataset.index = index;
-    // Aggiungi un event listener per il clic sulla barra
+    
     bar.addEventListener('click', () => {
         if (isAutoMode && pianoAllenamento.length > 0) {
-            // Cambia alla fase corrispondente
-            faseCorrente = index; // Imposta l'indice della fase corrente
-            gestioneFasi(); // Carica la fase selezionata
+            faseCorrente = index;
+            gestioneFasi();
         }
     });
-    // Aggiunge etichette
+
     const timeLabel = document.createElement('div');
     timeLabel.classList.add('time-label');
-    timeLabel.textContent = `${tempo}`; // Solo il valore, senza unità di misura
+    timeLabel.textContent = `${tempo}`;
     bar.appendChild(timeLabel);
+    
     const speedLabel = document.createElement('div');
     speedLabel.classList.add('speed-label');
-    speedLabel.textContent = `${velocita}`; // Solo il valore, senza unità di misura
+    speedLabel.textContent = `${velocita}`;
     bar.appendChild(speedLabel);
+    
     return bar;
 }
 
@@ -516,75 +507,72 @@ function mostraMessaggioCompletamento() {
 }
 
 function gestioneFasi() {
-    document.querySelector('.conto-alla-rovescia').textContent =
-        `${Math.floor(tempoRimanente / 60)}:${('0' + (tempoRimanente % 60)).slice(-2)}`;
-    let fase = pianoAllenamento[faseCorrente];
-    const planInfoDiv = document.getElementById('plan-section');
-    let faseAttualeDiv = planInfoDiv.querySelector('.fase-attuale');
-    const contoAllaRovescia = document.querySelector('.conto-alla-rovescia').textContent;
-    const tempoTrascorso = (fase.tempo * 60) - tempoRimanente;
-
-    if (tempoRimanente >= 0) {
-        // Aggiorna il progresso della barra
-        aggiornaProgressoFase(tempoTrascorso, fase.tempo * 60);
-        // Attiva il lampeggio negli ultimi 5 secondi
-        if (tempoRimanente <= 5) {
-            faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.add('lampeggia');
-        } else {
-            faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
-        }
-		// Bip iniziale (inizio fase) - 
-		if (tempoTrascorso === 1) {
-			playMusicForSpeed(currentSetSpeed);
-			playTone(1500, 1.5, 1.0);  
-		}
-		// Bip a 10 secondi dalla fine 
-		else if (tempoRimanente === 10) {
-			playTone(1300, 1, 1.0);   
-		}
-		// Bip a 5 secondi dalla fine 
-		else if (tempoRimanente === 5) {
-			playTone(1400, 1, 1.0);  
-		}
-
-        if (tempoTrascorso >= fase.tempo * 60) {
-            // CAMBIO FASE!
-            faseCorrente++;
-            if (faseCorrente < pianoAllenamento.length) {
-                // Passa alla fase successiva
-                fase = pianoAllenamento[faseCorrente];
-                currentSetSpeed = fase.velocita;
-				playMusicForSpeed(currentSetSpeed);
-                console.log("INIZIO FASE " + faseCorrente + ": " + fase.descrizione + " - velocità: " + fase.velocita + " - tempo: " + fase.tempo);
-                // Aggiorna il nome della fase
-                faseAttualeDiv.innerHTML = `
-                    FASE ${faseCorrente + 1}: ${fase.descrizione} <span class="conto-alla-rovescia">${formattaTempo(fase.tempo * 60)}</span>
-                `;
-                // Aggiorna la barra di progresso
-                evidenziaFaseAttiva(faseCorrente);
-                // Aggiorna la velocità
-                document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
-                setSpeed(currentSetSpeed);
-                // Aggiungi le unità di misura alle etichette della fase attiva
-                const barraAttiva = document.querySelector('.plan-histogram .bar.active');
-                if (barraAttiva) {
-                    const timeLabel = barraAttiva.querySelector('.time-label');
-                    const speedLabel = barraAttiva.querySelector('.speed-label');
-                    if (timeLabel && speedLabel) {
-                        timeLabel.textContent = `${fase.tempo} min`;
-                        speedLabel.textContent = `${fase.velocita} kmh`;
-                    }
-                }
-            } else {
-                // Allenamento completato
-                console.log("Allenamento completato!");
-				ripristinaPulsantePiano();
-                mostraMessaggioCompletamento();
-                stopAll();
-            }
-        }
+    // Aggiorna il conto alla rovescia nel nuovo container
+    const tempoResiduoElement = document.getElementById('tempo-residuo');
+    const faseAttuale = pianoAllenamento[faseCorrente];
+    
+    // Formatta il tempo come MM:SS
+    tempoResiduoElement.textContent = `${Math.floor(tempoRimanente / 60)}:${('0' + (tempoRimanente % 60)).slice(-2)}`;
+    
+    // Aggiorna il titolo della fase nel container destro
+    document.getElementById('fase-corrente-titolo').textContent = 
+        `FASE ${faseCorrente + 1}: ${faseAttuale.descrizione}`;
+    
+    // Calcola il tempo trascorso nella fase attuale
+    const tempoTrascorsoFaseAttuale = (faseAttuale.tempo * 60) - tempoRimanente;
+    
+    // Aggiorna la barra di progresso
+    aggiornaProgressoFase(tempoTrascorsoFaseAttuale, faseAttuale.tempo * 60);
+    
+    // Attiva il lampeggio negli ultimi 10 secondi
+    if (tempoRimanente <= 10) {
+        tempoResiduoElement.classList.add('lampeggia');
     } else {
-        faseAttualeDiv.querySelector('.conto-alla-rovescia').classList.remove('lampeggia');
+        tempoResiduoElement.classList.remove('lampeggia');
+    }
+    
+    // Suoni di notifica
+    if (tempoTrascorsoFaseAttuale === 1) {
+        playMusicForSpeed(currentSetSpeed);
+        playTone(1500, 1.5, 1.0);  
+    } else if (tempoRimanente === 10) {
+        playTone(1300, 1, 1.0);   
+    } //else if (tempoRimanente === 5) {
+        //playTone(1400, 1, 1.0);  
+    //}
+
+    // Controlla se la fase è completata
+    if (tempoTrascorsoFaseAttuale >= faseAttuale.tempo * 60) {
+        faseCorrente++;
+        
+        if (faseCorrente < pianoAllenamento.length) {
+            // Passa alla fase successiva
+            const nuovaFase = pianoAllenamento[faseCorrente];
+            currentSetSpeed = nuovaFase.velocita;
+            playMusicForSpeed(currentSetSpeed);
+            
+            // Aggiorna il container destro con la nuova fase
+            document.getElementById('fase-corrente-titolo').textContent = 
+                `FASE ${faseCorrente + 1}: ${nuovaFase.descrizione}`;
+            document.getElementById('tempo-residuo').textContent = 
+                formattaTempo(nuovaFase.tempo * 60);
+            
+            // Aggiorna la velocità
+            document.getElementById('speedInput').value = currentSetSpeed.toFixed(1);
+            setSpeed(currentSetSpeed);
+            
+            // Aggiorna l'istogramma
+            evidenziaFaseAttiva(faseCorrente);
+            
+            // Ripristina il lampeggio
+            document.getElementById('tempo-residuo').classList.remove('lampeggia');
+        } else {
+            // Allenamento completato
+            console.log("Allenamento completato!");
+            ripristinaPulsantePiano();
+            mostraMessaggioCompletamento();
+            stopAll();
+        }
     }
 }
 
@@ -704,6 +692,7 @@ function inizializzaPlanSection() {
         </div>
     `;
     planSection.style.display = 'block';
+	planSection.classList.add('empty');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
