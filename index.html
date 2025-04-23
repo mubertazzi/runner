@@ -141,16 +141,25 @@
         </div>        
         <!-- Sezione piano di allenamento -->
 		<div id="plan-section" class="plan-section">
-			<div class="plan-info-container">
-				<h3 id="allenamento-titolo"></h3>
-				<div class="parametri-container">
-					<span class="parametri"><span id="tempo-totale"></span> <span id="distanza-totale"></span></span>
+			<div class="plan-header-container">
+				<!-- Container sinistro (allenamento) -->
+				<div class="plan-info-container">
+					<span class="plan-title" id="allenamento-titolo"></span>
+					<span class="plan-params">
+						Tempo: <span id="tempo-totale">0 min</span> - 
+						Distanza: <span id="distanza-totale">0.00 km</span>
+					</span>
 				</div>
-				<div class="fase-attuale">
-					<span class="nome-fase"></span>
-					<span class="conto-alla-rovescia"></span>
+				
+				<!-- Container destro (fase corrente) -->
+				<div class="phase-info-container">
+					<span class="phase-title" id="fase-corrente-titolo"></span>
+					<span class="phase-time">
+						Tempo residuo: <span id="tempo-residuo">00:00</span>
+					</span>
 				</div>
 			</div>
+			
 			<div class="plan-histogram"></div>
 		</div>
     </div>
