@@ -1,4 +1,4 @@
-/* Stile generale del corpo della pagina */
+/* ====================== STILI GENERALI ====================== */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -11,7 +11,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Container principale */
 .container {
     text-align: center;
     background-color: #ffffff;
@@ -30,8 +29,7 @@ body {
     flex-direction: column;
 }
 
-
-/* Intestazione */
+/* ====================== INTESTAZIONE ====================== */
 .header {
     display: flex;
     justify-content: space-between;
@@ -39,16 +37,15 @@ body {
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
-	max-height: 80px;
+    max-height: 80px;
 }
 
 .header h1 {
     color: #333;
     margin: 0;
-    font-size: calc(1.5rem + 1vw); /* Font size responsivo */
+    font-size: calc(1.5rem + 1vw);
 }
 
-/* Stile Titolo Moderno */
 .app-title {
     font-size: calc(2.5rem + 1vw);
     font-weight: 600;
@@ -66,6 +63,11 @@ body {
     font-family: 'Orbitron', sans-serif;
     text-shadow: 0 0 8px rgba(0, 204, 255, 0.3);
     transition: all 0.3s ease;
+}
+
+.app-title:hover {
+    transform: scale(1.02);
+    text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
 }
 
 .logo-icon {
@@ -90,14 +92,13 @@ body {
     font-weight: 600;
 }
 
-/* Effetto hover */
-.app-title:hover {
-    transform: scale(1.02);
-    text-shadow: 0 0 12px rgba(0, 204, 255, 0.5);
+.connection-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-
-/* Sezione dispositivo (speed + parameters) */
+/* ====================== SEZIONE DISPOSITIVO ====================== */
 .device-section {
     display: flex;
     justify-content: space-between;
@@ -106,10 +107,9 @@ body {
     width: 100%;
     margin-bottom: 1rem;
     flex: 0 0 auto;
-	max-height: 140px;
+    max-height: 140px;
 }
 
-/* Sezione velocità */
 .speed-section {
     background: linear-gradient(145deg, #e6d9ff, #f2eaff);
     border-radius: 15px;
@@ -123,7 +123,7 @@ body {
     align-items: center;
     height: auto;
     box-sizing: border-box;
-    border: 1px solid #b388ff; 
+    border: 1px solid #b388ff;
 }
 
 .speed-section:hover {
@@ -131,7 +131,74 @@ body {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Sezione parametri */
+.speed-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.speed-control button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: calc(50px + 1vw);
+    height: calc(50px + 1vw);
+    font-size: calc(2rem + 0.5vw);
+    cursor: pointer;
+    margin: 0 1.5rem;
+    transition: background-color 0.3s;
+}
+
+.speed-control button:hover {
+    background-color: #3700b3;
+}
+
+.speed-control input {
+    width: calc(100px + 2vw);
+    padding: 0.8rem;
+    font-size: calc(1.5rem + 0.5vw);
+    text-align: center;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+.speed-control input:focus {
+    border-color: #6200ea;
+}
+
+.speed-dots {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.speed-dots .dot {
+    width: calc(30px + 0.5vw);
+    height: calc(30px + 0.5vw);
+    border-radius: 50%;
+    background-color: #6200ea;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: calc(1.2rem + 0.3vw);
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.speed-dots .dot:hover {
+    background-color: #3700b3;
+    transform: scale(1.05);
+}
+
 .parameter-section {
     display: flex;
     justify-content: space-between;
@@ -142,19 +209,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Pulsanti inferiori */
-/*
-.bottom-controls {
-    flex: 0 0 auto;
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-}
-*/
-
-/* Items dei parametri */
 .parameter-item {
     background: linear-gradient(145deg, #ffffff, #f0f0f8);
     border-radius: 15px;
@@ -162,121 +216,6 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 22%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
-}
-
-/* Controlli della velocità */
-.speed-control {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-	margin-bottom: 1.5rem;
-}
-
-.speed-control button {
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: calc(50px + 1vw); /* Ingrandisce i bottoni (+10px rispetto a prima) */
-    height: calc(50px + 1vw); /* Ingrandisce i bottoni */
-    font-size: calc(2rem + 0.5vw); /* Ingrandisce il testo "+" e "-" */
-    cursor: pointer;
-    margin: 0 1.5rem; /* Aumenta lo spazio laterale tra bottoni e textbox */
-    transition: background-color 0.3s;
-}
-
-.speed-control button:hover {
-    background-color: #3700b3;
-}
-
-.speed-control input {
-    width: calc(100px + 2vw);
-    padding: 0.8rem; /* Aumenta il padding interno per una textbox più alta */
-    font-size: calc(1.5rem + 0.5vw); /* Ingrandisce il testo nella textbox */
-    text-align: center;
-    border: 2px solid #ddd;
-    border-radius: 8px; /* Bordi più arrotondati */
-    outline: none;
-}
-
-.speed-control input:focus {
-    border-color: #6200ea;
-}
-
-/* Pallini di velocità */
-.speed-dots {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.8rem; /* Aumenta lo spazio tra i pallini */
-    width: 100%;
-}
-
-.speed-dots .dot {
-    width: calc(30px + 0.5vw); 
-    height: calc(30px + 0.5vw); 
-    border-radius: 50%;
-    background-color: #6200ea;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: calc(1.2rem + 0.3vw); 
-    font-weight: bold; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
-}
-
-.speed-dots .dot:hover {
-    background-color: #3700b3;
-    transform: scale(1.05); /* Leggero effetto "zoom" al hover */
-}
-
-.icon-button {
-    background-color: #6200ea;
-    border: none;
-    border-radius: 50%;
-    width: calc(50px + 1vw);
-    height: calc(50px + 1vw);
-    cursor: pointer;
-    margin: 0 10px;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-button svg {
-    fill: white;
-    width: calc(24px + 0.5vw);
-    height: calc(24px + 0.5vw);
-}
-
-.icon-button:hover {
-    background-color: #3700b3;
-}
-
-.icon-button:active {
-    transform: scale(0.95);
-}
-
-/* Contenitore principale per i parametri */
-.parameter-item {
-    background: linear-gradient(145deg, #ffffff, #f0f0f8);
-    border-radius: 15px;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 22%; 
     height: auto;
     display: flex;
     flex-direction: column;
@@ -286,13 +225,11 @@ body {
     box-sizing: border-box;
 }
 
-/* Effetto hover sui parametri */
 .parameter-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Etichette dei parametri */
 .parameter-label {
     font-size: 1rem;
     color: #555;
@@ -301,21 +238,18 @@ body {
     letter-spacing: 1px;
 }
 
-/* Valori dei parametri */
 .parameter-value {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
 }
 
-/* Icone dei parametri */
 .parameter-icon .icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 0.5rem;
+    width: calc(60px + 1vw);
+    height: calc(60px + 1vw);
+    display: block;
 }
 
-/* Colori personalizzati per ciascun parametro */
 .parameter-item.speed {
     background: linear-gradient(145deg, #e3f2fd, #bbdefb);
     border: 1px solid #90caf9;
@@ -337,38 +271,30 @@ body {
     border: 1px solid #ffcc80;
 }
 
-/* Icona calorie specifica */
+.parameter-item.calories {
+    background: linear-gradient(145deg, #fce4ec, #f8bbd0);
+    border: 1px solid #f48fb1;
+}
+
 .parameter-item.calories .parameter-icon .icon {
     width: 80px;
     height: 80px;
 }
 
-/* Stile del path */
 .parameter-item.calories .parameter-icon .icon path {
     stroke: #d81b60;
     fill: none;
     stroke-width: 1.5;
 }
 
-/* Container calorie - stesso stile degli altri */
-.parameter-item.calories {
-    background: linear-gradient(145deg, #fce4ec, #f8bbd0);
-    border: 1px solid #f48fb1;
-}
-
-/* Colore del valore delle calorie */
 #calories {
     color: #d81b60;
 }
 
-/* Stile base per tutte le icone */
-.parameter-icon .icon {
-    width: calc(60px + 1vw);
-    height: calc(60px + 1vw);
-    display: block;
-}
+#currentSpeed { color: #0066ff; }
+#elapsedTime { color: #00cc99; }
+#distance { color: #ff9933; }
 
-/* Colori specifici per categoria */
 .speed-icon .icon path,
 .speed-icon .icon circle {
     fill: #0066ff;
@@ -384,12 +310,7 @@ body {
     fill: none;
 }
 
-/* Ereditarietà colore per i valori */
-#currentSpeed { color: #0066ff; }
-#elapsedTime { color: #00cc99; }
-#distance { color: #ff9933; }
-
-/* Pulsanti di controllo */
+/* ====================== CONTROLLI INFERIORI ====================== */
 .controls-section {
     display: flex;
     justify-content: center;
@@ -414,7 +335,7 @@ body {
     text-align: center;
     border: none;
     color: white;
-	height: 100%;
+    height: 100%;
 }
 
 .start-stop-controls button#start {
@@ -449,167 +370,157 @@ body {
     background-color: #007ba7;
 }
 
-/* Messaggio di completamento */
-.completion-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #4caf50;
-    color: white;
-    padding: 20px 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: calc(1.2rem + 0.5vw);
-    font-weight: bold;
-    text-align: center;
-    z-index: 1000;
-    display: none;
-    animation: fadeIn 0.5s ease-in-out;
+.icon-button {
+    background-color: #6200ea;
+    border: none;
+    border-radius: 50%;
+    width: calc(50px + 1vw);
+    height: calc(50px + 1vw);
+    cursor: pointer;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
+.icon-button svg {
+    fill: white;
+    width: calc(24px + 0.5vw);
+    height: calc(24px + 0.5vw);
 }
 
-/* Sezione piano di allenamento */
+.icon-button:hover {
+    background-color: #3700b3;
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* ====================== SEZIONE PIANO ALLENAMENTO ====================== */
 .plan-section {
     flex: 1;
     min-height: 150px;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     padding: 1rem;
     border: 1px solid #008CBA;
     border-radius: 5px;
     background-color: #f9f9f9;
-    display: none;
-    font-size: calc(0.9rem + 0.2vw);
+    display: flex;
+    flex-direction: column;
     position: relative;
     overflow: auto;
     width: 100%;
     box-sizing: border-box;
-    font-family: 'Roboto Slab', serif;
 }
 
-.plan-row {
+.plan-section:not(.empty) {
+    background-image: url('Sfondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: local;
+    background-blend-mode: overlay;
+    background-color: rgba(249, 249, 249, 0.9);
+}
+
+.empty-plan-section {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-top: 0;
-    font-size: calc(1rem + 0.2vw);
+    justify-content: center;
+    padding: 0rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 0rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    background-image: none !important; 
+}
+
+.plan-header-container {
+    display: flex;
     width: 100%;
-    font-family: 'Roboto Slab', serif;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    height: 40px; 
+    align-items: stretch;
+}
+
+.plan-info-container, .phase-info-container {
+    background-color: rgba(220, 220, 220, 0.9);   
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    flex: 1;
+    min-width: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    align-items: flex-start;
+    text-align: left;
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.plan-info-container {
+    background-color: rgba(0, 0, 0, 0.1); 
+    backdrop-filter: blur(4px);
+	border: 1px solid black;
+}
+
+.phase-info-container {
+    background-color: rgba(0, 140, 180, 0.2);
+    backdrop-filter: blur(4px);
+	 border: 1px solid #008CBA;
 }
 
 .plan-title {
-    color: orange;
-    text-align: left;
-    font-family: 'Roboto Slab', serif;
+    color: black;
+    font-size: calc(0.9rem + 0.3vw);
+    margin-bottom: 0.3rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 80;
+    width: 100%;
+}
+
+.phase-title {
+    color: #ff9800;
+    font-size: calc(0.9rem + 0.3vw);
+    margin-bottom: 0.3rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 80;
+    width: 100%;
 }
 
 .plan-params {
-    color: darkblue;
-    text-align: right;
-    font-size: calc(1rem + 0.2vw);
-    font-family: 'Roboto Slab', serif;
-}
-
-.close-button {
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: none;
-    border: none;
-    font-size: calc(1.2rem + 0.2vw);
-    cursor: pointer;
+    font-size: calc(0.8rem + 0.2vw);
+    font-family: 'Orbitron', sans-serif;
     color: #555;
-    padding: 0.25rem;
-    z-index: 10;
-    display: none;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255,255,255,0.8);
-    border-radius: 50%;
-}
-
-.close-button:hover {
-    color: #f44336;
-    background-color: rgba(255,255,255,1);
-}
-
-#allenamento-titolo {
-    text-align: left;
-    margin-right: 2rem;
-    margin-left: 0;
     width: 100%;
-    display: initial;
-    font-family: 'Roboto Slab', serif;
-}
-
-/* Parametri allineati a destra */
-.parametri-container {
-    text-align: right;
-    display: initial;
-}
-
-.parametri {
-    font-size: calc(1rem + 0.2vw);
-    color: darkblue;
-    font-family: 'Roboto Slab', serif;
-}
-
-/* Nome della fase e conto alla rovescia */
-.fase-attuale {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
-    font-size: calc(1rem + 0.2vw);
-    color: orange;
-    font-family: 'Roboto Slab', serif;
-}
-
-.fase-attuale .nome-fase {
-    color: orange;
     text-align: left;
-    font-family: 'Roboto Slab', serif;
+	font-weight: 400;
 }
 
-.fase-attuale .conto-alla-rovescia {
-    color: darkblue;
-    text-align: right;
-    font-family: 'Roboto Slab', serif;
+.phase-time {
+    font-size: calc(0.8rem + 0.2vw);
+    font-family: 'Orbitron', sans-serif;
+    color: #555;
+    width: 100%;
+    text-align: left;
+	font-weight: 50;
 }
 
-/* Lampeggiamento del conto alla rovescia */
-@keyframes lampeggia {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-.conto-alla-rovescia.lampeggia {
-    animation: lampeggia 1s infinite;
-    color: red;
-}
-
-/* Istogramma */
 .plan-histogram {
     display: flex;
     margin-top: 0.0rem;
     position: relative;
-    height: 78%;/*calc(120px + 2vw);*/
+    height: calc(100% - 70px); 
     align-items: flex-end;
     gap: 0;
+    padding-bottom: 10px; 
 }
 
 .plan-histogram .bar {
@@ -671,35 +582,118 @@ body {
     z-index: 2;
 }
 
-@keyframes lampeggia {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.pausa-lampeggiante {
-    animation: lampeggia 1s infinite;
-}
-
-/* Stile per le fasi completate */
 .plan-histogram .bar.completata {
     opacity: 0.2;
     transition: opacity 0.3s ease;
 }
 
-/* Stile per la fase attiva */
 .plan-histogram .bar.active {
     border-bottom: 3px solid #ff9800;
     box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
     opacity: 1;
 }
 
-/* Stile per le fasi future */
 .plan-histogram .bar {
     opacity: 1;
     transition: opacity 0.3s ease;
 }
 
-/* Stile generale della popup */
+.empty-plan-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 0rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.empty-plan-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h30v30H0V0zm30 30h30v30H30V30z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+    animation: animateBg 60s linear infinite;
+    z-index: 0;
+}
+
+.empty-plan-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.runner-emoji {
+    font-size: 10rem;
+    margin: 0.5rem 0;
+    display: inline-block;
+    animation: runAnimation 0.8s ease-in-out infinite alternate;
+    order: -1;
+}
+
+.treadmill-container {
+    position: relative;
+    width: 250px;
+    margin-top: -15px;
+}
+
+.treadmill-belt {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.treadmill-belt::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        90deg,
+        #555 0px,
+        #555 20px,
+        #777 20px,
+        #777 40px
+    );
+    animation: beltMove 0.8s linear infinite;
+}
+
+/* ====================== MESSAGGI E POPUP ====================== */
+.completion-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: calc(1.2rem + 0.5vw);
+    font-weight: bold;
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
 .popup {
     display: none;
     position: fixed;
@@ -791,7 +785,39 @@ body {
     background-color: #d32f2f;
 }
 
-/* Stili per l'editor dei piani */
+.popup-button.edit {
+    background-color: #008CBA;
+    color: white;
+}
+
+.close-button {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-size: calc(1.2rem + 0.2vw);
+    cursor: pointer;
+    color: #555;
+    padding: 0.25rem;
+    z-index: 10;
+    display: none;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
+}
+
+.close-button:hover {
+    color: #f44336;
+    background-color: rgba(255,255,255,1);
+}
+
+/* ====================== EDITOR PIANI ====================== */
 .editor-section {
     margin-bottom: 1.5rem;
     padding: 1rem;
@@ -881,13 +907,8 @@ body {
     color: #6200ea;
 }
 
-.popup-button.edit {
-    background-color: #008CBA;
-    color: white;
-}
-
 #phasesContainer {
-    max-height: 300px; 
+    max-height: 300px;
     overflow-y: auto;
     margin-bottom: 10px;
     border: 1px solid #ddd;
@@ -912,81 +933,83 @@ body {
     background: #555;
 }
 
-.empty-plan-section {
-    display: flex;
-    flex-direction: column;
+/* ====================== ICONE AUDIO E BLUETOOTH ====================== */
+.audio-icon {
+    cursor: pointer;
+    margin-right: 50px;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 0rem;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-top: 0rem;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    transition: all 0.2s ease;
 }
 
-.empty-plan-section::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h30v30H0V0zm30 30h30v30H30V30z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
-    animation: animateBg 60s linear infinite;
-    z-index: 0;
+.audio-icon svg {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
 }
 
-.empty-plan-content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.audio-icon-main {
+    fill: #000000;
+    transition: fill 0.2s ease;
+}
+
+.audio-icon-mute-bar {
+    stroke: transparent;
+    stroke-width: 3px;
+    stroke-linecap: round;
+    transition: stroke 0.2s ease;
+}
+
+.audio-icon:hover {
+    transform: scale(1.1);
+}
+
+.audio-icon.muted .audio-icon-main {
+    fill: #f44336;
+}
+
+.audio-icon.muted .audio-icon-mute-bar {
+    stroke: #f44336;
+}
+
+.bluetooth-icon {
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    transition: all 0.2s ease;
 }
 
-.runner-emoji {
-    font-size: 10rem;
-    margin: 0.5rem 0;
-    display: inline-block;
-    animation: runAnimation 0.8s ease-in-out infinite alternate;
-    order: -1; /* Sposta l'emoji sopra gli elementi di testo */
+.bluetooth-icon svg {
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
 }
 
-.treadmill-container {
-    position: relative;
-    width: 250px;
-    margin-top: -15px;
+.bluetooth-icon-path {
+    fill: #f44336;
+    animation: bluetoothPulse 1.5s infinite;
 }
 
-.treadmill-belt {
-    width: 100%;
-    height: 10px;
-    background: #333;
-    border-radius: 5px;
-    overflow: hidden;
-    position: relative;
+.bluetooth-icon.connected .bluetooth-icon-path {
+    fill: #4CAF50;
+    animation: none;
 }
 
-.treadmill-belt::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        90deg,
-        #555 0px,
-        #555 20px,
-        #777 20px,
-        #777 40px
-    );
-    animation: beltMove 0.8s linear infinite;
+/* ====================== ANIMAZIONI ====================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes lampeggia {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
 }
 
 @keyframes runAnimation {
@@ -1004,82 +1027,6 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Stili per l'icona audio */
-.audio-icon {
-    cursor: pointer;
-    margin-right: 50px; /* Spazio tra icona e switch */
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.2s ease;
-}
-
-/* Icona SVG */
-.audio-icon svg {
-    width: 40px;
-    height: 40px;
-    vertical-align: middle;
-}
-
-/* Percorso principale dell'icona (altoparlante) */
-.audio-icon-main {
-    fill: #000000; 
-    transition: fill 0.2s ease;
-}
-
-/* Barra diagonale del mute (inizialmente trasparente) */
-.audio-icon-mute-bar {
-    stroke: transparent; 
-    stroke-width: 3px;
-    stroke-linecap: round;
-    transition: stroke 0.2s ease;
-}
-
-/* Stato hover */
-.audio-icon:hover {
-    transform: scale(1.1);
-}
-
-.audio-icon.muted .audio-icon-main {
-    fill: #f44336; /* Rosso quando mutato */
-}
-
-.audio-icon.muted .audio-icon-mute-bar {
-    stroke: #f44336; 
-}
-
-/* Container per le icone */
-.connection-container {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* Stili per l'icona Bluetooth */
-.bluetooth-icon {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    transition: all 0.2s ease;
-}
-
-.bluetooth-icon svg {
-    width: 60px;
-    height: 60px;
-    vertical-align: middle;
-}
-
-.bluetooth-icon-path {
-    fill: #f44336; /* Rosso di default */
-    animation: bluetoothPulse 1.5s infinite;
-}
-
-/* Stato connesso */
-.bluetooth-icon.connected .bluetooth-icon-path {
-    fill: #4CAF50; /* Verde quando connesso */
-    animation: none;
-}
-
-/* Animazione lampeggiante */
 @keyframes bluetoothPulse {
     0%, 100% {
         opacity: 1;
@@ -1091,7 +1038,12 @@ body {
     }
 }
 
-/* Rimuovi lo stile del vecchio switch */
-.switch, .slider, .connection-status {
-    display: none;
+.pausa-lampeggiante {
+    animation: lampeggia 1s infinite;
 }
+
+.lampeggia {
+    animation: lampeggia 0.5s infinite;
+    color: red;
+}
+
