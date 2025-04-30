@@ -394,7 +394,7 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     const containerHeight = histogramContainer.offsetHeight;
     
     // Calcola l'altezza massima (90% del contenitore)
-    const maxHeight = containerHeight * 0.9;
+    const maxHeight = containerHeight * 0.8;
     
     // Calcola l'altezza proporzionale alla velocità (es. velocità massima 10 km/h)
     const heightPercentage = (velocita / 10) * maxHeight;
