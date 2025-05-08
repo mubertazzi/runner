@@ -474,7 +474,7 @@ body {
 .phase-info-container {
     background-color: rgba(0, 0, 0, 0.1); 
     backdrop-filter: blur(4px);
-	 border: 1px solid #008CBA;
+	 border: 1px solid black;
 }
 
 .plan-title {
