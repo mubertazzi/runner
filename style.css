@@ -472,7 +472,7 @@ body {
 }
 
 .phase-info-container {
-    background-color: rgba(0, 140, 180, 0.2);
+    background-color: rgba(0, 0, 0, 0.1); 
     backdrop-filter: blur(4px);
 	 border: 1px solid #008CBA;
 }
