@@ -10,12 +10,12 @@
       "ripetizioni": 6,
       "serie": [
         {
-          "tempo": 1,
+          "tempo": 2,
           "velocita": 9,
           "descrizione": "Corsa veloce"
         },
         {
-          "tempo": 2,
+          "tempo": 1,
           "velocita": 6,
           "descrizione": "Camminata veloce"
         }
