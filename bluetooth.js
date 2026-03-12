@@ -92,8 +92,8 @@ function startAutomaticReading() {
                 const seconds = elapsedTime % 60;
                 const formattedTime = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
 				
-			   // Leggi le calorie (Byte 6 e Byte 7)
-			   const caloriesInt = value.getUint8(7, true); // Calorie in kilocalorie
+			   // Leggi le calorie (Byte 7 e Byte 8)
+			   const caloriesInt = value.getUint16(7, true); // Calorie in kilocalorie
 			   const caloriesDecimal = 0;//value.getUint8(13) / 100;
 			   const calories = caloriesInt + caloriesDecimal;
 			  
