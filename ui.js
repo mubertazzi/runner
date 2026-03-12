@@ -1,5 +1,5 @@
 let pausedSpeed = null;
-let currentSetSpeed = 1.0;
+let currentSetSpeed = 0;
 let startTime = null;
 let distance = 0;
 let pausedTime = 0;
@@ -28,6 +28,27 @@ function updateConnectionStatus() {
         bluetoothIcon.classList.remove('connected');
     }
 }
+
+
+function aggiornaDataOra() {
+    const giorni = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+    const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+                  "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+
+    const ora = new Date();
+
+    const giornoSettimana = giorni[ora.getDay()];
+    const giorno = ora.getDate();
+    const mese = mesi[ora.getMonth()];
+    const anno = ora.getFullYear();
+
+    const hh = String(ora.getHours()).padStart(2, '0');
+    const mm = String(ora.getMinutes()).padStart(2, '0');
+
+    document.getElementById("data-ora").textContent =
+        `${giornoSettimana} ${giorno} ${mese} ${anno} - ${hh}:${mm}`;
+}
+
 
 // ==================== PULSANTI + E - ====================
 document.getElementById('increaseSpeed').addEventListener('click', () => {
@@ -135,10 +156,13 @@ speedDots.forEach(dot => {
             alert("Collegati prima al dispositivo!");
             return;
         }
-        const speed = parseInt(dot.dataset.speed);
-        currentSetSpeed = speed;
-        document.getElementById('speedInput').value = speed.toFixed(1);
-        setSpeed(speed);
+        const speed = parseInt(dot.dataset.speed);		
+		if (currentSetSpeed > 0) 
+		{	
+			setSpeed(speed);
+			currentSetSpeed = speed;		
+		}
+        document.getElementById('speedInput').value = speed.toFixed(1);        
     });
 });
 
@@ -344,10 +368,11 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
         <div class="plan-header-container">
             <div class="plan-info-container">
                 <span class="plan-title" id="allenamento-titolo">ALLENAMENTO: ${nomePianoAllenamento}</span>
-                <span class="plan-params">
-                    Tempo: <span id="tempo-totale">0 min</span> - 
-                    Distanza: <span id="distanza-totale">0.00 km</span>
-                </span>
+				<span class="plan-params">
+					Tempo: <span id="tempo-totale">0 min</span> -
+					Distanza: <span id="distanza-totale">0.00 km</span> -
+					Residuo: <span id="tempo-residuo-totale">00:00</span>
+				</span>
             </div>
             <div class="phase-info-container">
                 <span class="phase-title" id="fase-corrente-titolo">FASE 1: ${pianoAllenamento[0].descrizione}</span>
@@ -370,7 +395,9 @@ function visualizzaPiano(pianoAllenamento, nomePianoAllenamento) {
     // Aggiorna i valori dei parametri
     document.getElementById('tempo-totale').textContent = `${durataTotale} min`;
     document.getElementById('distanza-totale').textContent = `${distanzaTotale.toFixed(2)} km`;
-
+	const totaleSecondi = durataTotale * 60;
+	document.getElementById('tempo-residuo-totale').textContent = formattaTempo(totaleSecondi);
+	
     // Crea l'istogramma
     const histogramDiv = document.querySelector('.plan-histogram');
     let currentTime = 0;
@@ -406,7 +433,7 @@ function creaBarra(tempo, velocita, currentTime, durataTotale, index) {
     bar.dataset.index = index;
     
     bar.addEventListener('click', () => {
-        if (isAutoMode && pianoAllenamento.length > 0) {
+        if (isAutoMode && pianoAllenamento.length > 0 && startTime !== null) {
             faseCorrente = index;
             gestioneFasi();
         }
@@ -574,6 +601,17 @@ function gestioneFasi() {
             stopAll();
         }
     }
+
+	// Aggiorna tempo residuo totale
+	if (isAutoMode && pianoAllenamento.length > 0) {
+		let totaleResiduo = tempoRimanente;
+		for (let i = faseCorrente + 1; i < pianoAllenamento.length; i++) {
+			totaleResiduo += pianoAllenamento[i].tempo * 60; 
+		}
+		document.getElementById('tempo-residuo-totale').textContent =
+			formattaTempo(totaleResiduo);
+	}
+	
 }
 
 let audioContext; // Mantieni una singola istanza globale
@@ -696,6 +734,8 @@ function inizializzaPlanSection() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    aggiornaDataOra();
+    setInterval(aggiornaDataOra, 30000);	
 	inizializzaPlanSection();
 });
 
