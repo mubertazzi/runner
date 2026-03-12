@@ -14,7 +14,9 @@ body {
 .container {
     text-align: center;
     background-color: #ffffff;
-    padding: 2rem;
+    padding: 0rem;
+	padding-left:2rem;
+	padding-right:2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 95vw;
@@ -30,14 +32,31 @@ body {
 }
 
 /* ====================== INTESTAZIONE ====================== */
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-    max-height: 80px;
+    padding: 0;
+    margin: 0;    
+}
+
+
+.data-ora {
+    justify-self: center;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: calc(1rem + 0.2vw);
+    color: #444;
+    opacity: 0.9;
+    line-height: 1.1;
+}
+
+.connection-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-self: end;
 }
 
 .header h1 {
@@ -57,7 +76,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin: 0;
-    padding: 0.5rem 1rem;
+    padding: 0rem 0rem;
     border-radius: 10px;
     position: relative;
     font-family: 'Orbitron', sans-serif;
@@ -90,12 +109,6 @@ body {
     letter-spacing: 3px;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
     font-weight: 600;
-}
-
-.connection-container {
-    display: flex;
-    align-items: center;
-    gap: 20px;
 }
 
 /* ====================== SEZIONE DISPOSITIVO ====================== */
@@ -140,20 +153,28 @@ body {
 }
 
 .speed-control button {
-    background-color: #6200ea;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: calc(50px + 1vw);
-    height: calc(50px + 1vw);
-    font-size: calc(2rem + 0.5vw);
-    cursor: pointer;
-    margin: 0 1.5rem;
-    transition: background-color 0.3s;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 8px; /* Come i pallini */
+  width: calc(42px + 0.5vw);
+  height: calc(42px + 0.5vw);
+  font-size: calc(1.4rem + 0.3vw);
+  cursor: pointer;
+  margin: 0 0.8rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-weight: bold;
 }
 
 .speed-control button:hover {
-    background-color: #3700b3;
+  background-color: #3700b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.speed-control button:active {
+  transform: translateY(0px) scale(0.96);
 }
 
 .speed-control input {
@@ -178,26 +199,42 @@ body {
     width: 100%;
 }
 
+.speed-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem; /* Spazio tra pulsanti */
+  flex-wrap: nowrap; /* NON vanno a capo */
+}
+
 .speed-dots .dot {
-    width: calc(30px + 0.5vw);
-    height: calc(30px + 0.5vw);
-    border-radius: 50%;
-    background-color: #6200ea;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: calc(1.2rem + 0.3vw);
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: calc(38px + 0.4vw);
+  height: calc(38px + 0.4vw);
+  border-radius: 8px; /* Come start/stop */
+  background-color: #6200ea;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
 
 .speed-dots .dot:hover {
-    background-color: #3700b3;
-    transform: scale(1.05);
+  background-color: #3700b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+.speed-dots .dot:active {
+  transform: translateY(0px) scale(0.96);
+}
+
+
 
 .parameter-section {
     display: flex;
