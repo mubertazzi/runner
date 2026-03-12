@@ -46,7 +46,7 @@ body {
     justify-self: center;
     text-align: center;
     font-family: 'Orbitron', sans-serif;
-    font-size: calc(1rem + 0.2vw);
+    font-size: calc(1.5rem + 0.25vw);
     color: #444;
     opacity: 0.9;
     line-height: 1.1;
@@ -1083,4 +1083,5 @@ body {
     animation: lampeggia 0.5s infinite;
     color: red;
 }
+
 
